@@ -1,0 +1,42 @@
+@import '/src/assets/sass/_vars.sass'
+
+.header
+	position: relative
+	align-self: stretch
+	padding-top: 70px
+	.logo
+		img 
+			margin: 0 auto
+
+	.contact-us
+		font-family: 'Kern Standard Bold Italic'
+		position: absolute
+		top: 25px
+		left: 0
+		display: flex
+		align-items: center
+		font-size: 19px
+		color: $accent
+		font-weight: 700
+		text-transform: uppercase
+		text-decoration: none
+		img 
+			display: block
+			margin-right: 15px
+
+
+@media only screen and (max-width: 768px)
+	.header
+		padding-top: 25px
+		.logo
+			img 
+				width: 150px
+		.contact-us
+			font-size: 0
+			top: 10px
+			img 
+				margin-right: 0
+
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px)
+	/**/
