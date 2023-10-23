@@ -1,0 +1,7 @@
+<div id="qr-popup">
+	<div class="qr-popup__content" :class="{active: slide}">
+		<p>get the app here</p>
+		<img :src="require(`/src/assets/images/qr.png`)" alt="qr-code">
+		<p id="qr-close" @click="$emit('closeQrPopup')">close</p>
+	</div>
+</div>

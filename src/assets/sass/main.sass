@@ -1,0 +1,42 @@
+@import "fonts"
+@import "libs"
+@import "base"
+@import "vars"
+
+// Пользовательские стили
+
+.logo 
+	margin-top: 50px
+
+.player-btn
+	display: flex
+	border: none
+	cursor: pointer
+	outline: none
+	border-radius: 50%
+	background: $accent
+	color: #000
+	width: 66px
+	height: 66px
+	justify-content: center
+	align-items: center
+	padding: 0
+	margin: 0 auto
+	&.mob
+		display: none
+
+.player-btn:after 
+	content: ''
+	width: 25px
+	height: 25px
+
+.player-btn.play:after 
+	border: 14px solid transparent
+	border-left: 25px solid #000
+	position: relative
+	left: 10px
+
+.player-btn.stop:after 
+	background-color: #000
+
+@import "media" // Всегда в конце

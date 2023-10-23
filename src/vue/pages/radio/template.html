@@ -1,0 +1,23 @@
+<div id="radio" ref="radio">
+	<audio v-if="radio" :src="radio.stream_url" controls id="player" ref="player"></audio>
+
+	<img :src="showCover" class="cover" alt="">
+
+	<Header/>
+
+	<main id="main">
+		<div class="show-info">
+			<h1 class="show-title disable-aos-mobile" data-aos="fade-left"  data-aos-duration="1000">24/7 <br> WORLDWIDE RADIO</h1>
+			<p class="show-autor disable-aos-mobile"  data-aos="fade-right" data-aos-duration="1000">curated by <span class="autor-name">Humans</span></p>
+			<button id="qr-btn" ref="qrBtn" @click="qrPopupActive = !qrPopupActive">GET THE APP HERE</button>
+		</div>
+	</main>
+
+	<button class="player-btn play mob disable-aos-mobile" data-aos="fade-up" @click="play"></button>
+
+	<Footer ref="footerComponent" :since="showSince" :until="showUntil" :title="showTitle" :autor="showAutor" @play="(e) => play(e)" :isPlayingMob="isPlaying"/>
+
+	<a href="https://onelink.to/msur6t" target="_blank" class="get-app mob" ref="getApp">GET THE APP HERE</a>
+</div>
+
+<QRPopup @closeQrPopup="qrPopupActive = !qrPopupActive" :class="{active: qrPopupActive}" :slide="qrPopupActive"/>
