@@ -15,6 +15,7 @@ export default function mounted() {
 		}
 	}).then(e => {
 		this.radio = e.data.live;
+		console.log(this.radio);
 	}).catch(() => console.log('axios error'));
 
 
