@@ -8,7 +8,7 @@ export default function mounted() {
 	// Detecting time zone in GMT format
 	let gmt=window.Date ().match (/GMT[+-]\d{2}/)[0];
 
-	axios.get('https://app.rovr.live/api/all/now/playing', {
+	axios.get('https://corsproxy.io/?https://app.rovr.live/api/all/now/playing', {
 		headers: {
 			'X-TIMEZONE' : gmt,
 	    	'Authorization' : 'Bearer 4b5febd4-921d-4bd4-ba67-3fc0d03d3903',
@@ -32,6 +32,4 @@ export default function mounted() {
 		this.updateTimer();
 		console.log(this.radio);
 	});
-
-	console.log('vue');
 }

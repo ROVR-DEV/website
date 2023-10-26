@@ -15,7 +15,7 @@ export default function timerUntil(oldVal, newVal) {
 		        } else {
 		          clearInterval(fadeOutInterval);
 		        }
-		     }, 200);
+		     }, 250);
 
 			setTimeout(() => {
 				player.pause();
@@ -25,6 +25,22 @@ export default function timerUntil(oldVal, newVal) {
 			setTimeout(() => {
 				player.play();
 				player.volume = 1;
+
+				this.$refs.radio.classList.remove('show-cover');
+				this.$refs.radio.classList.add('hide-cover');
+
+				setTimeout(() => {
+					this.$refs.radio.classList.remove('visible');
+				}, 400);
+
+				setTimeout(() => {
+					this.$refs.radio.classList.remove('hide-cover');
+					this.$refs.radio.classList.add('show-cover');
+				}, 2000);
+
+				setTimeout(() => {
+					this.$refs.radio.classList.add('visible');
+				}, 2400);
 
 				player.addEventListener('ended', () => {
 					player.setAttribute('src', this.radio.stream_url);
