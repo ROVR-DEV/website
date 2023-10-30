@@ -14,8 +14,12 @@ export default function mounted() {
 	    	'Authorization' : 'Bearer 4b5febd4-921d-4bd4-ba67-3fc0d03d3903',
 		}
 	}).then(e => {
-		this.radio = e.data.live;
-		console.log(this.radio);
+		this.radio  = e.data.live;
+		this.player = new Audio(this.radio.stream_url);
+
+		this.interval = setInterval(() => {
+			this.playerTime++;
+		}, 1000);
 	}).catch(() => console.log('axios error'));
 
 	window.io=io;

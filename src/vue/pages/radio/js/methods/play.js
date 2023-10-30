@@ -1,13 +1,14 @@
 'use strict';
 
 export default function play(event) {
-	let player = this.$refs.player;
+	let player = this.player;
 	let btn    = event.target;
 	
 	if(btn.classList.contains('play')) {
-		player.setAttribute('src', this.radio.stream_url);
-		player.play();
 		this.isPlaying = true;
+
+		player.currentTime = this.playerTime;
+		player.play();
 
 		btn.classList.remove('play');
 		btn.classList.add('stop');
@@ -24,8 +25,9 @@ export default function play(event) {
 		
 		this.$refs.footerComponent.$refs.footer.classList.add('active');
 	} else {
-		player.pause();
 		this.isPlaying = false;
+
+		player.pause();
 
 		btn.classList.remove('stop');
 		btn.classList.add('play');

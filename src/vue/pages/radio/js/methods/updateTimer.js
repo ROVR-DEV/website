@@ -9,6 +9,6 @@ export default function updateTimer() {
 	    	this.timerUntil       = this.radio.show.until
 		}
 	    
-	    console.log(this.timerUntil);
+	    //console.log(this.timerUntil);
 	}, 1000);
 }

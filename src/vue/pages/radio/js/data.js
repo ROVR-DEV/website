@@ -3,6 +3,9 @@ export default function data () {
 	return (
 		{
 			radio: null,
+			player: null,
+			interval: null,
+			playerTime: 0,
 			qrPopupActive: false,
 			ivl: 0,
 			timerUntil: null,
