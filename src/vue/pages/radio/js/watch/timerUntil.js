@@ -5,7 +5,7 @@ import jingle  from '../../jingle.mp3'
 export default function timerUntil(oldVal, newVal) {
 	if(newVal && newVal == 3) {
 		if(this.isPlaying) {
-			let player = this.$refs.player;
+			let player = this.player;
 			let actualVolumeFadeOut = player.volume;
 
 			let fadeOutInterval = setInterval(function() {
