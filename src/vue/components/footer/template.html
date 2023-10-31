@@ -9,7 +9,7 @@
 			</div>
 		</div>
 
-		<button class="player-btn play disable-aos-mobile" data-aos="fade-up" @click="$emit('play', $event); isPlaying = !isPlaying" ref="playBtn"/>
+		<button class="player-btn play disable-aos-mobile" data-aos="fade-up" data-aos-delay="3000" data-aos-duration="1000" @click="$emit('play', $event); isPlaying = !isPlaying" ref="playBtn"/>
 
 		<div class="duration-wrapper disable-aos-mobile" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="1500">
 			<div class="fade-on-play" :class="{active: isPlaying || isPlayingMob}">
