@@ -4,6 +4,7 @@ export default function data () {
 		{
 			radio: null,
 			player: null,
+			jingle: null,
 			interval: null,
 			playerTime: 0,
 			qrPopupActive: false,

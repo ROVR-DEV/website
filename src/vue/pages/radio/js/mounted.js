@@ -3,6 +3,7 @@
 import io      from 'socket.io-client'
 import Echo    from 'laravel-echo'
 import axios   from 'axios'
+import jingle  from '../jingle.mp3'
 
 export default function mounted() {
 	// Detecting time zone in GMT format
@@ -16,6 +17,7 @@ export default function mounted() {
 	}).then(e => {
 		this.radio  = e.data.live;
 		this.player = new Audio(this.radio.stream_url);
+		this.jingle = new Audio(jingle);
 
 		this.interval = setInterval(() => {
 			this.playerTime++;

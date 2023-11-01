@@ -1,7 +1,5 @@
 'use strict';
 
-import jingle  from '../../jingle.mp3'
-
 export default function timerUntil(oldVal, newVal) {
 	if(newVal && newVal == 3) {
 		if(this.isPlaying) {
@@ -19,15 +17,14 @@ export default function timerUntil(oldVal, newVal) {
 
 			setTimeout(() => {
 				player.pause();
-				player.setAttribute('src', jingle);
 			}, 2000);
 
 			setTimeout(() => {
-				player.play();
+				this.jingle.play();
 				player.volume = 1;
 
-				player.addEventListener('ended', () => {
-					player.setAttribute('src', this.radio.stream_url);
+				this.jingle.addEventListener('ended', () => {
+					player.currentTime = this.playerTime;
 					player.play();
 				});
 			}, 3000);
