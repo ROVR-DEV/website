@@ -9,6 +9,7 @@ export default function mounted() {
 	// Detecting time zone in GMT format
 	let gmt=window.Date ().match (/GMT[+-]\d{2}/)[0];
 
+	// getting current show
 	axios.get('https://app.rovr.live/api/all/now/playing', {
 		headers: {
 			'X-TIMEZONE' : gmt,
@@ -24,6 +25,7 @@ export default function mounted() {
 		}, 1000);
 	}).catch(() => console.log('axios error'));
 
+	// connecting socket-io
 	window.io=io;
 	window.Echo=new Echo (
 	  {
@@ -33,6 +35,7 @@ export default function mounted() {
 	    auth:{'headers':{'Authorization':'Bearer '+ '4b5febd4-921d-4bd4-ba67-3fc0d03d3903'}}
 	  });
 
+	// listening for socket and updating info
 	window.Echo.private ('playnow.'+gmt).listen ('.playnow', e => {
 		this.radio = e.playnow.live;
 		this.updateTimer();

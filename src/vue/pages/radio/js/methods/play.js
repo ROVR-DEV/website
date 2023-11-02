@@ -6,6 +6,17 @@ export default function play(event) {
 	
 	if(btn.classList.contains('play')) {
 		this.isPlaying = true;
+		this.playPressCount++;
+
+		console.log(this.playPressCount);
+
+		if(this.playPressCount === 1) {
+			this.jingle.volume = 0;
+			this.jingle.play();
+			setTimeout(() => {
+				this.jingle.pause();	
+			}, 100);
+		}
 
 		player.currentTime = this.playerTime;
 		player.play();

@@ -6,11 +6,12 @@ export default function data () {
 			player: null,
 			jingle: null,
 			interval: null,
+			isPlaying: false,
 			playerTime: 0,
+			playPressCount: 0,
 			qrPopupActive: false,
 			ivl: 0,
 			timerUntil: null,
-			isPlaying: false,
 			replaceCover: {
 			    localhost: "app.rovr.live",
 			    lp: "app"

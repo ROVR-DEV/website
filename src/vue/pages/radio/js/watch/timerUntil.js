@@ -22,6 +22,7 @@ export default function timerUntil(oldVal, newVal) {
 			setTimeout(() => {
 				this.jingle.play();
 				player.volume = 1;
+				this.jingle.volume = 1;
 
 				this.jingle.addEventListener('ended', () => {
 					player.currentTime = this.playerTime;
