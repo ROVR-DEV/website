@@ -11,6 +11,7 @@
     "aos": "^2.3.4",
     "axios": "^1.5.1",
     "core-js": "^3.8.3",
+    "jquery": "^3.7.1",
     "laravel-echo": "^1.15.3",
     "socket.io-client": "^2.5.0",
     "vue": "^3.2.13"

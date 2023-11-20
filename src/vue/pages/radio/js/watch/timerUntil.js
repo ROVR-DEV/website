@@ -1,19 +1,14 @@
 'use strict';
 
+import $ from 'jquery';
+
 export default function timerUntil(oldVal, newVal) {
 	if(newVal && newVal == 3) {
 		if(this.isPlaying) {
 			let player = this.player;
-			let actualVolumeFadeOut = player.volume;
+			let jingle = this.jingle;
 
-			let fadeOutInterval = setInterval(function() {
-		        actualVolumeFadeOut = (parseFloat(actualVolumeFadeOut) - 0.1).toFixed(1);
-		        if (actualVolumeFadeOut >= 0) {
-		          player.volume = actualVolumeFadeOut;
-		        } else {
-		          clearInterval(fadeOutInterval);
-		        }
-		     }, 200);
+			$(player).animate({volume: 0}, 2000);
 
 			setTimeout(() => {
 				player.pause();
@@ -21,12 +16,13 @@ export default function timerUntil(oldVal, newVal) {
 
 			setTimeout(() => {
 				this.jingle.play();
-				player.volume = 1;
-				this.jingle.volume = 1;
+				$(jingle).animate({volume: 1}, 1000);
+				
 
-				this.jingle.addEventListener('ended', () => {
+				jingle.addEventListener('ended', () => {
 					player.currentTime = this.playerTime;
 					player.play();
+					$(player).animate({volume: 1}, 1000);
 				});
 			}, 3000);
 		}
