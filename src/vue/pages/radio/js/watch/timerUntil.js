@@ -8,21 +8,18 @@ export default function timerUntil(oldVal, newVal) {
 			let player = this.player;
 			let jingle = this.jingle;
 
-			$(player).animate({volume: 0}, 2000);
+			$(player).animate({volume: 0}, 2500);
 
 			setTimeout(() => {
 				player.pause();
-			}, 2000);
-
-			setTimeout(() => {
-				this.jingle.play();
-				$(jingle).animate({volume: 1}, 1000);
+				jingle.play();
+				$(jingle).animate({volume: 1}, 1500);
 				
 
 				jingle.addEventListener('ended', () => {
 					player.currentTime = this.playerTime;
 					player.play();
-					$(player).animate({volume: 1}, 1000);
+					$(player).animate({volume: 1}, 2000);
 				});
 			}, 3000);
 		}
