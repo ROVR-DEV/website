@@ -1,11 +1,19 @@
 'use strict';
 
-import io      from 'socket.io-client'
-import Echo    from 'laravel-echo'
-import axios   from 'axios'
-import jingle  from '../media/jingle.mp3'
+import io      from 'socket.io-client';
+import Echo    from 'laravel-echo';
+import axios   from 'axios';
+import AOS     from 'aos';
+import jingle  from '../media/jingle.mp3';
 
 export default function mounted() {
+	// Animate On Scroll library initialization
+	AOS.init({
+		disable: 'mobile',
+		duration: 1000,
+		delay: 1000
+	});
+
 	// Detecting time zone in GMT format
 	let gmt=window.Date ().match (/GMT[+-]\d{2}/)[0];
 

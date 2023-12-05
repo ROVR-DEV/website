@@ -1,6 +1,6 @@
 <footer class="footer" ref="footer">
 	<div class="show-control">
-		<div class="now-playing disable-aos-mobile" data-aos="fade-right" data-aos-delay="1500" data-aos-duration="1000">
+		<div class="now-playing" data-aos="fade-right" data-aos-delay="1500">
 			<div class="fade-on-play" :class="{active: isPlaying || isPlayingMob}">
 				<strong>NOW PLAYING:</strong>
 				<em>
@@ -9,9 +9,9 @@
 			</div>
 		</div>
 
-		<button class="player-btn play disable-aos-mobile" data-aos="fade-up" data-aos-delay="3000" data-aos-duration="1000" @click="$emit('play', $event); isPlaying = !isPlaying" ref="playBtn"/>
+		<button class="player-btn play" data-aos="fade-up" data-aos-delay="3000" @click="$emit('play', $event); isPlaying = !isPlaying" ref="playBtn"/>
 
-		<div class="duration-wrapper disable-aos-mobile" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="1500">
+		<div class="duration-wrapper" data-aos="fade-left" data-aos-delay="1500">
 			<div class="fade-on-play" :class="{active: isPlaying || isPlayingMob}">
 				<div v-text="since" v-if="sinceActive" class="duration since" @click="sinceActive = !sinceActive"/>
 				<div v-text="until" v-else class="duration until" @click="sinceActive = !sinceActive"/>

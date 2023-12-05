@@ -5,13 +5,13 @@
 
 	<main id="main">
 		<div class="show-info">
-			<h1 class="show-title disable-aos-mobile" data-aos="fade-left" data-aos-delay="1000" data-aos-duration="1000">24/7 <br> WORLDWIDE RADIO</h1>
-			<p class="show-autor disable-aos-mobile"  data-aos="fade-right" data-aos-delay="1000" data-aos-duration="1000">curated by <span class="autor-name">Humans</span></p>
+			<h1 class="show-title" data-aos="fade-left">24/7 <br> WORLDWIDE RADIO</h1>
+			<p class="show-autor"  data-aos="fade-right">curated by <span class="autor-name">Humans</span></p>
 			<button id="qr-btn" ref="qrBtn" @click="qrPopupActive = !qrPopupActive">GET THE APP HERE</button>
 		</div>
 	</main>
 
-	<button class="player-btn play mob disable-aos-mobile" data-aos="fade-up" @click="play"></button>
+	<button class="player-btn play mob" data-aos="fade-up" @click="play"></button>
 
 	<Footer ref="footerComponent" :since="showSince" :until="showUntil" :title="showTitle" :autor="showAutor" @play="(e) => play(e)" :isPlayingMob="isPlaying"/>
 
