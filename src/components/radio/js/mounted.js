@@ -3,7 +3,7 @@
 import io      from 'socket.io-client'
 import Echo    from 'laravel-echo'
 import axios   from 'axios'
-import jingle  from '../jingle.mp3'
+import jingle  from '../media/jingle.mp3'
 
 export default function mounted() {
 	// Detecting time zone in GMT format

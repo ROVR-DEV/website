@@ -8,7 +8,5 @@ export default function updateTimer() {
 	    	this.radio.show.until = Math.round(this.radio.show.until) - 1
 	    	this.timerUntil       = this.radio.show.until
 		}
-	    
-	    console.log(this.timerUntil);
 	}, 1000);
 }

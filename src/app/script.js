@@ -1,10 +1,8 @@
 'use strict';
 
-import Radio from '../vue/pages/radio/Radio.vue'
+import components from './js/components';
 
 export default {
 	name: 'App',
-	components: {
-		Radio
-	}
+	components,
 }
