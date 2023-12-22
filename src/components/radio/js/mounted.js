@@ -21,7 +21,7 @@ export default function mounted() {
 	axios.get('https://app.rovr.live/api/all/now/playing', {
 		headers: {
 			'X-TIMEZONE' : gmt,
-	    	'Authorization' : 'Bearer 67e0d139-5d59-428b-834d-286bbe462980',
+	    	'Authorization' : 'Bearer 1e10f824-8fb2-4951-9815-d84d7bb141f5',
 		}
 	}).then(e => {
 		this.radio  = e.data.live;
