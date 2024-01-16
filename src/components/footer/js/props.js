@@ -4,6 +4,6 @@ export default({
 	since: String,
 	until: String,
 	title: String,
-	autor: String,
+	author: String,
 	isPlayingMob: Boolean
 })
