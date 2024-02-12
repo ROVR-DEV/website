@@ -27,25 +27,30 @@
         border-bottom: 2px solid $primary;
         cursor: pointer;
         transition: $transition;
+        overflow: hidden;
         &__photo {
             background-color: $primary;
-            width: 175px;
-            height: 175px;
+            min-width: 10.75rem;
+            max-width: 10.75rem;
+            aspect-ratio: 1;
             margin-right: 1.5rem;
         }
+        &__info {
+            width: calc(100% - 10.75rem - 1.5rem);
+        }
         &__name {
-            @include font-size(54px);
+            @include font-size(48px);
             margin: 0;
             text-transform: uppercase;
             font-weight: bold;
-            max-width: 500px;
+            max-width: 95%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
             line-height: 1.5;
         }
         &__country {
-            @include font-size(24px);
+            @include font-size(22px);
             font-weight: bold;
             display: block;
             text-transform: uppercase;

@@ -62,7 +62,7 @@
         &__close {
             @include flex-center;
             width: 2.75rem;
-            height: 2.75rem;
+            aspect-ratio: 1;
             background-color: $primary;
             border-radius: 50%;
             cursor: pointer;
@@ -131,7 +131,7 @@
             background-color: $black;
             border: 1px solid $primary;
             width: 2.5rem;
-            height: 2.5rem;
+            aspect-ratio: 1;
             transition: $transition;
             img {
                 width: 1.25rem;
