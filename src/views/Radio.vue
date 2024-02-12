@@ -3,7 +3,7 @@
         <div class="radio__info">
             <div class="show">
                 <h1 class="show__title" v-text="radio.show.title"/>
-                <h2 class="show__author">BY <em v-text="radio.curator.name" @click="stopScaling('curator')" :style="{ transform: curatorScaleStyle }"/></h2>
+                <h2 class="show__author">BY <em v-text="radio.curator.name" v-press="{ time: 250, scale: 0.97 }" @click="showCuratorInfoHandler(500)"/></h2>
                 <p class="show__description" v-text="radio.show.description ?? radio.show.about"/>
                 <div class="show__player">
                     <play-button
@@ -18,7 +18,7 @@
             </div>
             <current-track :title="radio.title" :artist="radio.artist" :label="radio.label"/>
         </div>
-        <div class="radio__image" @mousedown="startScaling" @mouseup="stopScaling('photo')">
+        <div class="radio__image" @mousedown="startScaling" @mouseup="stopScaling">
             <img :src="radioCover" :style="{ transform: photoScaleStyle }" alt="preview">
         </div>
     </section>
@@ -117,10 +117,13 @@
         }, 20);
     }
 
+    const showCuratorInfoHandler = (delay) => {
+        setTimeout(() => showCuratorInfo.value = true, delay);
+    }
+
     // image scale
     const isScaling = ref(false);
     const photoScaleStyle = ref('scale(1)');
-    const curatorScaleStyle = ref('scale(1)');
 
     const startScaling = () => {
         isScaling.value = true;
@@ -131,12 +134,11 @@
         }, 500);
     }
 
-    const stopScaling = (from) => {
+    const stopScaling = () => {
         isScaling.value = false;
-        from === 'photo' ? photoScaleStyle.value = 'scale(0.98)' : curatorScaleStyle.value = 'scale(0.98)';
+        photoScaleStyle.value = 'scale(0.98)';
         setTimeout(() => {
             photoScaleStyle.value = 'scale(1)';
-            curatorScaleStyle.value = 'scale(1)';
             setTimeout(() => {
                 showCuratorInfo.value = true;
             }, 300);
@@ -202,7 +204,7 @@
                 object-fit: cover;
                 position: relative;
                 z-index: 1;
-                transition: all 0.3s linear;
+                transition: all 0.2s linear;
             }
             &::after {
                 content: "";

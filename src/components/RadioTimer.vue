@@ -1,6 +1,9 @@
 <template>
     <div class="radio__timer">
-        <span v-text="timer" @click="mode === 'until' ? mode = 'since' : mode = 'until'"/>
+        <span
+            v-text="timer"
+            v-press="{ time: 200, scale: 0.97 }"
+            @click="switchTimerMode(200)"/>
     </div>
 </template>
 
@@ -58,6 +61,10 @@
                 timerUntil.value--;
             }
         }, 1000);
+    }
+
+    const switchTimerMode = (delay) => {
+        setTimeout(() => mode.value === 'until' ? mode.value = 'since' : mode.value = 'until', delay);
     }
 
     const fmtMSS = (s) => {

@@ -1,6 +1,6 @@
 <template>
     <section class="curator">
-        <div class="curator__close" @click="emit('close')">
+        <div class="curator__close" v-press="{ time: 200, scale: 0.95 }" @click="close(300)">
             <img src="@/assets/images/icons/arrow-left.svg" alt="back">
         </div>
         <div class="curator__photo">
@@ -43,6 +43,10 @@
             link.name = 'website';
         }
     });
+
+    const close = (delay) => {
+        setTimeout(() => emit('close'), delay);
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -100,7 +104,7 @@
             overflow-y: auto;
         }
         &__name {
-            @include font-size(118px);
+            @include font-size(100px);
             font-family: 'GT Alpina', sans-serif;
             stroke: 1px solid $primary;
             font-style: italic;
@@ -108,10 +112,11 @@
             line-height: 1;
         }
         &__about {
-            @include font-size(21px);
+            @include font-size(18px);
             font-weight: normal;
             margin: 0;
             line-height: 1.25;
+            white-space: pre-line;
         }
         &__details {
             flex: 0 1 75%;
@@ -125,15 +130,15 @@
             border-radius: 50%;
             background-color: $black;
             border: 1px solid $primary;
-            width: 2.75rem;
-            height: 2.75rem;
+            width: 2.5rem;
+            height: 2.5rem;
             transition: $transition;
             img {
-                width: 1.5rem;
+                width: 1.25rem;
                 transition: $transition;
             }
             &:not(:last-child) {
-                margin-bottom: 1.5rem;
+                margin-bottom: 1.25rem;
             }
             &:hover {
                 background-color: $primary;

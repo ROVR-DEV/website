@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
     <header class="header">
-        <div class="header__logo">
+        <div class="header__logo" v-press="{ time: 200, scale: 0.97 }" @click="redirect(200)">
             <img src="@/assets/images/logo.svg" alt="Logo">
         </div>
 
@@ -14,6 +14,8 @@
 </template>
 
 <script setup>
+    import router from '@/router';
+
     const links = [
         {
             id: 0,
@@ -35,6 +37,10 @@
             path: "/curators"
         }
     ]
+
+    const redirect = (delay) => {
+        setTimeout(() => router.push({ name: 'radio' }), delay);
+    }
 </script>
 
 <style lang="scss" scoped>
@@ -44,6 +50,7 @@
         padding: 1.5rem 3.75rem;
         border-bottom: 2px solid $primary;
         &__logo {
+            cursor: pointer;
             img {
                 width: 8rem;
             }
@@ -56,14 +63,26 @@
                 }
                 a {
                     @include font-size(18px);
+                    background-image: linear-gradient(
+                        to right,
+                        $primary,
+                        $primary 50%,
+                        rgba($color: $primary, $alpha: 0.35) 50%
+                    );
+                    background-size: 200% 100%;
+                    background-position: -101%;
                     text-decoration: none;
-                    color: $primary;
+                    color: rgba($color: $primary, $alpha: 0.35);
                     font-weight: normal;
                     font-style: italic;
                     text-transform: uppercase;
-                    opacity: 0.35;
-                    &.router-link-exact-active {
-                        opacity: 1;
+                    background-clip: text;
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    transition: all 0.2s ease-in-out;
+                    &.router-link-exact-active,
+                    &:hover {
+                        background-position: 0;
                     }
                 }
             }

@@ -2,7 +2,8 @@
     <button
         class="player-button"
         :class="{ 'player-button--stop': isPlaying, 'player-button--play': !isPlaying, 'player-button--ready': isPlayerReady }"
-        @click="play(isPlayerReady)"/>
+        v-press="{ time: 150, scale: 0.96 }"
+        @click="play(isPlayerReady, 150)"/>
 </template>
 
 <script setup>
@@ -18,10 +19,12 @@
         }
     });
 
-    const play = (isPlayerReady) => {
+    const play = (isPlayerReady, delay) => {
         if(isPlayerReady) {
-            isPlaying.value = !isPlaying.value;
-            isPlaying.value ? emit('play') : emit('stop');
+            setTimeout(() => {
+                isPlaying.value = !isPlaying.value;
+                isPlaying.value ? emit('play') : emit('stop');
+            }, delay);
         } else {
             console.log('not ready yet');
         }
@@ -39,7 +42,6 @@
         width: 6.25rem;
         height: 6.25rem;
         padding: 0;
-        transition: $transition;
         filter: brightness(0.5);
         cursor: not-allowed;
         &:after {
