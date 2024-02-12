@@ -56,5 +56,6 @@
 <style lang="scss" scoped>
     .curators {
         @include grid(2, 0);
+        height: auto;
     }
 </style>

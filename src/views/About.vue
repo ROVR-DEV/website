@@ -42,6 +42,10 @@
         &__logo {
             display: inline-block;
             margin-top: 6.5rem;
+            width: 13.25rem;
+            @media screen and (max-width: 1600px) {
+                margin-top: 3.5rem;
+            }
         }
     }
 </style>
