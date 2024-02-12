@@ -1,42 +1,34 @@
 @import "fonts";
+@import "libs";
 @import "base";
 @import "vars";
+@import "mixins";
 
-.player-btn {
-	display: flex;
-	border: none;
-	cursor: pointer;
-	outline: none;
-	border-radius: 50%;
-	background: $accent;
-	color: #000;
-	width: 66px;
-	height: 66px;
-	justify-content: center;
-	align-items: center;
-	padding: 0;
-	margin: 0 auto;
-	
-	&.mob {
-		display: none;
-	}
+// SCROLL BAR
+::-webkit-scrollbar {
+    width: 0.5rem;
 }
 
-.player-btn:after {
-	content: '';
-	width: 25px;
-	height: 25px;
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: #434343;
 }
 
-.player-btn.play:after {
-	border: 14px solid transparent;
-	border-left: 25px solid #000;
-	position: relative;
-	left: 10px;
+::-webkit-scrollbar-thumb {
+    background: $primary;
+    border-radius: 10px;
 }
 
-.player-btn.stop:after {
-	background-color: #000;
+
+section {
+    height: inherit;
+    width: 100%;
+}
+
+.main {
+    position: relative;
+    overflow-y: auto;
+    height: 100%;
 }
 
 @import "media";
