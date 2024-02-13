@@ -173,7 +173,6 @@
                     em {
                         @include font-size(92px);
                         display: inline-block;
-                        font-family: 'GT Alpina', sans-serif;
                         margin-left: 0.5rem;
                         cursor: pointer;
                     }

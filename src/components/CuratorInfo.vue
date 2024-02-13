@@ -34,8 +34,10 @@
 
     let links = [];
 
-    for (let i = 0; i < props.curator.links.length; i++) {
-        links.push({ href: props.curator.links[i], name: props.curator.link_titles[i].toLowerCase() });
+    if(props.curator.links.length && props.curator.link_titles) {
+        for (let i = 0; i < props.curator.links.length; i++) {
+            links.push({ href: props.curator.links[i], name: props.curator.link_titles[i].toLowerCase() });
+        }
     }
 
     links.forEach((link) => {
