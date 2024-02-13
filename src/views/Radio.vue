@@ -57,7 +57,7 @@
             radio.value = e.data.live;
             player = new Audio(radio.value.stream_url);
             setInterval(() => playerTime.value++, 1000);
-            player.addEventListener('canplay', () => isPlayerReady.value = true);
+            player.addEventListener('canplaythrough', () => isPlayerReady.value = true);
             console.log(radio.value);
         }).catch(() => console.log('axios error'));
 
@@ -91,16 +91,18 @@
     }
 
     const finish = () => {
-        startFadeOut();
+        if(!player.paused) {
+            startFadeOut();
 
-        setTimeout(() => jingle.play(), 2000);
+            setTimeout(() => jingle.play(), 2000);
 
-        jingle.onended = () => {
-            jingle.pause();
-            player.load(radio.value.stream_url);
-            player.play();
-            player.volume = 1;
-            playerTime.value = 0;
+            jingle.onended = () => {
+                jingle.pause();
+                player.load(radio.value.stream_url);
+                player.play();
+                player.volume = 1;
+                playerTime.value = 0;
+            }
         }
     }
 
