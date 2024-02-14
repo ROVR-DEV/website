@@ -9,10 +9,11 @@
 
 <script setup>
     import { computed, onMounted, ref, watch } from 'vue';
+    import { usePlayerStore } from '@/stores/player';
+
+    const playerStore = usePlayerStore();
 
     const mode = ref('until');
-
-    const emit = defineEmits(['finish']);
 
     const props = defineProps({
         since: {
@@ -39,7 +40,8 @@
 
     watch(timerUntil, (position) => {
         if (position === 0) {
-            emit('finish');
+            playerStore.setFinished(true);
+            console.log(playerStore.isFinished);
             timerUntil.value = 0;
             timerSince.value = props.since;
         }

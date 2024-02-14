@@ -19,19 +19,20 @@
     const links = [
         {
             id: 0,
-            name: "about",
-            path: "/about"
+            name: "radio",
+            path: "/radio"
         },
         {
             id: 1,
-            name: "radio",
-            path: "/radio"
+            name: "about",
+            path: "/about"
         },
         {
             id: 2,
             name: "schedule",
             path: "/schedule"
-        }, {
+        },
+        {
             id: 3,
             name: "curators",
             path: "/curators"

@@ -6,20 +6,16 @@
                 <h2 class="show__author">BY <em v-text="radio.curator.name" v-press="{ time: 250, scale: 0.97 }" @click="showCuratorInfoHandler(500)"/></h2>
                 <p class="show__description" v-text="radio.show.description ?? radio.show.about"/>
                 <div class="show__player">
-                    <play-button
-                        @play="play"
-                        @stop="player.pause()"
-                        :isPlayerReady="isPlayerReady"/>
+                    <play-button/>
                     <radio-timer
                         :until="Math.round(radio.show.until)"
-                        :since="Math.round(radio.show.since)"
-                        @finish="finish"/>
+                        :since="Math.round(radio.show.since)"/>
                 </div>
             </div>
             <current-track :title="radio.title" :artist="radio.artist" :label="radio.label"/>
         </div>
         <div class="radio__image" @mousedown="startScaling" @mouseup="stopScaling">
-            <img :src="radioCover" :style="{ transform: photoScaleStyle }" alt="preview">
+            <img :src="radio.curator.photo" :style="{ transform: photoScaleStyle }" alt="preview">
         </div>
     </section>
 
@@ -27,23 +23,20 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, computed } from 'vue';
+    import { ref, onMounted } from 'vue';
+    import { usePlayerStore } from '@/stores/player';
     import io           from 'socket.io-client';
     import Echo         from 'laravel-echo';
     import axios        from 'axios';
-    import jingleTrack  from '@/assets/media/jingle.mp3';
     import PlayButton   from '@/components/PlayButton.vue';
     import RadioTimer   from '@/components/RadioTimer.vue';
     import CurrentTrack from '@/components/CurrentTrack.vue';
     import CuratorInfo  from '@/components/CuratorInfo.vue';
 
     const radio  = ref(null);
-    const playerTime = ref(0);
-    const isPlayerReady = ref(false);
     const showCuratorInfo = ref(false);
 
-    let player = null;
-    let jingle = new Audio(jingleTrack);
+    const playerStore = usePlayerStore();
 
     onMounted(() => {
         const GMT = window.Date().match(/GMT[+-]\d{2}/)[0];
@@ -55,9 +48,7 @@
             }
         }).then(e => {
             radio.value = e.data.live;
-            player = new Audio(radio.value.stream_url);
-            setInterval(() => playerTime.value++, 1000);
-            player.addEventListener('canplaythrough', () => isPlayerReady.value = true);
+            playerStore.setStreamUrl(radio.value.stream_url);
             console.log(radio.value);
         }).catch(() => console.log('axios error'));
 
@@ -75,49 +66,6 @@
             console.log(radio.value);
         });
     });
-
-    const radioCover = computed(() => {
-        const replaceCover = {
-            localhost: 'app.rovr.live',
-            lp: 'app'
-        }
-        
-        return radio.value ? radio.value.curator.photo.replace(/localhost|lp/gi, (matched) => replaceCover[matched]) : "";
-    });
-
-    const play = () => {
-        player.play();
-        player.currentTime = playerTime.value;
-    }
-
-    const finish = () => {
-        if(!player.paused) {
-            startFadeOut();
-
-            setTimeout(() => jingle.play(), 2000);
-
-            jingle.onended = () => {
-                jingle.pause();
-                player.load(radio.value.stream_url);
-                player.play();
-                player.volume = 1;
-                playerTime.value = 0;
-            }
-        }
-    }
-
-    const fadeOutInterval = ref(null);
-
-    const startFadeOut = () => {
-        fadeOutInterval.value = setInterval(() => {
-            player.volume -= 0.01;
-            if (player.volume <= 0.01) {
-                player.pause();
-                player.volume = 0;
-                clearInterval(fadeOutInterval.value);
-            }
-        }, 20);
-    }
 
     const showCuratorInfoHandler = (delay) => {
         setTimeout(() => showCuratorInfo.value = true, delay);
@@ -150,9 +98,10 @@
 
 <style lang="scss" scoped>
     .radio {
-        @include grid(2, 0);
+        display: flex;
         &__info {
             @include flex-column;
+            flex: 0 1 55%;
             .show {
                 @include flex-column;
                 flex: auto;
@@ -198,6 +147,7 @@
             position: relative;
             cursor: pointer;
             overflow: hidden;
+            flex: 0 1 45%;
             img {
                 display: block;
                 width: 100%;

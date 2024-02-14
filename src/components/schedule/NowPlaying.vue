@@ -15,10 +15,13 @@
                 @click="showCuratorInfoHandler(program.curator, 500)"/>
         </span>
         <p class="schedule-program__description" v-text="program.show.description"/>
+        <play-button/>
     </div>
 </template>
 
 <script setup>
+    import PlayButton from '../PlayButton.vue';
+
     defineProps({
         program: {
             type: Object,
@@ -133,8 +136,8 @@
         &__description {
             @include font-size(20px);
             font-weight: bold;
-            margin: 0;
-            line-height: 1;
+            margin: 0 0 2.25rem 0;
+            line-height: 1.2;
         }
     }
 </style>

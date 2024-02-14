@@ -1,32 +1,23 @@
 <template>
     <button
         class="player-button"
-        :class="{ 'player-button--stop': isPlaying, 'player-button--play': !isPlaying, 'player-button--ready': isPlayerReady }"
+        :class="{ 
+            'player-button--stop': playerStore.isPlaying,
+            'player-button--play': !playerStore.isPlaying,
+            'player-button--ready': playerStore.isPlayerReady 
+        }"
         v-press="{ time: 150, scale: 0.96 }"
-        @click="play(isPlayerReady, 150)"/>
+        @click="play(150)"/>
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { usePlayerStore } from '@/stores/player';
 
-    const isPlaying = ref(false);
-    const emit = defineEmits(['play', 'stop']);
+    const playerStore = usePlayerStore();
 
-    defineProps({
-        isPlayerReady: {
-            type: Boolean,
-            required: true,
-        }
-    });
-
-    const play = (isPlayerReady, delay) => {
-        if(isPlayerReady) {
-            setTimeout(() => {
-                isPlaying.value = !isPlaying.value;
-                isPlaying.value ? emit('play') : emit('stop');
-            }, delay);
-        } else {
-            console.log('not ready yet');
+    const play = (delay) => {
+        if(playerStore.isPlayerReady) {
+            setTimeout(() => playerStore.togglePlaying(), delay);
         }
     }
 </script>
