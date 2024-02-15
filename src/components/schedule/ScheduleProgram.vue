@@ -68,6 +68,7 @@
             aspect-ratio: 1;
             margin-right: 2rem;
             position: relative;
+            overflow: hidden;
             &::after {
                 content: '';
                 position: absolute;
@@ -78,8 +79,10 @@
                 background-color: rgba($color: $black, $alpha: 0.3);
                 z-index: 2;
             }
-            @media screen and (max-width: 1400px) {
+            @media screen and (max-width: 1600px) {
                 margin-right: 1.5rem;
+                min-width: 14rem;
+                max-width: 14rem;
             }
         }
         &__photo {
@@ -88,6 +91,7 @@
             object-fit: cover;
             position: absolute;
             z-index: 1;
+            transform: scale(1.075);
         }
         &__time {
             @include flex(row, flex-end, flex-start);
@@ -104,6 +108,14 @@
                 display: block;
                 line-height: 3.125rem;
                 margin-right: 0.25rem;
+                
+            }
+            @media screen and (max-width: 1600px) {
+                @include font-size(20px);
+                strong {
+                    @include font-size(46px);
+                    line-height: 2rem;
+                }
             }
         }
         &__title {
@@ -113,6 +125,9 @@
             margin: 0 0 0.5rem;
             line-height: 1;
             -webkit-text-stroke: 0.5px $black;
+            @media screen and (max-width: 1600px) {
+                @include font-size(32px);
+            }
         }
         &__author {
             @include font-size(24px);
@@ -125,6 +140,12 @@
                 margin-left: 0.5rem;
                 cursor: pointer;
             }
+            @media screen and (max-width: 1600px) {
+                @include font-size(20px);
+                em {
+                    @include font-size(32px);
+                }
+            }
         }
         &__description {
             @include font-size(20px);
@@ -132,6 +153,9 @@
             line-height: 1.2;
             font-weight: bold;
             max-width: 80%;
+            @media screen and (max-width: 1600px) {
+                @include font-size(18px);
+            }
         }
     }
 </style>

@@ -70,8 +70,8 @@
                         $primary 50%,
                         rgba($color: $primary, $alpha: 0.35) 50%
                     );
-                    background-size: 200% 100%;
-                    background-position: -101%;
+                    background-size: calc(200% + 5px) 100%;
+                    background-position: calc(100% + 0.5px);
                     text-decoration: none;
                     color: rgba($color: $primary, $alpha: 0.35);
                     font-weight: normal;
