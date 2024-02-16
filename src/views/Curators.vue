@@ -57,5 +57,8 @@
     .curators {
         @include grid(2, 0);
         height: auto;
+        @media screen and (max-width: 768px) {
+            grid-template-columns: 1fr;
+        }
     }
 </style>

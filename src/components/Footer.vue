@@ -1,18 +1,19 @@
 <template>
     <footer class="footer">
-        <a href="#"><img src="@/assets/images/icons/instagram.svg" alt="instagram"></a>
-        <a href="#">
+        <a href="#" class="footer__instagram"><img src="@/assets/images/icons/instagram.svg" alt="instagram"></a>
+        <a href="#" class="footer__appstore">
             <img src="@/assets/images/icons/app-store.svg" alt="App Store">
             App Store
         </a>
-        <a href="#">
+        <a href="#" class="footer__googleplay">
             <img src="@/assets/images/icons/google-play.svg" alt="Google Play">
             Google Play
         </a>
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms & Conditions</a>
-        <a href="#">Contact</a>
-        <p>© 2024 ROVR | All rights reserved</p>
+        <a href="#" class="footer__privacy">Privacy Policy</a>
+        <a href="#" class="footer__terms">Terms & Conditions</a>
+        <a href="#" class="footer__contact">Contact</a>
+        <p class="footer__copyright">© 2024 ROVR | All rights reserved</p>
+        <p class="footer__copyright--mobile">© 2024 ROVR <br> All rights reserved</p>
     </footer>
 </template>
 
@@ -41,6 +42,11 @@
             }
             img {
                 margin-right: 6px;
+            }
+        }
+        &__copyright {
+            &--mobile {
+                display: none;
             }
         }
     }

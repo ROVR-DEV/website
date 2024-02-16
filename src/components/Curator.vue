@@ -34,9 +34,17 @@
             max-width: 10.75rem;
             aspect-ratio: 1;
             margin-right: 1.5rem;
+            @media screen and (max-width: 768px) {
+                min-width: 7.5rem;
+                max-width: 7.5rem;
+                margin-right: 1rem;
+            }
         }
         &__info {
             width: calc(100% - 10.75rem - 1.5rem);
+            @media screen and (max-width: 768px) {
+                width: calc(100% - 7.5rem - 1rem);
+            }
         }
         &__name {
             @include font-size(48px);
@@ -48,12 +56,18 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             line-height: 1.5;
+            @media screen and (max-width: 768px) {
+                @include font-size(32px);
+            }
         }
         &__country {
             @include font-size(22px);
             font-weight: bold;
             display: block;
             text-transform: uppercase;
+            @media screen and (max-width: 768px) {
+                @include font-size(14px);
+            }
         }
         &:hover {
             background-color: $primary;

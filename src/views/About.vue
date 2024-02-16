@@ -37,12 +37,18 @@
                 margin: 0;
                 font-weight: bold;
                 line-height: 1;
+                @media screen and (max-width: 480px) {
+                    @include font-size(36px);
+                    &:not(:last-child) {
+                        margin-bottom: 2.25rem;
+                    }
+                }
             }
         }
         &__logo {
             display: inline-block;
             margin-top: 6.5rem;
-            width: 13.25rem;
+            width: 13rem;
             @media screen and (max-width: 1600px) {
                 margin-top: 3.5rem;
             }

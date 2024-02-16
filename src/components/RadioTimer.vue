@@ -42,7 +42,7 @@
             playerStore.setFinished(true);
             console.log(playerStore.isFinished);
             timerUntil.value = 0;
-            timerSince.value = props.since;
+            timerSince.value = 0;
         }
     });
 

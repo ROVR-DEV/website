@@ -1,3 +1,20 @@
+@media screen and (min-width: 480px) {
+    // SCROLL BAR
+    ::-webkit-scrollbar {
+        width: 0.5rem;
+    }
+
+    ::-webkit-scrollbar-track {
+        border-radius: 10px;
+        background: #434343;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: $primary;
+        border-radius: 10px;
+    }
+}
+
 @media screen and (max-width: 1600px) {
     html {
         font-size: 14px;
@@ -9,3 +26,9 @@
         font-size: 12px;
     }
 }
+
+@import "./mobile/header.mobile.scss";
+@import "./mobile/radio.mobile.scss";
+@import "./mobile/schedule.mobile.scss";
+@import "./mobile/curator-info.mobile.scss";
+@import "./mobile/footer.mobile.scss";

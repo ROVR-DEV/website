@@ -1,0 +1,51 @@
+@media screen and (max-width: 480px) {
+    #base-layout {
+        .footer {
+            padding: 1.5rem 2rem;
+            justify-content: space-between;
+            &__privacy,
+            &__terms,
+            &__contact {
+                display: none;
+            }
+            &__copyright {
+                display: none;
+                &--mobile {
+                    @include font-size(14px);
+                    display: block;
+                    line-height: 1.2;
+                    margin-right: 1.825rem;
+                }
+            }
+            &__instagram {
+                order: 2;
+                margin-right: 1.5rem;
+                img {
+                    width: 1.75rem;
+                }
+            }
+            &__appstore {
+                @include font-size(16px);
+                order: 3;
+                margin-right: 1.5rem;
+                line-height: 1rem;
+                img {
+                    width: 1.25rem;
+                    position: relative;
+                    top: -3px;
+                }
+            }
+            &__googleplay {
+                @include font-size(16px);
+                order: 4;
+                margin-right: 0;
+                line-height: 1rem;
+                img {
+                    width: 1.25rem;
+                    position: relative;
+                    top: -3px;
+                }
+            }
+        }
+    }
+}

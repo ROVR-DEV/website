@@ -31,7 +31,7 @@
         background: $primary;
         color: $black;
         width: 6.25rem;
-        height: 6.25rem;
+        aspect-ratio: 1;
         padding: 0;
         filter: brightness(0.5);
         cursor: not-allowed;

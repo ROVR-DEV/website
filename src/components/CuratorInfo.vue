@@ -1,6 +1,6 @@
 <template>
     <section class="curator">
-        <div class="curator__close" v-press="{ time: 200, scale: 0.95 }" @click="close(300)">
+        <div class="curator__close" @click="emit('close')">
             <img src="@/assets/images/icons/arrow-left.svg" alt="back">
         </div>
         <div class="curator__photo">
@@ -45,10 +45,6 @@
             link.name = 'website';
         }
     });
-
-    const close = (delay) => {
-        setTimeout(() => emit('close'), delay);
-    }
 </script>
 
 <style lang="scss" scoped>
@@ -65,7 +61,7 @@
             @include flex-center;
             width: 2.75rem;
             aspect-ratio: 1;
-            background-color: $primary;
+            background-color: $black;
             border-radius: 50%;
             cursor: pointer;
             position: absolute;

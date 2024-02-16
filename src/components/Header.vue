@@ -5,37 +5,65 @@
             <img src="@/assets/images/logo.svg" alt="Logo">
         </div>
 
-        <nav class="header__nav">
+        <nav class="header__nav" :class="{'header__nav--active' : isBurgerActive}">
             <ul class="header__links">
-                <li v-for="link in links" :key="link.id"><router-link :to="link.path" v-text="link.name"/></li>
+                <li v-for="link in links" :key="link.id" class="header__link" :class="`header__link-${link.name}`">
+                    <router-link :to="link.path" v-text="link.title" @click="isBurgerActive = false"/>
+                </li>
             </ul>
         </nav>
+
+        <div
+            class="header__burger"
+            @click="isBurgerActive = !isBurgerActive"
+            :class="{ 'header__burger--active': isBurgerActive }">
+            <span/>
+        </div>
     </header>
 </template>
 
 <script setup>
+    import { ref } from 'vue';
     import router from '@/router';
+
+    const isBurgerActive = ref(false);
 
     const links = [
         {
             id: 0,
             name: "radio",
+            title: "radio",
             path: "/radio"
         },
         {
             id: 1,
             name: "about",
+            title: "about",
             path: "/about"
         },
         {
             id: 2,
             name: "schedule",
+            title: "schedule",
             path: "/schedule"
         },
         {
             id: 3,
             name: "curators",
+            title: "curators",
             path: "/curators"
+        },
+        {
+            id: 4,
+            name: "contact",
+            title: "contact",
+            path: "/contacts"
+        },
+        {
+            id: 5,
+            name: "terms",
+            title: "Privacy Policy  |  Terms & Conditions",
+            path: "/terms"
         }
     ]
 
@@ -58,12 +86,20 @@
         }
         &__links {
             @include flex-center-vert;
-            li {
-                &:not(:last-child) {
-                    margin-right: 3.25rem;
-                }
-                a {
-                    @include font-size(18px);
+        }
+        &__link {
+            &:not(:last-child) {
+                margin-right: 3.25rem;
+            }
+            a {
+                @include font-size(18px);
+                text-decoration: none;
+                color: rgba($color: $primary, $alpha: 0.35);
+                font-weight: normal;
+                font-style: italic;
+                text-transform: uppercase;
+                transition: all 0.2s ease-in-out;
+                @media screen and (min-width: 769px) {
                     background-image: linear-gradient(
                         to right,
                         $primary,
@@ -72,21 +108,22 @@
                     );
                     background-size: calc(200% + 5px) 100%;
                     background-position: calc(100% + 0.5px);
-                    text-decoration: none;
-                    color: rgba($color: $primary, $alpha: 0.35);
-                    font-weight: normal;
-                    font-style: italic;
-                    text-transform: uppercase;
                     background-clip: text;
                     -webkit-background-clip: text;
                     -webkit-text-fill-color: transparent;
-                    transition: all 0.2s ease-in-out;
                     &.router-link-exact-active,
                     &:hover {
                         background-position: 0;
                     }
                 }
             }
+            &-contact,
+            &-terms {
+                display: none;
+            }
+        }
+        &__burger {
+            display: none;
         }
     }
 </style>

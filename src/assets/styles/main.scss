@@ -1,23 +1,8 @@
-@import "fonts";
-@import "libs";
-@import "base";
-@import "vars";
-@import "mixins";
-
-// SCROLL BAR
-::-webkit-scrollbar {
-    width: 0.5rem;
-}
-
-::-webkit-scrollbar-track {
-    border-radius: 10px;
-    background: #434343;
-}
-
-::-webkit-scrollbar-thumb {
-    background: $primary;
-    border-radius: 10px;
-}
+@import "./kit/fonts";
+@import "./kit/libs";
+@import "./kit/base";
+@import "./kit/vars";
+@import "./kit/mixins";
 
 // Italic text
 em {

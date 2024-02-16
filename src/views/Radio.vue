@@ -11,6 +11,12 @@
                         :until="Math.round(radio.show.until)"
                         :since="Math.round(radio.show.since)"/>
                 </div>
+
+                <!-- FOR MOBILE -->
+                <div class="show__cover" @touchstart="startScaling" @touchend="stopScaling">
+                    <img :src="radio.curator.photo" :style="{ transform: photoScaleStyle }" class="" alt="preview">
+                </div>
+                <!-- FOR MOBILE -->
             </div>
             <current-track :title="radio.title" :artist="radio.artist" :label="radio.label"/>
         </div>
@@ -108,6 +114,9 @@
                 background-color: $black;
                 color: $primary;
                 padding: 3.25rem 3.75rem;
+                &__cover {
+                    display: none;
+                }
                 &__title {
                     @include font-size(80px);
                     line-height: 102%;
