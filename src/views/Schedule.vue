@@ -1,7 +1,7 @@
 <template>
-    <section class="schedule" v-if="schedule">
-        <div class="schedule__plan">
-            <week-days @day-picked="date => selectedDate = date"/>
+    <section class="schedule" v-if="schedule" :class="{ 'nowplaying--hidden': currentDate !== selectedDate }">
+        <div class="schedule__plan" ref="scrollParent">
+            <week-days @day-picked="date => loadDaySchedule(date)"/>
 
             <div v-if="filteredSchedule.length > 0" class="schedule__programs">
                 <schedule-program
@@ -11,7 +11,7 @@
                     @show-curator-info="curator => showCuratorInfoHandler(curator)"/>
             </div>
         </div>
-        <div class="schedule__current" v-if="schedule">
+        <div class="schedule__current">
             <now-playing :program="schedule[0]" @show-curator-info="curator => showCuratorInfoHandler(curator)"/>
         </div>
     </section>
@@ -32,6 +32,7 @@
     const selectedDate = ref(null);
     const showCuratorInfo = ref(false);
     const selectedCurator = ref(null);
+    const scrollParent = ref(null);
 
     watch(() => scheduleStore.schedule, (state) => {
         if (state) schedule.value = state;
@@ -45,11 +46,25 @@
         }
     });
 
+    const loadDaySchedule = (date) => {
+        selectedDate.value = date;
+        scrollParent.value.scrollTop = 0;
+    }
+
     const showCuratorInfoHandler = (curator) => {
         showCuratorInfo.value = true;
         selectedCurator.value = curator;
         console.log(curator);
     }
+
+    const currentDate = computed(() => {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const year = today.getFullYear();
+
+        return `${day}/${month}/${year}`;
+    });
 </script>
 
 <style lang="scss" scoped>
