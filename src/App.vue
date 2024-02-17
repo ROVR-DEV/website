@@ -6,7 +6,7 @@
             <main class="main">
                 <router-view v-slot="{ Component }">
                     <player/>
-                    
+
                     <keep-alive>
                         <component :is="Component"/>
                     </keep-alive>
@@ -46,6 +46,7 @@
             }
         }).then(e => {
             curatorsStore.loadCurators(e.data);
+            console.log(e.data);
         }).catch((e) => {
             console.log(e);
         });
@@ -57,6 +58,7 @@
             }
         }).then(e => {
             scheduleStore.loadSchedule(e.data);
+            console.log(e.data);
         }).catch((e) => {
             console.log(e);
         });

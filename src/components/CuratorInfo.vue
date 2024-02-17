@@ -34,7 +34,7 @@
 
     let links = [];
 
-    if(props.curator.links.length && props.curator.link_titles) {
+    if(props.curator.links && props.curator.link_titles) {
         for (let i = 0; i < props.curator.links.length; i++) {
             links.push({ href: props.curator.links[i], name: props.curator.link_titles[i].toLowerCase() });
         }

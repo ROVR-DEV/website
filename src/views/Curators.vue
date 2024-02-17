@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue';
+    import { ref, computed, watch } from 'vue';
     import { useCuratorsStore } from '@/stores/curators';
     import Curator from '@/components/Curator.vue';
     import CuratorInfo from '@/components/CuratorInfo.vue';
@@ -16,6 +16,10 @@
     const curators = ref(curatorsStore.curators);
     const showCuratorInfo = ref(false);
     const selectedCurator = ref(null);
+
+    watch(() => curatorsStore.curators, (state) => {
+        if (state) curators.value = state;
+    });
 
     const openCuratorInfo = (data) => {
         showCuratorInfo.value = true;

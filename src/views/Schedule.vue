@@ -1,5 +1,5 @@
 <template>
-    <section class="schedule">
+    <section class="schedule" v-if="schedule">
         <div class="schedule__plan">
             <week-days @day-picked="date => selectedDate = date"/>
 
@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue';
+    import { ref, computed, watch } from 'vue';
     import { useScheduleStore } from '@/stores/schedule';
     import WeekDays from '@/components/schedule/WeekDays.vue';
     import ScheduleProgram from '@/components/schedule/ScheduleProgram.vue';
@@ -32,6 +32,10 @@
     const selectedDate = ref(null);
     const showCuratorInfo = ref(false);
     const selectedCurator = ref(null);
+
+    watch(() => scheduleStore.schedule, (state) => {
+        if (state) schedule.value = state;
+    });
 
     const filteredSchedule = computed(() => {
         if (schedule.value && selectedDate.value) {

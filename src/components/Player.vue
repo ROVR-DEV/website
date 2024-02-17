@@ -1,3 +1,6 @@
+<!-- eslint-disable vue/valid-template-root -->
+<template></template>
+
 <script setup>
     import { ref, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
