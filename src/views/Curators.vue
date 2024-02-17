@@ -7,12 +7,13 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, computed } from 'vue';
-    import axios from 'axios';
+    import { ref, computed } from 'vue';
+    import { useCuratorsStore } from '@/stores/curators';
     import Curator from '@/components/Curator.vue';
     import CuratorInfo from '@/components/CuratorInfo.vue';
 
-    const curators = ref(null);
+    const curatorsStore = useCuratorsStore();
+    const curators = ref(curatorsStore.curators);
     const showCuratorInfo = ref(false);
     const selectedCurator = ref(null);
 
@@ -26,19 +27,6 @@
         showCuratorInfo.value = false;
         selectedCurator.value = null;
     }
-
-    onMounted(async () => {
-        await axios.get('https://app.rovr.live/api/notifications/curators/all', {
-            headers: {
-                'Authorization': 'Bearer 1e10f824-8fb2-4951-9815-d84d7bb141f5',
-            }
-        }).then(e => {
-            curators.value = e.data;
-            console.log(curators.value);
-        }).catch(() => {
-            console.log('error getting curators');
-        });
-    });
 
     const sortedCurators = computed(() => {
         if (curators.value) {

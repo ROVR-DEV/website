@@ -30,6 +30,7 @@
 
 <script setup>
     import { ref, onMounted } from 'vue';
+    import { useUserStore }   from '@/stores/user';
     import { usePlayerStore } from '@/stores/player';
     import io           from 'socket.io-client';
     import Echo         from 'laravel-echo';
@@ -39,18 +40,17 @@
     import CurrentTrack from '@/components/CurrentTrack.vue';
     import CuratorInfo  from '@/components/CuratorInfo.vue';
 
+    const userStore = useUserStore();
     const radio  = ref(null);
     const showCuratorInfo = ref(false);
 
     const playerStore = usePlayerStore();
 
     onMounted(() => {
-        const GMT = window.Date().match(/GMT[+-]\d{2}/)[0];
-
         axios.get('https://app.rovr.live/api/all/now/playing', {
             headers: {
-                'X-TIMEZONE': GMT,
-                'Authorization': 'Bearer 1e10f824-8fb2-4951-9815-d84d7bb141f5',
+                'X-TIMEZONE': userStore.gmt,
+                'Authorization': `Bearer ${userStore.token}`,
             }
         }).then(e => {
             radio.value = e.data.live;
@@ -64,10 +64,10 @@
                 broadcaster: 'socket.io',
                 namespace: 'App.Events',
                 host: 'https://app.rovr.live/',
-                auth: { 'headers': { 'Authorization': 'Bearer ' + '1e10f824-8fb2-4951-9815-d84d7bb141f5' } }
+                auth: { 'headers': { 'Authorization': `Bearer ${userStore.token}`, } }
             });
 
-        window.Echo.private('playnow.' + GMT).listen('.playnow', e => {
+        window.Echo.private('playnow.' + userStore.gmt).listen('.playnow', e => {
             radio.value = e.playnow.live;
             console.log(radio.value);
         });

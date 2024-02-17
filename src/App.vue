@@ -22,19 +22,49 @@
 </template>
 
 <script setup>
-    import { ref, watch } from "vue";
+    import { onMounted, ref, watch } from "vue";
+    import { useUserStore } from "./stores/user";
     import { usePlayerStore } from '@/stores/player';
+    import { useCuratorsStore } from '@/stores/curators';
+    import { useScheduleStore } from '@/stores/schedule';
+    import axios from "axios";
     import Header from "@/components/Header.vue";
     import Footer from "@/components/Footer.vue";
     import jingleTrack from '@/assets/media/jingle.mp3';
 
     const error = ref(false);
 
+    const userStore = useUserStore();
     const playerStore = usePlayerStore();
+    const curatorsStore = useCuratorsStore();
+    const scheduleStore = useScheduleStore();
     const playerTime = ref(0);
 
     const player = ref();
     const jingle = new Audio(jingleTrack);
+
+    onMounted(async () => {
+        await axios.get('https://app.rovr.live/api/notifications/curators/all', {
+            headers: {
+                'Authorization': `Bearer ${userStore.token}`,
+            }
+        }).then(e => {
+            curatorsStore.loadCurators(e.data);
+        }).catch((e) => {
+            console.log(e);
+        });
+
+        await axios.get('https://app.rovr.live/api/notifications/reminders/all', {
+            headers: {
+                'X-TIMEZONE': userStore.gmt,
+                'Authorization': `Bearer ${userStore.token}`,
+            }
+        }).then(e => {
+            scheduleStore.loadSchedule(e.data);
+        }).catch((e) => {
+            console.log(e);
+        });
+    });
 
     watch(() => playerStore.stream_url, (state) => {
         if(state) createPlayer();

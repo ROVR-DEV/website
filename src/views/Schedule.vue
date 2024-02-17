@@ -20,33 +20,18 @@
 </template>
 
 <script setup>
-    import axios from 'axios';
-    import { ref, onMounted, computed } from 'vue';
+    import { ref, computed } from 'vue';
+    import { useScheduleStore } from '@/stores/schedule';
     import WeekDays from '@/components/schedule/WeekDays.vue';
     import ScheduleProgram from '@/components/schedule/ScheduleProgram.vue';
     import NowPlaying from '@/components/schedule/NowPlaying.vue';
     import CuratorInfo from '@/components/CuratorInfo.vue';
 
-    const schedule = ref(null);
+    const scheduleStore = useScheduleStore();
+    const schedule = ref(scheduleStore.schedule);
     const selectedDate = ref(null);
     const showCuratorInfo = ref(false);
     const selectedCurator = ref(null);
-
-    onMounted(async () => {
-        const GMT = window.Date().match(/GMT[+-]\d{2}/)[0];
-
-        await axios.get('https://app.rovr.live/api/notifications/reminders/all', {
-            headers: {
-                'X-TIMEZONE': GMT,
-                'Authorization': 'Bearer 1e10f824-8fb2-4951-9815-d84d7bb141f5',
-            }
-        }).then(e => {
-            schedule.value = e.data;
-            console.log(schedule.value);
-        }).catch(() => {
-            console.log('error getting curators');
-        });
-    });
 
     const filteredSchedule = computed(() => {
         if (schedule.value && selectedDate.value) {
