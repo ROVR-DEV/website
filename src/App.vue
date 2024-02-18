@@ -24,7 +24,7 @@
 </template>
 
 <script setup>
-    import { onMounted, ref } from "vue";
+    import { onMounted, onUnmounted, ref } from "vue";
     import { useUserStore } from "./stores/user";
     import { useCuratorsStore } from '@/stores/curators';
     import { useScheduleStore } from '@/stores/schedule';
@@ -39,7 +39,12 @@
     const curatorsStore = useCuratorsStore();
     const scheduleStore = useScheduleStore();
 
+    const currentHour = ref(new Date().getHours());
+    const intervalId  = ref(null);
+
     onMounted(async () => {
+        intervalId.value = setInterval(checkNewHour, 60000);
+
         await axios.get('https://app.rovr.live/api/notifications/curators/all', {
             headers: {
                 'Authorization': `Bearer ${userStore.token}`,
@@ -51,6 +56,23 @@
             console.log(e);
         });
 
+        getSchedule();
+    });
+
+    onUnmounted(() => {
+        clearInterval(intervalId.value);
+    });
+
+    const checkNewHour = () => {
+        const newHour = new Date().getHours();
+        if (newHour !== currentHour.value) {
+            currentHour.value = newHour;
+            scheduleStore.loadSchedule(null);
+            getSchedule();
+        }
+    }
+
+    const getSchedule = async () => {
         await axios.get('https://app.rovr.live/api/notifications/reminders/all', {
             headers: {
                 'X-TIMEZONE': userStore.gmt,
@@ -62,7 +84,7 @@
         }).catch((e) => {
             console.log(e);
         });
-    });
+    }
 </script>
 
 <style lang="scss" scoped>

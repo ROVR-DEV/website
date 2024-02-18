@@ -20,9 +20,11 @@
             </div>
             <current-track :title="radio.title" :artist="radio.artist" :label="radio.label"/>
         </div>
+        <!-- FOR DESKTOP -->
         <div class="radio__image" @mousedown="startScaling" @mouseup="stopScaling">
             <img :src="radio.curator.photo" :style="{ transform: photoScaleStyle }" alt="preview">
         </div>
+        <!-- FOR DESKTOP -->
     </section>
 
     <curator-info v-if="showCuratorInfo" :curator="radio.curator" @close="showCuratorInfo = false"/>
