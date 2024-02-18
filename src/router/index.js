@@ -1,8 +1,9 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import AboutView from "@/views/About.vue";
-import RadioView from "@/views/Radio.vue";
+import AboutView    from "@/views/About.vue";
+import RadioView    from "@/views/Radio.vue";
 import ScheduleView from "@/views/Schedule.vue";
 import CuratorsView from "@/views/Curators.vue";
+import TermsView    from "@/views/Terms.vue";
 
 const routes = [
   {
@@ -11,10 +12,9 @@ const routes = [
     component: AboutView,
   },
   {
-    path: "/radio",
+    path: "/",
     name: "radio",
     component: RadioView,
-    alias: "/"
   },
   {
     path: "/schedule",
@@ -25,6 +25,11 @@ const routes = [
     path: "/curators",
     name: "curators",
     component: CuratorsView,
+  },
+  {
+    path: "/terms",
+    name: "terms",
+    component: TermsView,
   },
 ];
 

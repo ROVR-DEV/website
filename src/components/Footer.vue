@@ -11,7 +11,7 @@
         </a>
         <a href="#" class="footer__privacy">Privacy Policy</a>
         <a href="#" class="footer__terms">Terms & Conditions</a>
-        <a href="#" class="footer__contact">Contact</a>
+        <a href="mailto:info@rovr.live" class="footer__contact">Contact</a>
         <p class="footer__copyright">© 2024 ROVR | All rights reserved</p>
         <p class="footer__copyright--mobile">© 2024 ROVR <br> All rights reserved</p>
     </footer>

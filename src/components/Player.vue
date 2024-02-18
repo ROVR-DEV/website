@@ -25,7 +25,7 @@
 
     const createPlayer = () => {
         player.value = new Audio(playerStore.stream_url);
-        player.value.addEventListener('canplaythrough', () => playerStore.setReady());
+        player.value.addEventListener('loadstart', () => playerStore.setReady());
         setInterval(() => playerTime.value++, 1000);
     }
 

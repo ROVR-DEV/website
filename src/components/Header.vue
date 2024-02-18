@@ -8,7 +8,12 @@
         <nav class="header__nav" :class="{'header__nav--active' : isBurgerActive}">
             <ul class="header__links">
                 <li v-for="link in links" :key="link.id" class="header__link" :class="`header__link-${link.name}`">
-                    <router-link :to="link.path" v-text="link.title" @click="isBurgerActive = false"/>
+                    <template v-if="link.name === 'contact'">
+                        <a href="mailto:info@rovr.live" v-text="link.name"/>
+                    </template>
+                    <template v-else>
+                        <router-link :to="{ name: link.name }" v-text="link.title" @click="isBurgerActive = false"/>
+                    </template>
                 </li>
             </ul>
         </nav>
@@ -33,37 +38,31 @@
             id: 0,
             name: "radio",
             title: "radio",
-            path: "/radio"
         },
         {
             id: 1,
             name: "about",
             title: "about",
-            path: "/about"
         },
         {
             id: 2,
             name: "schedule",
             title: "schedule",
-            path: "/schedule"
         },
         {
             id: 3,
             name: "curators",
             title: "curators",
-            path: "/curators"
         },
         {
             id: 4,
             name: "contact",
             title: "contact",
-            path: "/contacts"
         },
         {
             id: 5,
             name: "terms",
             title: "Privacy Policy  |  Terms & Conditions",
-            path: "/terms"
         }
     ]
 

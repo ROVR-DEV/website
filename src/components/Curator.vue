@@ -69,9 +69,17 @@
                 @include font-size(14px);
             }
         }
-        &:hover {
-            background-color: $primary;
-            color: $black;
+        @media (hover: hover) {
+            &:hover {
+                background-color: $primary;
+                color: $black;
+            }
+        }
+        @media (hover: none) {
+            &:active {
+                background-color: $primary;
+                color: $black;
+            }
         }
     }
 </style>

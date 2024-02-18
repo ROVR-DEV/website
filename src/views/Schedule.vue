@@ -1,5 +1,5 @@
 <template>
-    <section class="schedule" v-if="schedule" :class="{ 'nowplaying--hidden': currentDate !== selectedDate }">
+    <section class="schedule" v-if="schedule" :class="{ 'nowplaying--hidden': (selectedDate && currentDate !== selectedDate.fullDate) }">
         <div class="schedule__plan" ref="scrollParent">
             <week-days @day-picked="date => loadDaySchedule(date)"/>
 
@@ -10,6 +10,11 @@
                     :program="program"
                     @show-curator-info="curator => showCuratorInfoHandler(curator)"/>
             </div>
+
+            <div
+                v-else-if="(selectedDate && !filteredSchedule.length > 0)"
+                class="schedule__empty"
+                v-text="`That's it for ${selectedDate.name}!`"/>
         </div>
         <div class="schedule__current">
             <now-playing :program="schedule[0]" @show-curator-info="curator => showCuratorInfoHandler(curator)"/>
@@ -40,7 +45,7 @@
 
     const filteredSchedule = computed(() => {
         if (schedule.value && selectedDate.value) {
-            return schedule.value.filter(program => program.start_time.includes(selectedDate.value) && !program.now_playing);
+            return schedule.value.filter(program => program.start_time.includes(selectedDate.value.fullDate) && !program.now_playing);
         } else {
             return [];
         }
@@ -71,7 +76,8 @@
     .schedule {
         display: flex;
         &__plan {
-            flex: 0 1 40%;
+            @include flex-column;
+            flex: 0 1 45%;
             background-color: $primary;
             overflow-y: auto;
             overflow-x: hidden;
@@ -83,13 +89,17 @@
         &__programs {
             position: relative;
             z-index: 1;
-            padding: 0 3.625rem 1.5rem 3.625rem;
-            @media screen and (max-width: 1800px) {
-                padding: 0 2rem 2rem 2rem;
-            }
+            padding: 0 3.5rem 1.5rem 3.5rem;
+        }
+        &__empty {
+            @include flex-center;
+            @include font-size(24px);
+            flex: auto;
+            font-weight: bold;
+            font-style: italic;
         }
         &__current {
-            flex: 0 1 60%;
+            flex: 0 1 55%;
             display: flex;
             @media screen and (max-width: 1600px) {
                 flex: 0 1 50%;

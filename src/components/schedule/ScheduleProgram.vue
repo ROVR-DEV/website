@@ -63,10 +63,10 @@
             margin-bottom: 3.5rem;
         }
         &__preview {
-            min-width: 16rem;
-            max-width: 16rem;
+            min-width: 14rem;
+            max-width: 14rem;
             aspect-ratio: 1;
-            margin-right: 2rem;
+            margin-right: 1.25rem;
             position: relative;
             overflow: hidden;
             &::after {
@@ -76,13 +76,8 @@
                 left: 0;
                 width: 100%;
                 height: 100%;
-                background-color: rgba($color: $black, $alpha: 0.3);
+                background-color: rgba($color: $black, $alpha: 0.1);
                 z-index: 2;
-            }
-            @media screen and (max-width: 1600px) {
-                margin-right: 1.5rem;
-                min-width: 14rem;
-                max-width: 14rem;
             }
         }
         &__photo {
@@ -91,11 +86,11 @@
             object-fit: cover;
             position: absolute;
             z-index: 1;
-            transform: scale(1.075);
+            transform: scale(1.0625);
         }
         &__time {
             @include flex(row, flex-end, flex-start);
-            @include font-size(30px);
+            @include font-size(24px);
             margin: 0;
             position: absolute;
             z-index: 3;
@@ -104,9 +99,9 @@
             color: $primary;
             line-height: 1;
             strong {
-                @include font-size(80px);
+                @include font-size(62px);
                 display: block;
-                line-height: 3.125rem;
+                line-height: 2.5rem;
                 margin-right: 0.25rem;
                 
             }
@@ -118,8 +113,11 @@
                 }
             }
         }
+        &__info {
+            padding-top: 0.75rem;
+        }
         &__title {
-            @include font-size(48px);
+            @include font-size(32px);
             text-transform: uppercase;
             font-weight: bold;
             margin: 0 0 0.5rem;
@@ -130,14 +128,14 @@
             }
         }
         &__author {
-            @include font-size(24px);
+            @include font-size(20px);
             display: block;
             font-weight: bold;
-            margin-bottom: 1.25rem;
+            margin-bottom: 1rem;
             em {
-                @include font-size(36px);
+                @include font-size(30px);
                 display: inline-block;
-                margin-left: 0.5rem;
+                margin-left: 0.25rem;
                 cursor: pointer;
             }
             @media screen and (max-width: 1600px) {
@@ -148,7 +146,7 @@
             }
         }
         &__description {
-            @include font-size(20px);
+            @include font-size(16px);
             margin: 0;
             line-height: 1.2;
             font-weight: bold;

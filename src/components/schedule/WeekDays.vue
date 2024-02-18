@@ -5,8 +5,8 @@
             v-for="(day, index) in week"
             :key="index"
             :class="{ 'schedule__day--active': index === currentDayIndex }"
-            @click="currentDayIndex = index; emit('day-picked', day.fullDate);">
-            <span class="schedule__day-name" v-text="day.name"/>
+            @click="currentDayIndex = index; emit('day-picked', day);">
+            <span class="schedule__day-name" v-text="day.name.slice(0, 3)"/>
             <div class="schedule__day-date" v-text="day.date"/>
         </li>
     </ul>
@@ -43,11 +43,11 @@
 
         week.value = daysOfWeek;
 
-        emit('day-picked', daysOfWeek[currentDayIndex.value].fullDate);
+        emit('day-picked', daysOfWeek[currentDayIndex.value]);
     });
 
     const getShortDayName = (date) => {
-        const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         return daysOfWeek[date.getDay()];
     }
 </script>
@@ -55,17 +55,13 @@
 <style lang="scss" scoped>
     .schedule__week {
         @include flex-center-sb;
-        margin-bottom: 3.5rem;
+        margin-bottom: 0.5rem;
         position: sticky;
         top: 0;
         left: 0;
         background-color: $primary;
-        padding: 1.5rem 3.625rem;
+        padding: 1.5rem 3.5rem;
         z-index: 2;
-        @media screen and (max-width: 1800px) {
-            padding: 2rem;
-            margin-bottom: 1rem;
-        }
         .schedule__day {
             text-align: center;
             cursor: pointer;
