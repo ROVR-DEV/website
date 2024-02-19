@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-    import { ref, computed, watch } from 'vue';
+    import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
     import { useCuratorsStore } from '@/stores/curators';
     import Curator from '@/components/Curator.vue';
     import CuratorInfo from '@/components/CuratorInfo.vue';
@@ -16,6 +16,10 @@
     const curators = ref(curatorsStore.curators);
     const showCuratorInfo = ref(false);
     const selectedCurator = ref(null);
+
+    // saving scroll position when closing curator-info
+    const scrollPosition  = ref(0);
+    const main = document.querySelector('.main');
 
     watch(() => curatorsStore.curators, (state) => {
         if (state) curators.value = state;
@@ -30,6 +34,11 @@
     const closeCuratorInfo = () => {
         showCuratorInfo.value = false;
         selectedCurator.value = null;
+        
+        // setting scroll position
+        nextTick(() => {
+            main.scrollTop = scrollPosition.value;
+        });
     }
 
     const sortedCurators = computed(() => {
@@ -43,6 +52,18 @@
             return [];
         }
     });
+
+    onMounted(() => {
+        main.addEventListener('scroll', saveScrollPosition);
+    });
+
+    onUnmounted(() => {
+        main.removeEventListener('scroll');
+    });
+
+    const saveScrollPosition = () => {
+        if(!showCuratorInfo.value) scrollPosition.value = main.scrollTop;
+    }
 </script>
 
 <style lang="scss" scoped>

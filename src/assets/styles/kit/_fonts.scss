@@ -27,8 +27,15 @@
 }
 
 @font-face {
-    font-family: 'Azeret Mono';
-    src: url('../fonts/Azeret-Mono-Thin.woff2') format('woff2');
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('../fonts/Roboto-Thin.woff2') format('woff2');
     font-weight: 100;
     font-style: normal;
 }

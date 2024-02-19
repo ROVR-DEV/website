@@ -78,6 +78,8 @@
         margin-left: 4rem;
         span {
             @include font-size(92px);
+            font-family: 'Roboto', monospace;
+            font-weight: 300;
             display: block;
             font-weight: normal;
             line-height: 1;

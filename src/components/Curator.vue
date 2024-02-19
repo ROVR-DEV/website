@@ -1,7 +1,8 @@
 <template>
     <div class="curator">
         <div class="curator__photo">
-            <img :src="curator.photo" :alt="curator.name">
+            <img v-if="curator.photo" :src="curator.photo" :alt="curator.name">
+            <img v-else src="@/assets/images/icons/user.svg" class="curator__photo--empty" :alt="curator.name">
         </div>
         <div class="curator__info">
             <p class="curator__name" v-text="curator.name" :title="curator.name"/>
@@ -29,6 +30,7 @@
         transition: $transition;
         overflow: hidden;
         &__photo {
+            @include flex-center;
             background-color: $primary;
             min-width: 10.75rem;
             max-width: 10.75rem;
@@ -38,6 +40,12 @@
                 min-width: 7.5rem;
                 max-width: 7.5rem;
                 margin-right: 1rem;
+                &--empty {
+                    width: 3rem;
+                }
+            }
+            img {
+                transform: scale(1.0325);
             }
         }
         &__info {

@@ -1,6 +1,6 @@
 <template>
     <footer class="footer">
-        <a href="#" class="footer__instagram"><img src="@/assets/images/icons/instagram.svg" alt="instagram"></a>
+        <a href="https://www.instagram.com/rovr_live/" target="_blank" class="footer__instagram"><img src="@/assets/images/icons/instagram.svg" alt="instagram"></a>
         <a href="#" class="footer__appstore">
             <img src="@/assets/images/icons/app-store.svg" alt="App Store">
             App Store

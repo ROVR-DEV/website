@@ -1,9 +1,9 @@
 <!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
     <header class="header">
-        <div class="header__logo" v-press="{ time: 200, scale: 0.97 }" @click="redirect(200)">
+        <router-link class="header__logo" to="/">
             <img src="@/assets/images/logo.svg" alt="Logo">
-        </div>
+        </router-link>
 
         <nav class="header__nav" :class="{'header__nav--active' : isBurgerActive}">
             <ul class="header__links">
@@ -29,7 +29,6 @@
 
 <script setup>
     import { ref } from 'vue';
-    import router from '@/router';
 
     const isBurgerActive = ref(false);
 
@@ -65,10 +64,6 @@
             title: "Privacy Policy  |  Terms & Conditions",
         }
     ]
-
-    const redirect = (delay) => {
-        setTimeout(() => router.push({ name: 'radio' }), delay);
-    }
 </script>
 
 <style lang="scss" scoped>

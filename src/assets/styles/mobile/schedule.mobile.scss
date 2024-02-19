@@ -128,6 +128,7 @@
                     .player-button {
                         grid-column: 1/2;
                         width: 5rem;
+                        margin-top: auto;
                         &::after {
                             width: 2rem;
                             height: 2rem;
