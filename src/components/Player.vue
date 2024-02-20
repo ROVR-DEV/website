@@ -6,9 +6,8 @@
     import { usePlayerStore } from '@/stores/player';
     import jingleTrack from '@/assets/media/jingle.mp3';
 
-    const player = ref();
+    const player = ref(null);
     const playerStore = usePlayerStore();
-    const playerTime = ref(0);
     const jingle = new Audio(jingleTrack);
 
     watch(() => playerStore.stream_url, (state) => {
@@ -26,12 +25,12 @@
     const createPlayer = () => {
         player.value = new Audio(playerStore.stream_url);
         player.value.addEventListener('loadstart', () => playerStore.setReady());
-        setInterval(() => playerTime.value++, 1000);
     }
 
     const play = () => {
+        let stream = `${playerStore.stream_url}?hash=${(new Date()).getTime()}`;
+        player.value.load(stream);
         player.value.play();
-        player.value.currentTime = playerTime.value;
     }
 
     const pause = () => {
@@ -49,7 +48,6 @@
                 player.value.load(playerStore.stream_url);
                 player.value.play();
                 player.value.volume = 1;
-                playerTime.value = 0;
                 playerStore.setFinished(false);
             }
         }

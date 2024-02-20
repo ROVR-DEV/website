@@ -9,16 +9,30 @@
             <span class="schedule__day-name" v-text="day.name.slice(0, 3)"/>
             <div class="schedule__day-date" v-text="day.date"/>
         </li>
+
+        <div class="schedule__loader" v-if="loading">
+            <div class="ball-beat">
+                <div></div><div></div><div></div>
+            </div>
+        </div>
     </ul>
 </template>
 
 <script setup>
     import { ref, onMounted } from 'vue';
+    import 'loaders.css';
 
     const emit = defineEmits(['day-picked']);
 
     const week = ref([]);
     const currentDayIndex = ref(-1);
+
+    defineProps({
+        loading: {
+            type: Boolean,
+            required: true
+        }
+    });
 
     onMounted(() => {
         const currentDate = new Date();
@@ -76,7 +90,6 @@
             &-date {
                 @include flex-center;
                 @include font-size(24px);
-                //font-family: 'Azeret Mono', monospace;
                 width: 3.5rem;
                 aspect-ratio: 1;
                 border-radius: 50%;
@@ -93,6 +106,19 @@
                     background-color: transparent;
                 }
             }
+        }
+    }
+    .schedule__loader {
+        @include flex-center;
+        width: 100%;
+        position: absolute;
+        bottom: -0.325rem;
+        left: 0;
+        z-index: 3;
+        .ball-beat > div {
+            background-color: $black;
+            width: 0.75rem;
+            height: 0.75rem;
         }
     }
 </style>

@@ -14,7 +14,7 @@
 
                 <!-- FOR MOBILE -->
                 <div class="show__cover" @touchstart="startScaling" @touchend="stopScaling">
-                    <img :src="radio.curator.photo" :style="{ transform: photoScaleStyle }" class="" alt="preview">
+                    <img :src="radio.show.cover" :style="{ transform: photoScaleStyle }" class="" alt="preview">
                 </div>
                 <!-- FOR MOBILE -->
             </div>
@@ -22,7 +22,7 @@
         </div>
         <!-- FOR DESKTOP -->
         <div class="radio__image" @mousedown="startScaling" @mouseup="stopScaling">
-            <img :src="radio.curator.photo" :style="{ transform: photoScaleStyle }" alt="preview">
+            <img :src="radio.show.cover" :style="{ transform: photoScaleStyle }" alt="preview">
         </div>
         <!-- FOR DESKTOP -->
     </section>

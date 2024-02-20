@@ -41,6 +41,9 @@
             &__plan {
                 flex: auto;
             }
+            &__loader {
+                bottom: 0;
+            }
             &__empty {
                 position: absolute;
                 top: 27.25rem;

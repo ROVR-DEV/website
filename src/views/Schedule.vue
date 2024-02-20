@@ -1,7 +1,7 @@
 <template>
     <section class="schedule" v-if="schedule" :class="{ 'nowplaying--hidden': (selectedDate && currentDate !== selectedDate.fullDate) }">
         <div class="schedule__plan" ref="scrollParent">
-            <week-days @day-picked="date => loadDaySchedule(date)"/>
+            <week-days @day-picked="date => loadDaySchedule(date)" :loading="preloader"/>
 
             <div v-if="filteredSchedule.length > 0" class="schedule__programs">
                 <schedule-program
@@ -38,9 +38,15 @@
     const showCuratorInfo = ref(false);
     const selectedCurator = ref(null);
     const scrollParent = ref(null);
+    const preloader = ref(false);
 
     watch(() => scheduleStore.schedule, (state) => {
-        if (state) schedule.value = state;
+        if(state) {
+            schedule.value = state;
+            preloader.value = false;
+        } else {
+            preloader.value = true;
+        }
     });
 
     const filteredSchedule = computed(() => {

@@ -52,21 +52,20 @@
                     }
                     &__title {
                         @include font-size(42px);
-                        margin-bottom: 0.5rem;
+                        margin-bottom: 0.625rem;
                         letter-spacing: 0.5px;
                     }
                     &__author {
-                        @include font-size(20px);
-                        margin-bottom: 1.25rem;
+                        @include font-size(22px);
+                        margin-bottom: 1.325rem;
                         em {
-                            @include font-size(38px);
+                            @include font-size(40px);
                             margin-left: 0.25rem;
                         }
                     }
                     &__description {
-                        @include font-size(18px);
+                        @include font-size(19px);
                         margin-bottom: 0;
-                        max-width: 23rem;
                     }
                     &__player {
                         margin-top: 1rem;
