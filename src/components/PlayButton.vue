@@ -4,7 +4,8 @@
         :class="{ 
             'player-button--stop': playerStore.isPlaying,
             'player-button--play': !playerStore.isPlaying,
-            'player-button--ready': playerStore.isPlayerReady 
+            'player-button--ready': playerStore.isPlayerReady,
+            'player-button--disabled' : isTouchEventDisabled
         }"
         v-press="{ time: 150, scale: 0.96 }"
         @click="play(150)"/>
@@ -12,13 +13,17 @@
 
 <script setup>
     import { usePlayerStore } from '@/stores/player';
+import { ref } from 'vue';
 
     const playerStore = usePlayerStore();
+    const isTouchEventDisabled = ref(false);
 
     const play = (delay) => {
         if(playerStore.isPlayerReady) {
             setTimeout(() => playerStore.togglePlaying(), delay);
         }
+        isTouchEventDisabled.value = true;
+        setTimeout(() => isTouchEventDisabled.value = false, 1000);
     }
 </script>
 
@@ -52,6 +57,9 @@
         &--ready {
             filter: brightness(1);
             cursor: pointer;
+        }
+        &--disabled {
+            pointer-events: none;
         }
     }
 </style>

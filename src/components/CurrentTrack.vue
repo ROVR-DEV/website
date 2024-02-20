@@ -1,16 +1,55 @@
 <template>
     <div class="current-track">
         <p>Track:</p>
-        <div class="current-track__info">
-            <span v-text="artist" class="current-track__artist"/>
-            <span v-text="title" class="current-track__title"/>
-            <em v-text="label" class="current-track__label"/>
+        <div
+            class="current-track__info"
+            :class="{ 'current-track__info--fade-in': isAnimating && playerStore.isPlaying, 'current-track__info--fade-out': isAnimating && !playerStore.isPlaying }"
+            :style="opacity"
+            @animationend="isAnimating = false;">
+                <span v-text="trackArtist" class="current-track__artist"/>
+                <span v-text="trackTitle" class="current-track__title"/>
+                <em v-text="trackLabel" class="current-track__label"/>
         </div>
     </div>
 </template>
 
 <script setup>
-    defineProps({
+    import { usePlayerStore } from '@/stores/player';
+    import { ref, watch, computed } from 'vue';
+
+    const playerStore = usePlayerStore();
+    const isAnimating = ref(false);
+
+    const trackArtist = ref('Artist');
+    const trackTitle  = ref('Title');
+    const trackLabel  = ref('Label');
+
+    watch(() => playerStore.isPlaying, (state) => {
+        isAnimating.value = true;
+
+        if(state) {
+            trackArtist.value = props.artist;
+            trackTitle.value  = props.title;
+            trackLabel.value  = props.label;
+        } else {
+            console.log('end');
+            setTimeout(() => {
+                trackArtist.value = 'Artist';
+                trackTitle.value  = 'Title';
+                trackLabel.value  = 'Label';
+            }, 800);
+        }
+    });
+
+    const opacity = computed(() => {
+        if (isAnimating.value) {
+            return { opacity: playerStore.isPlaying ? '1' : '0.32' };
+        } else {
+            return { opacity: playerStore.isPlaying ? '1' : '0.32' };
+        }
+    });
+
+    const props = defineProps({
         artist: {
             type: String,
             required: true,
@@ -42,6 +81,13 @@
             margin: 0 3rem 0 0;
         }
         &__info {
+            opacity: 0.32;
+            &--fade-in {
+                animation: fade-in 1.5s linear;
+            }
+            &--fade-out {
+                animation: fade-out 1.5s linear;
+            }
             & > * {
                 @include font-size(20px);
                 display: block;
@@ -57,6 +103,26 @@
         &__label {
             font-family: 'GT Alpina', sans-serif;
             font-style: italic;
+        }
+    }
+
+    @keyframes fade-in {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    @keyframes fade-out {
+        0% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 0.32;
         }
     }
 </style>
