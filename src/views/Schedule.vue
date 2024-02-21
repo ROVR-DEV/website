@@ -15,9 +15,10 @@
                 v-else-if="(selectedDate && !filteredSchedule.length > 0)"
                 class="schedule__empty"
                 v-text="`That's it for ${selectedDate.name}!`"/>
-        </div>
-        <div class="schedule__current">
-            <now-playing :program="schedule[0]" @show-curator-info="curator => showCuratorInfoHandler(curator)"/>
+
+            <div class="schedule__current">
+                <now-playing :program="schedule[0]" @show-curator-info="curator => showCuratorInfoHandler(curator)"/>
+            </div>
         </div>
     </section>
 
@@ -80,22 +81,21 @@
 
 <style lang="scss" scoped>
     .schedule {
-        display: flex;
         &__plan {
-            @include flex-column;
-            flex: 0 1 45%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             background-color: $primary;
-            overflow-y: auto;
-            overflow-x: hidden;
+            overflow: hidden;
             position: relative;
-            @media screen and (max-width: 1600px) {
-                flex: 0 1 50%;
-            }
+            grid-template-rows: repeat(2, auto);
+            height: 100%;
         }
         &__programs {
+            grid-row: 2/3;
             position: relative;
             z-index: 1;
             padding: 0 3.5rem 1.5rem 3.5rem;
+            overflow-y: auto;
         }
         &__empty {
             @include flex-center;
@@ -105,11 +105,9 @@
             font-style: italic;
         }
         &__current {
-            flex: 0 1 55%;
             display: flex;
-            @media screen and (max-width: 1600px) {
-                flex: 0 1 50%;
-            }
+            grid-column: 2/3;
+            grid-row: 1/3;
         }
     }
 </style>

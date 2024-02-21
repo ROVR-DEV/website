@@ -14,20 +14,21 @@
 @media screen and (max-width: 768px) {
     #base-layout {
         .schedule {
-            flex-direction: column;
-            position: relative;
+            overflow: hidden;
             &.nowplaying--hidden {
                 .schedule__current {
                     display: none;
                 }
                 .schedule__programs {
-                    top: 9.25rem;
                     padding: 1rem;
+                }
+                .schedule__plan {
+                    grid-template-rows: 85px auto;
                 }
             }
             &__week {
+                grid-row: 1;
                 margin-bottom: 0;
-                height: 9.25rem;
             }
             &__day {
                 &-name {
@@ -39,20 +40,16 @@
                 }
             }
             &__plan {
-                flex: auto;
+                grid-template-columns: 1fr;
+                grid-template-rows: 85px 200px auto;
+                overflow-y: hidden;
+                height: 100%;
             }
             &__loader {
                 bottom: 0;
             }
-            &__empty {
-                position: absolute;
-                top: 27.25rem;
-                width: 100%;
-                height: calc(100% - 27.25rem);
-            }
             &__programs {
-                position: absolute;
-                top: 27.25rem;
+                grid-row: 3;
                 background-color: $primary;
                 width: 100%;
                 .schedule-program {
@@ -83,18 +80,20 @@
                 }
             }
             &__current {
-                position: absolute;
-                top: 9.25rem;
-                left: 0;
+                grid-column: 1;
+                grid-row: 2;
                 width: 100%;
-                height: 18rem;
                 .schedule-program {
                     padding: 2rem 1rem;
                     display: grid;
                     grid-template-columns: auto auto;
-                    grid-gap: 0 2rem;
+                    grid-gap: 1rem 1.5rem;
+                    overflow: hidden;
+                    &__photo {
+                        transform: scale(1.025);
+                    }
                     &__nowplaying {
-                        margin-bottom: 1.5rem;
+                        margin-bottom: 1rem;
                     }
                     &__time {
                         @include font-size(18px);
@@ -110,13 +109,14 @@
                         @include font-size(38px);
                         grid-column: 2/3;
                         grid-row: 2/3;
+                        margin-bottom: 0;
                     }
                     &__author {
                         @include font-size(18px);
                         grid-column: 2/3;
                         grid-row: 3/4;
                         margin-bottom: 0;
-                        margin-top: -0.25rem;
+                        margin-top: -1rem;
                         em {
                             @include font-size(32px);
                         }
@@ -126,7 +126,7 @@
                         grid-column: 2/3;
                         grid-row: 3/4;
                         margin-bottom: 0;
-                        margin-top: 3rem;
+                        margin-top: 2.5rem;
                     }
                     .player-button {
                         grid-column: 1/2;

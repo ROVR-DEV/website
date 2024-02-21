@@ -1,6 +1,6 @@
 <template>
     <div class="schedule-program" v-if="program">
-        <img :src="program.curator.photo" class="schedule-program__photo" alt="cover">
+        <img :src="program.show.cover" class="schedule-program__photo" alt="cover">
         <span class="schedule-program__nowplaying">now playing</span>
         <h2 class="schedule-program__time">
             <strong v-text="getTime('hours', program.start_time)"/>

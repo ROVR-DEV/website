@@ -70,12 +70,9 @@
     .schedule__week {
         @include flex-center-sb;
         margin-bottom: 0.5rem;
-        position: sticky;
-        top: 0;
-        left: 0;
         background-color: $primary;
         padding: 1.5rem 3.5rem;
-        z-index: 2;
+        grid-row: 1/2;
         .schedule__day {
             text-align: center;
             cursor: pointer;
