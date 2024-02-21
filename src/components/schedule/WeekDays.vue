@@ -69,7 +69,6 @@
 <style lang="scss" scoped>
     .schedule__week {
         @include flex-center-sb;
-        margin-bottom: 0.5rem;
         background-color: $primary;
         padding: 1.5rem 3.5rem;
         grid-row: 1/2;

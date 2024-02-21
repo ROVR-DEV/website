@@ -83,11 +83,12 @@
     .schedule {
         &__plan {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: 45% 55%;
             background-color: $primary;
             overflow: hidden;
             position: relative;
-            grid-template-rows: repeat(2, auto);
+            grid-template-rows: 8.75rem auto;
+            grid-row-gap: 0.5rem;
             height: 100%;
         }
         &__programs {
