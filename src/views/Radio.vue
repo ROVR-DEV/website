@@ -14,7 +14,7 @@
 
                 <!-- FOR MOBILE -->
                 <div class="show__cover" @touchstart="startScaling" @touchend="stopScaling">
-                    <img :src="radio.show.cover" :style="{ transform: photoScaleStyle }" class="" alt="preview">
+                    <img :src="radioCover" :style="{ transform: photoScaleStyle }" class="" alt="preview">
                 </div>
                 <!-- FOR MOBILE -->
             </div>
@@ -22,7 +22,7 @@
         </div>
         <!-- FOR DESKTOP -->
         <div class="radio__image" @mousedown="startScaling" @mouseup="stopScaling">
-            <img :src="radio.show.cover" :style="{ transform: photoScaleStyle }" alt="preview">
+            <img :src="radioCover" :style="{ transform: photoScaleStyle }" alt="preview">
         </div>
         <!-- FOR DESKTOP -->
     </section>
@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, computed } from 'vue';
     import { useUserStore }   from '@/stores/user';
     import { usePlayerStore } from '@/stores/player';
     import io           from 'socket.io-client';
@@ -78,6 +78,16 @@
     const showCuratorInfoHandler = (delay) => {
         setTimeout(() => showCuratorInfo.value = true, delay);
     }
+
+    // replacing radio cover (backend bug)
+    const radioCover = computed(() => {
+        const replaceCover = {
+            localhost: 'app.rovr.live',
+            lp: 'app'
+        }
+
+        return radio.value ? radio.value.show.cover.replace(/localhost|lp/gi, (matched) => replaceCover[matched]) : "";
+    });
 
     // image scale
     const isScaling = ref(false);

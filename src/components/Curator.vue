@@ -50,6 +50,8 @@
         }
         &__info {
             width: calc(100% - 10.75rem - 1.5rem);
+            position: relative;
+            top: -0.825rem;
             @media screen and (max-width: 768px) {
                 width: calc(100% - 7.5rem - 1rem);
             }

@@ -3,7 +3,6 @@
         <div class="container">
             <div class="about__content">
                 <div class="about__text">
-                    <p>RADIO REINVENTED</p>
                     <p>24/7 MUSIC</p>
                     <p>NO INTERRUPTIONS</p>
                     <p>QUALITY SELECTORS</p>

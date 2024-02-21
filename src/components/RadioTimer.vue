@@ -1,5 +1,5 @@
 <template>
-    <div class="radio__timer">
+    <div class="radio__timer" :class="{'radio__timer--active' : playerStore.isPlaying}">
         <span
             v-text="timer"
             @click="switchTimerMode"/>
@@ -84,6 +84,12 @@
             font-weight: normal;
             line-height: 1;
             cursor: pointer;
+            opacity: 0.32;
+        }
+        &--active {
+            span {
+                opacity: 1;
+            }
         }
     }
 </style>
