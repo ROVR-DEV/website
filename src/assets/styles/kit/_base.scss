@@ -27,6 +27,11 @@ body {
     position: relative;
     min-width: 320px;
     background: $black;
+    &.webview {
+        header, footer {
+            display: none !important;
+        }
+    }
 }
 
 ul {

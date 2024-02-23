@@ -3,6 +3,7 @@ import AboutView    from "@/views/About.vue";
 import RadioView    from "@/views/Radio.vue";
 import ScheduleView from "@/views/Schedule.vue";
 import CuratorsView from "@/views/Curators.vue";
+import ShopView     from "@/views/Shop.vue";
 import TermsView    from "@/views/Terms.vue";
 
 const routes = [
@@ -25,6 +26,11 @@ const routes = [
     path: "/curators",
     name: "curators",
     component: CuratorsView,
+  },
+  {
+    path: "/shop",
+    name: "shop",
+    component: ShopView,
   },
   {
     path: "/terms",

@@ -62,7 +62,12 @@
             id: 5,
             name: "terms",
             title: "Privacy Policy  |  Terms & Conditions",
-        }
+        },
+        {
+            id: 6,
+            name: "shop",
+            title: "shop",
+        },
     ]
 </script>
 
