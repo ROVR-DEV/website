@@ -84,7 +84,6 @@
         }
         &__info {
             opacity: 0.32;
-            max-width: 250px;
             &--fade-in {
                 animation: fade-in 1.5s linear;
             }

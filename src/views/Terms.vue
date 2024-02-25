@@ -161,7 +161,19 @@
 
             <div class="terms__block">
                 <h2>15. Customer Support</h2>
-                <p>For any account related questions or customer support, please email us at info@rovr.live.</p>
+                <p>For any account related questions or customer support, please email us at <a href="mailto:info@rovr.live">info@rovr.live</a>.</p>
+            </div>
+
+            <div class="terms__partners">
+                <div class="partner">
+                    <img src="@/assets/images/sgae-logo.png" alt="sgae">
+                </div>
+                <div class="partner">
+                    <img src="@/assets/images/acum-logo.png" alt="acum">
+                </div>
+                <div class="partner">
+                    <img src="@/assets/images/tono-logo.png" alt="tono">
+                </div>
             </div>
         </div>
     </section>
@@ -208,7 +220,7 @@
                 }
             }
             p {
-                line-height: 1.2;
+                line-height: 1.5;
                 strong {
                     font-weight: bold;
                 }
@@ -217,6 +229,22 @@
                 }
                 @media screen and (max-width: 768px) {
                     @include font-size(16px);
+                }
+            }
+        }
+        &__partners {
+            @include flex-center-vert;
+            margin-top: 2rem;
+            .partner {
+                background-color: $primary;
+                padding: 1rem;
+                &:not(:last-child) {
+                    margin-right: 1rem;
+                }
+                img {
+                    width: 10rem;
+                    height: 5rem;
+                    object-fit: contain;
                 }
             }
         }

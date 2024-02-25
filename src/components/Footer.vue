@@ -9,7 +9,7 @@
             <img src="@/assets/images/icons/google-play.svg" alt="Google Play">
             Google Play
         </a>
-        <a href="#" class="footer__privacy">Privacy Policy</a>
+        <router-link to="/privacy" class="footer__privacy">Privacy Policy</router-link>
         <router-link to="/terms" class="footer__terms">Terms & Conditions</router-link>
         <a href="mailto:info@rovr.live" class="footer__contact">Contact</a>
         <p class="footer__copyright">© 2024 ROVR | All rights reserved</p>

@@ -78,6 +78,9 @@
                 .current-track {
                     padding: 1.5rem 2rem;
                     height: 9.25rem;
+                    &__info {
+                        max-width: 250px;
+                    }
                 }
             }
         }

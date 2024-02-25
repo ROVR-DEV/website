@@ -5,6 +5,7 @@ import ScheduleView from "@/views/Schedule.vue";
 import CuratorsView from "@/views/Curators.vue";
 import ShopView     from "@/views/Shop.vue";
 import TermsView    from "@/views/Terms.vue";
+import PrivacyView  from "@/views/Privacy.vue";
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: "/terms",
     name: "terms",
     component: TermsView,
+  },
+  {
+    path: "/privacy",
+    name: "privacy",
+    component: PrivacyView,
   },
 ];
 
