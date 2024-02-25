@@ -1,9 +1,13 @@
 <!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
     <header class="header">
-        <router-link class="header__logo" to="/">
-            <img src="@/assets/images/logo.svg" alt="Logo">
-        </router-link>
+        <div @click="router.push({name:'radio'})" class="header__logo">
+            <img ref="logo" :src="logoImage" alt="Logo">
+        </div>
+
+        <transition name="fade">
+            <sticky-player v-if="playerStore.show_sticky_player"/>
+        </transition>
 
         <nav class="header__nav" :class="{'header__nav--active' : isBurgerActive}">
             <ul class="header__links">
@@ -28,9 +32,76 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref, watch } from 'vue';
+    import { usePlayerStore } from '@/stores/player';
+    import { useRouter, useRoute } from 'vue-router';
+    import StickyPlayer from './StickyPlayer.vue';
 
+    import logoImage from '@/assets/images/logo/logo.svg';
+    import logoSticky from '@/assets/images/logo/logo_sticky.svg';
+    import logoImageAnimated from '@/assets/images/logo/player_logo.gif';
+    import logoImageAnimatedOff from '@/assets/images/logo/player_logo_off.gif';
+
+    const router = useRouter();
+    const route  = useRoute();
+
+    const playerStore = usePlayerStore();
     const isBurgerActive = ref(false);
+    const logo = ref(null);
+
+    watch(route, () => {
+        if (router.currentRoute.value.name !== 'radio' && playerStore.isPlaying) {
+            if (!logo.value.parentNode.classList.contains('header__logo--sticky')) {
+                logo.value.setAttribute('src', logoImageAnimated);
+
+                logo.value.onload = () => {
+                    setTimeout(() => {
+                        playerStore.toggleStickyPlayer(true);
+
+                        if (!logo.value.parentNode.classList.contains('header__logo--sticky')) {
+                            logo.value.setAttribute('src', logoSticky);
+                            logo.value.parentNode.classList.add('header__logo--sticky');
+                        }
+                    }, 900);
+                };
+            }
+        } else {
+            playerStore.toggleStickyPlayer(false);
+
+            if (playerStore.isPlaying) {
+                setTimeout(() => {
+                    logo.value.setAttribute('src', logoImageAnimatedOff);
+                    logo.value.onload = () => {
+                        setTimeout(() => {
+                            logo.value.setAttribute('src', logoImage);
+                            logo.value.parentNode.classList.remove('header__logo--sticky');
+                        }, 1200);
+                    }
+                }, 500);
+            }
+        }
+    });
+
+
+    watch(() => playerStore.isPlaying, (state) => {
+        if (!state) {
+            if (playerStore.show_sticky_player) {
+                playerStore.toggleStickyPlayer(false);
+
+                setTimeout(() => {
+                    logo.value.setAttribute('src', logoImageAnimatedOff);
+                    logo.value.onload = () => {
+                        setTimeout(() => {
+                            logo.value.setAttribute('src', logoImage);
+                            logo.value.parentNode.classList.remove('header__logo--sticky');
+                        }, 1200);
+                    }
+                }, 500);
+
+
+            }
+        }
+    });
 
     const links = [
         {
@@ -60,13 +131,13 @@
         },
         {
             id: 5,
-            name: "terms",
-            title: "Privacy Policy  |  Terms & Conditions",
+            name: "shop",
+            title: "shop",
         },
         {
             id: 6,
-            name: "shop",
-            title: "shop",
+            name: "terms",
+            title: "Privacy Policy  |  Terms & Conditions",
         },
     ]
 </script>
@@ -77,10 +148,22 @@
         background-color: $black;
         padding: 1.5rem 3.75rem;
         border-bottom: 2px solid $primary;
+        flex: 1 0 100px;
+        @media screen and (max-width: 1400px) {
+            flex: 1 0 80px;
+        }
         &__logo {
             cursor: pointer;
             img {
                 width: 8rem;
+                height: 2.875rem;
+            }
+            &--sticky {
+                margin-right: 1rem;
+                img {
+                    width: auto;
+                    height: 2.875rem;
+                }
             }
         }
         &__links {
@@ -88,7 +171,7 @@
         }
         &__link {
             &:not(:last-child) {
-                margin-right: 3.25rem;
+                margin-right: 3rem;
             }
             a {
                 @include font-size(18px);
@@ -123,6 +206,15 @@
         }
         &__burger {
             display: none;
+        }
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity 0.5s linear;
+        }
+
+        .fade-enter-from,
+        .fade-leave-to {
+            opacity: 0;
         }
     }
 </style>

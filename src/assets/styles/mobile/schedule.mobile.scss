@@ -106,16 +106,19 @@
                     height: inherit;
                     justify-content: flex-start;
                     align-items: flex-start;
+                    &__photo {
+                        object-position: center;
+                    }
                     &::after {
                         background-image: none;
                         height: 100%;
-                        background-color: rgba($color: #000000, $alpha: 0.46);
+                        background-color: rgba($color: #000000, $alpha: 0.3);
                     }
                     &__photo {
                         transform: scale(1.025);
                     }
                     &__nowplaying {
-                        @include font-size(14px);
+                        @include font-size(16px);
                         margin-bottom: 0.325rem;
                     }
                     &__time {
@@ -138,9 +141,10 @@
                         max-width: 100%;
                         align-self: flex-end;
                         line-height: 1;
+                        -webkit-text-stroke: $primary 0.025px;
                     }
                     &__author {
-                        @include font-size(20px);
+                        @include font-size(22px);
                         grid-column: 2/3;
                         grid-row: 3;
                         margin: 0.25rem 0 0 0;
@@ -152,7 +156,7 @@
                         }
                     }
                     &__description {
-                        @include font-size(19px);
+                        @include font-size(21px);
                         font-weight: normal;
                         grid-column: 2/3;
                         grid-row: 4;

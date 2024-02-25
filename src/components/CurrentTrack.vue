@@ -7,7 +7,9 @@
             :style="opacity"
             @animationend="isAnimating = false;">
                 <span v-text="trackArtist" class="current-track__artist"/>
-                <span v-text="trackTitle" class="current-track__title"/>
+                <marquee-text marqueeClass="current-track__title">
+                    {{ trackTitle }}
+                </marquee-text>
                 <em v-text="trackLabel" class="current-track__label"/>
         </div>
     </div>
@@ -16,6 +18,7 @@
 <script setup>
     import { usePlayerStore } from '@/stores/player';
     import { ref, watch, computed } from 'vue';
+    import MarqueeText from './MarqueeText.vue';
 
     const playerStore = usePlayerStore();
     const isAnimating = ref(false);
@@ -32,7 +35,6 @@
             trackTitle.value  = props.title;
             trackLabel.value  = props.label;
         } else {
-            console.log('end');
             setTimeout(() => {
                 trackArtist.value = 'Artist';
                 trackTitle.value  = 'Title';
@@ -68,7 +70,7 @@
     });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
     .current-track {
         display: flex;
         background-color: $primary;
@@ -82,16 +84,18 @@
         }
         &__info {
             opacity: 0.32;
+            max-width: 250px;
             &--fade-in {
                 animation: fade-in 1.5s linear;
             }
             &--fade-out {
                 animation: fade-out 1.5s linear;
             }
-            & > * {
+            * {
                 @include font-size(20px);
                 display: block;
                 color: $black;
+                margin: 0;
                 &:not(:last-child) {
                     margin-bottom: 1rem;
                 }

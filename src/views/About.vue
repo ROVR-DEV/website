@@ -10,7 +10,7 @@
                     <p>ANTI ALGORITHM</p>
                 </div>
                 <div class="about__logo">
-                    <img src="@/assets/images/logo_black.svg" alt="logo">
+                    <img src="@/assets/images/logo/logo_black.svg" alt="logo">
                 </div>
             </div>
         </div>

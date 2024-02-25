@@ -18,6 +18,7 @@
                 </div>
                 <!-- FOR MOBILE -->
             </div>
+            
             <current-track :title="radio.title" :artist="radio.artist" :label="radio.label"/>
         </div>
         <!-- FOR DESKTOP -->
@@ -57,6 +58,7 @@
         }).then(e => {
             radio.value = e.data.live;
             playerStore.setStreamUrl(radio.value.stream_url);
+            playerStore.updateTrack(radio.value.title, radio.value.artist, radio.value.label);
             console.log(radio.value);
         }).catch(() => console.log('axios error'));
 
@@ -71,6 +73,7 @@
 
         window.Echo.private('playnow.' + userStore.gmt).listen('.playnow', e => {
             radio.value = e.playnow.live;
+            playerStore.updateTrack(radio.value.title, radio.value.artist, radio.value.label);
             console.log(radio.value);
         });
     });
@@ -117,6 +120,7 @@
 <style lang="scss" scoped>
     .radio {
         display: flex;
+        overflow: hidden;
         &__info {
             @include flex-column;
             flex: 0 1 55%;

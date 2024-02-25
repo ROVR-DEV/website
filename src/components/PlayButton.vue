@@ -12,15 +12,17 @@
 </template>
 
 <script setup>
+    import { ref } from 'vue';
     import { usePlayerStore } from '@/stores/player';
-import { ref } from 'vue';
 
     const playerStore = usePlayerStore();
     const isTouchEventDisabled = ref(false);
 
     const play = (delay) => {
         if(playerStore.isPlayerReady) {
-            setTimeout(() => playerStore.togglePlaying(), delay);
+            setTimeout(() => {
+                playerStore.togglePlaying();
+            }, delay);
         }
         isTouchEventDisabled.value = true;
         setTimeout(() => isTouchEventDisabled.value = false, 1000);
