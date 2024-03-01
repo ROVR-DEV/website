@@ -1,13 +1,12 @@
 <template>
     <button
         class="player-button"
-        :class="{ 
-            'player-button--stop': playerStore.isPlaying,
-            'player-button--play': !playerStore.isPlaying,
-            'player-button--disabled' : isTouchEventDisabled
-        }"
+        :class="{ 'player-button--disabled' : isTouchEventDisabled}"
         v-press="{ time: 150, scale: 0.96 }"
-        @click="play(150)"/>
+        @click="play(150)">
+        <img v-show="!playerStore.isPlaying" src="@/assets/images/icons/play_button.svg" alt="play">
+        <img v-show="playerStore.isPlaying" src="@/assets/images/icons/stop_button.svg" alt="play">
+    </button>
 </template>
 
 <script setup>
@@ -35,26 +34,16 @@
         border-radius: 50%;
         background: $primary;
         color: $black;
-        width: 6.25rem;
+        width: 6rem;
         aspect-ratio: 1;
         padding: 0;
         cursor: pointer;
-        &:after {
-            content: '';
-            width: 2.5rem;
-            height: 2.5rem;
-        }
-        &--play:after {
-            border: 1.25rem solid transparent;
-            border-left: 2.25rem solid $black;
-            position: relative;
-            left: 0.938rem;
-        }
-        &--stop:after {
-            background-color: $black;
-        }
         &--disabled {
             pointer-events: none;
+        }
+
+        @media screen and (max-width: 1400px) {
+            width: 6.25rem;
         }
     }
 </style>

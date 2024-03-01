@@ -1,12 +1,12 @@
 <!-- eslint-disable vue/valid-template-root -->
 <template>
-    <audio :src="playerStore.stream_url" preload="none" ref="player" crossorigin="anonymous" controls hidden></audio>
-
-    <transition name="fade">
-        <div class="preloader" v-if="!ready">
-            <img src="@/assets/images/logo/start_animation.gif" alt="">
-        </div>
-    </transition>
+    <teleport to="#modal">
+        <transition name="fade">
+            <div class="preloader" v-if="!ready">
+                <img src="@/assets/images/logo/start_animation.gif" alt="">
+            </div>
+        </transition>
+    </teleport>
 </template>
 
 <script setup>
@@ -15,18 +15,16 @@
     import jingleTrack from '@/assets/media/jingle.mp3';
 
     const ready = ref(false);
-
     const player = ref(null);
     const playerStore = usePlayerStore();
     const playerTime = ref(0);
     const jingle = new Audio(jingleTrack);
 
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const gainNode = audioContext.createGain();
-
-
     watch(() => playerStore.stream_url, (state) => {
-        if (state) setInterval(() => playerTime.value++, 1000);
+        if (state) {
+            player.value = new Audio(playerStore.stream_url);
+            setInterval(() => playerTime.value++, 1000);
+        }
     });
 
     watch(() => playerStore.isPlaying, (state) => {
@@ -40,14 +38,7 @@
     watch(() => playerStore.track, () => setWidget(), { deep: true });
 
     onMounted(() => {
-        setTimeout(() => {
-            ready.value = true;
-        }, 4000);
-
-        gainNode.gain.value = 1;
-        const source = audioContext.createMediaElementSource(player.value);
-        source.connect(gainNode);
-        gainNode.connect(audioContext.destination);
+        setTimeout(() => ready.value = true, 4000);
     });
 
     const play = () => {
@@ -64,7 +55,7 @@
                 jingle.pause();
                 jingle.currentTime = 0;
             }, 10);
-        }, 1000);
+        }, 500);
     }
 
     const pause = () => {
@@ -74,9 +65,17 @@
 
     const finish = () => {
         if (!player.value.paused) {
-            startFadeOut();
-            playerStore.setFinished(true);
-            setTimeout(() => jingle.play(), 2000);
+            if(getMobileOS() === 'iOS') {
+                player.value.pause();
+                jingle.play();
+                console.log('no fade out fadeout');
+            } else {
+                startFadeOut();
+                playerStore.setFinished(true);
+                setTimeout(() => jingle.play(), 2000);
+                console.log('fadeout');
+            }
+
             setTimeout(() => {
                 player.value.load(playerStore.stream_url);
                 playerTime.value = 0;
@@ -87,29 +86,44 @@
                 jingle.currentTime = 0;
                 player.value.play();
                 player.value.currentTime = playerTime.value;
-                gainNode.gain.value = 1;
+                player.value.volume = 1;
                 playerStore.setFinished(false);
             }
         }
     }
 
-    function startFadeOut() {
-        const initialVolume = gainNode.gain.value;
-        const targetVolume = 0;
-        const fadeSteps = 100;
-        const fadeInterval = 2000 / fadeSteps;
-        const volumeStep = (initialVolume - targetVolume) / fadeSteps;
+    const fadeOutInterval = ref(null);
 
-        const fadeOutInterval = setInterval(() => {
-            gainNode.gain.value -= volumeStep;
-            if (gainNode.gain.value <= targetVolume) {
-                clearInterval(fadeOutInterval);
+    const startFadeOut = () => {
+        fadeOutInterval.value = setInterval(() => {
+            player.value.volume -= 0.01;
+            if (player.value.volume <= 0.01) {
                 player.value.pause();
-                player.value.currentTime = 0;
+                player.value.volume = 0;
+                clearInterval(fadeOutInterval.value);
             }
-        }, fadeInterval);
+        }, 20);
     }
 
+    const getMobileOS = () => {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+        // Windows Phone must come first because its UA also contains "Android"
+        if (/windows phone/i.test(userAgent)) {
+            return "Windows Phone";
+        }
+
+        if (/android/i.test(userAgent)) {
+            return "Android";
+        }
+
+        // iOS detection from: http://stackoverflow.com/a/9039885/177710
+        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+            return "iOS";
+        }
+
+        return "unknown";
+    }
 
     const setWidget = () => {
         if ("mediaSession" in navigator) {
@@ -161,15 +175,13 @@
         width: 100%;
         height: 100%;
         z-index: 50;
-        @include flex-center;
         background-color: $black;
         img {
             width: 20rem;
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -45%);
         }
-    }
-
-    audio {
-        position: absolute;
-        z-index: 50;
     }
 </style>

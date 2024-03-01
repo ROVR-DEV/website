@@ -93,12 +93,12 @@
                 flex: auto;
                 background-color: $black;
                 color: $primary;
-                padding: 3.25rem 3.75rem;
+                padding: 3rem 3.5rem;
                 &__cover {
                     display: none;
                 }
                 &__title {
-                    @include font-size(80px);
+                    @include font-size(72px);
                     line-height: 102%;
                     letter-spacing: -1.659px;
                     text-transform: uppercase;
@@ -106,19 +106,19 @@
                     margin: 0;
                 }
                 &__author {
-                    @include font-size(56px);
+                    @include font-size(48px);
                     font-weight: bold;
                     margin: 0 0 1rem 0;
                     line-height: 1;
                     em {
-                        @include font-size(92px);
+                        @include font-size(80px);
                         display: inline-block;
                         margin-left: 0.5rem;
                         cursor: pointer;
                     }
                 }
                 &__description {
-                    @include font-size(24px);
+                    @include font-size(22px);
                     margin: 0;
                     font-weight: normal;
                     letter-spacing: 0.23px;

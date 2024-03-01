@@ -40,7 +40,6 @@
     watch(timerUntil, (position) => {
         if (position === 0) {
             playerStore.setFinished(true);
-            console.log(playerStore.isFinished);
             timerUntil.value = 0;
             timerSince.value = 0;
         }
@@ -79,7 +78,7 @@
     .radio__timer {
         margin-left: 4rem;
         span {
-            @include font-size(92px);
+            @include font-size(88px);
             font-family: 'Roboto', monospace;
             font-weight: 300;
             display: block;

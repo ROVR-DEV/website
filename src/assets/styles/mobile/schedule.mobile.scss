@@ -106,9 +106,6 @@
                     height: inherit;
                     justify-content: flex-start;
                     align-items: flex-start;
-                    &__photo {
-                        object-position: center;
-                    }
                     &::after {
                         background-image: none;
                         height: 100%;

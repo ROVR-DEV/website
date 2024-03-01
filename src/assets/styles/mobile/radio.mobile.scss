@@ -1,3 +1,31 @@
+@media screen and (max-width: 1400px) {
+    .main {
+        .radio {
+            .current-track {
+                padding: 1.5rem 3.5rem;
+            }
+            &__info {
+                .show {
+                    &__title {
+                        @include font-size(60px);
+                        margin-bottom: 0.25rem;
+                    }
+                    &__author {
+                        @include font-size(32px);
+                        margin-bottom: 1rem;
+                        em {
+                            @include font-size(60px);
+                        }
+                    }
+                    &__description {
+                        @include font-size(20px);
+                    }
+                }
+            }
+        }
+    }
+}
+
 @media screen and (max-width: 768px) {
     .main {
         .radio {
