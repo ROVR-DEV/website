@@ -69,7 +69,9 @@
     }
 
     const fmtMSS = (s) => {
-        return (s - (s %= 60)) / 60 + (9 < s ? ':' : ':0') + s;
+        const minutes = Math.floor(s / 60);
+        s %= 60;
+        return (minutes < 10 ? '0' : '') + minutes + ':' + (s < 10 ? '0' : '') + s;
     }
 </script>
 

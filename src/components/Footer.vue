@@ -1,15 +1,23 @@
 <template>
     <footer class="footer">
         <a href="https://www.instagram.com/rovr_live/" target="_blank" class="footer__instagram"><img src="@/assets/images/icons/instagram.svg" alt="instagram"></a>
-        <a href="#" class="footer__appstore">
+        <a href="https://apps.apple.com/app/id6448372142" target="_blank" class="footer__appstore">
             <img src="@/assets/images/icons/app-store.svg" alt="App Store">
             App Store
         </a>
-        <a href="#" class="footer__googleplay">
+        <a href="https://play.google.com/store/apps/details?id=com.rovr.live" target="_blank" class="footer__googleplay">
             <img src="@/assets/images/icons/google-play.svg" alt="Google Play">
             Google Play
         </a>
-        <router-link to="/privacy" class="footer__privacy">Privacy Policy</router-link>
+        <a href="https://onelink.to/rovr" target="_blank" class="footer__appstore mobile">
+            <img src="@/assets/images/icons/app-store.svg" alt="App Store">
+            App Store
+        </a>
+        <a href="https://onelink.to/rovr" target="_blank" class="footer__googleplay mobile">
+            <img src="@/assets/images/icons/google-play.svg" alt="Google Play">
+            Google Play
+        </a>
+        <router-link to="/privacy" class="footer__privacy">Privacy Notice</router-link>
         <router-link to="/terms" class="footer__terms">Terms & Conditions</router-link>
         <a href="mailto:info@rovr.live" class="footer__contact">Contact</a>
         <p class="footer__copyright">© 2024 ROVR | All rights reserved</p>
@@ -34,6 +42,9 @@
             letter-spacing: 0.2px;
             &:not(:last-child) {
                 margin-right: 2.25rem;
+            }
+            &.mobile {
+                display: none;
             }
             &:first-child {
                 img {

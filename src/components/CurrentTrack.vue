@@ -6,10 +6,8 @@
             :class="{ 'current-track__info--fade-in': isAnimating && playerStore.isPlaying, 'current-track__info--fade-out': isAnimating && !playerStore.isPlaying }"
             :style="opacity"
             @animationend="isAnimating = false;">
-                <span v-text="trackArtist" class="current-track__artist"/>
-                <marquee-text marqueeClass="current-track__title">
-                    {{ trackTitle }}
-                </marquee-text>
+                <marquee-text marqueeClass="current-track__artist" :text="trackArtist"/>
+                <marquee-text marqueeClass="current-track__title" :text="trackTitle"/>
                 <em v-text="trackLabel" class="current-track__label"/>
         </div>
     </div>
@@ -31,9 +29,9 @@
         isAnimating.value = true;
 
         if(state) {
-            trackArtist.value = props.artist;
-            trackTitle.value  = props.title;
-            trackLabel.value  = props.label;
+            trackArtist.value = playerStore.track.artist;
+            trackTitle.value  = playerStore.track.title;
+            trackLabel.value  = playerStore.track.label;
         } else {
             setTimeout(() => {
                 trackArtist.value = 'Artist';
@@ -43,30 +41,20 @@
         }
     });
 
+    watch(() => playerStore.track, () => {
+        if(playerStore.isPlaying) {
+            trackArtist.value = playerStore.track.artist;
+            trackTitle.value = playerStore.track.title;
+            trackLabel.value = playerStore.track.label;
+        }
+    }, { deep: true });
+
     const opacity = computed(() => {
         if (isAnimating.value) {
             return { opacity: playerStore.isPlaying ? '1' : '0.32' };
         } else {
             return { opacity: playerStore.isPlaying ? '1' : '0.32' };
         }
-    });
-
-    const props = defineProps({
-        artist: {
-            type: String,
-            required: true,
-            default: 'Artist'
-        },
-        title: {
-            type: String,
-            required: true,
-            default: 'Title'
-        },
-        label: {
-            type: String,
-            required: true,
-            default: 'Label'
-        },
     });
 </script>
 
@@ -95,6 +83,7 @@
                 display: block;
                 color: $black;
                 margin: 0;
+                height: 1.325rem;
                 &:not(:last-child) {
                     margin-bottom: 1rem;
                 }

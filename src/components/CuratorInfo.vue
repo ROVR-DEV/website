@@ -34,17 +34,19 @@
 
     let links = [];
 
-    if(props.curator.links && props.curator.link_titles) {
+    if (props.curator.links && props.curator.link_titles) {
         for (let i = 0; i < props.curator.links.length; i++) {
             links.push({ href: props.curator.links[i], name: props.curator.link_titles[i].toLowerCase() });
         }
     }
 
-    links.forEach((link) => {
-        if(link.name === 'linktree') {
-            link.name = 'website';
+    for (let i = links.length - 1; i >= 0; i--) {
+        if (links[i].name === 'linktree') {
+            links[i].name = 'website';
+        } else if (links[i].name === 'bandcamp' || links[i].name === 'youtube' || links[i].name === 'soundcloud') {
+            links.splice(i, 1);
         }
-    });
+    }
 </script>
 
 <style lang="scss" scoped>

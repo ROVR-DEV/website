@@ -131,11 +131,11 @@
                 height: calc(100% - 11.5rem);
             }
             &__logo {
-                img {
+                * {
                     width: 9rem;
                 }
                 &--sticky {
-                    img {
+                    * {
                         width: auto;
                     }
                 }

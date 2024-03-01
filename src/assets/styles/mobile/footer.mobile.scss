@@ -29,6 +29,12 @@
                 order: 3;
                 margin-right: 0.5rem;
                 line-height: 1rem;
+                &:not(.mobile) {
+                    display: none;
+                }
+                &.mobile {
+                    display: flex;
+                }
                 img {
                     width: 1.25rem;
                     position: relative;
@@ -40,6 +46,12 @@
                 order: 4;
                 margin-right: 0;
                 line-height: 1rem;
+                &:not(.mobile) {
+                    display: none;
+                }
+                &.mobile {
+                    display: flex;
+                }
                 img {
                     width: 1.25rem;
                     position: relative;

@@ -4,7 +4,6 @@
         :class="{ 
             'player-button--stop': playerStore.isPlaying,
             'player-button--play': !playerStore.isPlaying,
-            'player-button--ready': playerStore.isPlayerReady,
             'player-button--disabled' : isTouchEventDisabled
         }"
         v-press="{ time: 150, scale: 0.96 }"
@@ -19,13 +18,12 @@
     const isTouchEventDisabled = ref(false);
 
     const play = (delay) => {
-        if(playerStore.isPlayerReady) {
-            setTimeout(() => {
-                playerStore.togglePlaying();
-            }, delay);
-        }
+        setTimeout(() => {
+            playerStore.togglePlaying();
+        }, delay);
+        
         isTouchEventDisabled.value = true;
-        setTimeout(() => isTouchEventDisabled.value = false, 1000);
+        setTimeout(() => isTouchEventDisabled.value = false, 2500);
     }
 </script>
 
@@ -40,8 +38,7 @@
         width: 6.25rem;
         aspect-ratio: 1;
         padding: 0;
-        filter: brightness(0.5);
-        cursor: not-allowed;
+        cursor: pointer;
         &:after {
             content: '';
             width: 2.5rem;
@@ -55,10 +52,6 @@
         }
         &--stop:after {
             background-color: $black;
-        }
-        &--ready {
-            filter: brightness(1);
-            cursor: pointer;
         }
         &--disabled {
             pointer-events: none;

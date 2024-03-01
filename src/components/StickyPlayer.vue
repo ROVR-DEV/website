@@ -8,7 +8,7 @@
             <em class="sticky-player__label" v-text="playerStore.track.label"/>
         </div>
 
-        <button class="sticky-player__stop" @click="playerStore.togglePlaying()"/>
+        <button class="sticky-player__stop" @click="playerStore.togglePlaying();"/>
     </div>
 </template>
 
@@ -55,6 +55,8 @@
         }
         &__label {
             @include font-size(12px);
+            margin: 0.25rem 0 0 0;
+            display: block;
             font-family: 'GT Alpina', sans-serif;
             font-style: italic;
             color: $white;

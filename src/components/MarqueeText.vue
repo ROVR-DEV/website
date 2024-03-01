@@ -6,12 +6,14 @@
             ref="marqueeText"
             :style="{ transform: transformStyle, transitionDuration: transitionDuration}">
             <slot></slot>
+            {{ text }}
         </p>
+        
     </div>
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, watch } from 'vue';
 
     const transformStyle = ref('translateX(0)');
     const transitionDuration = ref(0);
@@ -19,15 +21,27 @@
 
     let animation = null;
 
-    onMounted(() => {
-        checkForAnimation();
-    });
-
-    defineProps({
+    const props = defineProps({
         marqueeClass: {
             type: String,
             required: false
+        },
+        text: {
+            type: String,
+            required: false
         }
+    });
+
+    onMounted(() => {
+        setTimeout(() => {
+            checkForAnimation();
+        }, 1000);
+    });
+
+    watch(() => props.text, () => {
+        setTimeout(() => {
+            checkForAnimation();
+        }, 1000);
     });
 
     const checkForAnimation = () => {

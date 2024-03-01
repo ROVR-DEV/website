@@ -1,15 +1,15 @@
 <template>
-    <section class="radio" v-if="radio" v-show="!showCuratorInfo">
+    <section class="radio" v-if="radioStore.radio" v-show="!showCuratorInfo">
         <div class="radio__info">
             <div class="show">
-                <h1 class="show__title" v-text="radio.show.title"/>
-                <h2 class="show__author">BY <em v-text="radio.curator.name" v-press="{ time: 250, scale: 0.97 }" @click="showCuratorInfoHandler(500)"/></h2>
-                <p class="show__description" v-text="radio.show.description ?? radio.show.about"/>
+                <h1 class="show__title" v-text="radioStore.radio.show.title"/>
+                <h2 class="show__author">BY <em v-text="radioStore.radio.curator.name" v-press="{ time: 250, scale: 0.97 }" @click="showCuratorInfoHandler(500)"/></h2>
+                <p class="show__description" v-text="radioStore.radio.show.description ?? radioStore.radio.show.about"/>
                 <div class="show__player">
                     <play-button/>
                     <radio-timer
-                        :until="Math.round(radio.show.until)"
-                        :since="Math.round(radio.show.since)"/>
+                        :until="Math.round(radioStore.radio.show.until)"
+                        :since="Math.round(radioStore.radio.show.since)"/>
                 </div>
 
                 <!-- FOR MOBILE -->
@@ -19,7 +19,7 @@
                 <!-- FOR MOBILE -->
             </div>
             
-            <current-track :title="radio.title" :artist="radio.artist" :label="radio.label"/>
+            <current-track/>
         </div>
         <!-- FOR DESKTOP -->
         <div class="radio__image" @mousedown="startScaling" @mouseup="stopScaling">
@@ -28,55 +28,19 @@
         <!-- FOR DESKTOP -->
     </section>
 
-    <curator-info v-if="showCuratorInfo" :curator="radio.curator" @close="showCuratorInfo = false"/>
+    <curator-info v-if="showCuratorInfo" :curator="radioStore.radio.curator" @close="showCuratorInfo = false"/>
 </template>
 
 <script setup>
-    import { ref, onMounted, computed } from 'vue';
-    import { useUserStore }   from '@/stores/user';
-    import { usePlayerStore } from '@/stores/player';
-    import io           from 'socket.io-client';
-    import Echo         from 'laravel-echo';
-    import axios        from 'axios';
+    import { ref, computed } from 'vue';
+    import { useRadioStore } from "@/stores/radio";
     import PlayButton   from '@/components/PlayButton.vue';
     import RadioTimer   from '@/components/RadioTimer.vue';
     import CurrentTrack from '@/components/CurrentTrack.vue';
     import CuratorInfo  from '@/components/CuratorInfo.vue';
 
-    const userStore = useUserStore();
-    const radio  = ref(null);
+    const radioStore = useRadioStore();
     const showCuratorInfo = ref(false);
-
-    const playerStore = usePlayerStore();
-
-    onMounted(() => {
-        axios.get('https://app.rovr.live/api/all/now/playing', {
-            headers: {
-                'X-TIMEZONE': userStore.gmt,
-                'Authorization': `Bearer ${userStore.token}`,
-            }
-        }).then(e => {
-            radio.value = e.data.live;
-            playerStore.setStreamUrl(radio.value.stream_url);
-            playerStore.updateTrack(radio.value.title, radio.value.artist, radio.value.label);
-            console.log(radio.value);
-        }).catch(() => console.log('axios error'));
-
-        window.io = io;
-        window.Echo = new Echo(
-            {
-                broadcaster: 'socket.io',
-                namespace: 'App.Events',
-                host: 'https://app.rovr.live/',
-                auth: { 'headers': { 'Authorization': `Bearer ${userStore.token}`, } }
-            });
-
-        window.Echo.private('playnow.' + userStore.gmt).listen('.playnow', e => {
-            radio.value = e.playnow.live;
-            playerStore.updateTrack(radio.value.title, radio.value.artist, radio.value.label);
-            console.log(radio.value);
-        });
-    });
 
     const showCuratorInfoHandler = (delay) => {
         setTimeout(() => showCuratorInfo.value = true, delay);
@@ -89,7 +53,7 @@
             lp: 'app'
         }
 
-        return radio.value ? radio.value.show.cover.replace(/localhost|lp/gi, (matched) => replaceCover[matched]) : "";
+        return radioStore.radio ? radioStore.radio.show.cover.replace(/localhost|lp/gi, (matched) => replaceCover[matched]) : "";
     });
 
     // image scale
