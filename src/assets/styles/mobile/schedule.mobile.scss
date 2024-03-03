@@ -59,7 +59,10 @@
                 grid-row: 3;
             }
             &__loader {
-                bottom: 0;
+                .ball-beat > div {
+                    width: 0.5rem;
+                    height: 0.5rem;
+                }
             }
             &__programs {
                 grid-row: 3;

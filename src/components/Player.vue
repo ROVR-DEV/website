@@ -39,10 +39,16 @@
 
     onMounted(() => {
         setTimeout(() => ready.value = true, 4000);
+
+        setInterval(() => {
+            if(!playerStore.isPlaying) {
+                player.value.load(playerStore.stream_url);
+                playerTime.value = 0;
+            }
+        }, 300000);
     });
 
     const play = () => {
-        //player.value.load(playerStore.stream_url);
         player.value.play();
         player.value.currentTime = playerTime.value;
         navigator.mediaSession.playbackState = "playing";

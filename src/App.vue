@@ -53,12 +53,9 @@
     const scheduleStore = useScheduleStore();
     const playerStore = usePlayerStore();
 
-    const currentHour = ref(new Date().getHours());
     const intervalId = ref(null);
 
     onMounted(async () => {
-        intervalId.value = setInterval(checkNewHour, 60000);
-
         getRadio();
         getCurators();
         getSchedule();
@@ -95,14 +92,13 @@
         }
     });
 
-    const checkNewHour = () => {
-        const newHour = new Date().getHours();
-        if ((newHour !== currentHour.value) && (isDocumentHidden.value || !isDocumentHidden.value)) {
-            currentHour.value = newHour;
+    // updating schedule 
+    watch(() => playerStore.isFinished, (state) => {
+        if (state) {
             scheduleStore.loadSchedule(null);
             getSchedule();
         }
-    }
+    });
 
     const getRadio = async () => {
         await axios.get('https://app.rovr.live/api/all/now/playing', {

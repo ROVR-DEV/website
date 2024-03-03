@@ -63,6 +63,7 @@
         display: flex;
         background-color: $primary;
         padding: 2rem 3.75rem;
+        height: 10rem;
         & > p {
             @include font-size(20px);
             color: rgba($color: $black, $alpha: 0.32);

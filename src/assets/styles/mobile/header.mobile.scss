@@ -136,7 +136,8 @@
                 }
                 &--sticky {
                     * {
-                        width: auto;
+                        min-width: 35px;
+                        max-width: 35px;
                     }
                 }
             }

@@ -1,18 +1,7 @@
 <!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
     <header class="header">
-        <div class="header__logo" :class="{'header__logo--sticky' : logoSticky}" @click="router.push({ name: 'radio' }); isBurgerActive = false">
-            <img v-show="logoOriginal" src="@/assets/images/logo/logo.svg" alt="Logo">
-            <video v-show="logoGif" playsinline autoplay muted preload="none" ref="logoVideo">
-                <source src="@/assets/images/logo/player_logo.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <video v-show="logoGifOff" playsinline autoplay muted preload="none" ref="logoVideoOff">
-                <source src="@/assets/images/logo/player_logo_off.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <img v-show="logoSticky" src="@/assets/images/logo/logo_sticky.svg" alt="Logo">
-        </div>
+        <header-logo/>
 
         <transition name="fade">
             <sticky-player v-if="playerStore.show_sticky_player"/>
@@ -49,6 +38,7 @@
     import { ref, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
     import { useRouter, useRoute } from 'vue-router';
+    import HeaderLogo from './HeaderLogo.vue';
     import StickyPlayer from './StickyPlayer.vue';
 
     const router = useRouter();
@@ -59,69 +49,11 @@
     
     const headerPrivacy = ref(null);
 
-    const logoOriginal = ref(true);
-    const logoSticky   = ref(false);
-    const logoGif      = ref(false);
-    const logoGifOff   = ref(false);
-
-    const logoVideo    = ref(null);
-    const logoVideoOff = ref(null);
-
     watch(route, () => {
-        if (router.currentRoute.value.name !== 'radio' && playerStore.isPlaying) {
-            if(!logoSticky.value) {
-                logoOriginal.value = false;
-                logoGif.value = true;
-                logoVideo.value.play();
-                logoVideo.value.addEventListener('ended', () => {
-                    logoGif.value = false;
-                    logoSticky.value = true;
-                    playerStore.toggleStickyPlayer(true);
-                });
-            }
-        } else {
-            if(playerStore.isPlaying) {
-                playerStore.toggleStickyPlayer(false);
-                setTimeout(() => {
-                    logoSticky.value = false;
-                    logoGifOff.value = true;
-                    logoVideoOff.value.play();
-                }, 500);
-                logoVideoOff.value.addEventListener('ended', () => {
-                    logoGifOff.value = false;
-                    logoOriginal.value = true;
-                });
-            }
-        }
-
-        if(router.currentRoute.value.name === 'terms' || router.currentRoute.value.name === 'privacy') {
+        if (router.currentRoute.value.name === 'terms' || router.currentRoute.value.name === 'privacy') {
             headerPrivacy.value.classList.add('active');
         } else {
             headerPrivacy.value.classList.remove('active');
-        }
-    });
-
-    watch(() => playerStore.isPlaying, (status) => {
-        if(!status && playerStore.show_sticky_player) {
-            playerStore.toggleStickyPlayer(false);
-            setTimeout(() => {
-                logoSticky.value = false;
-                logoGifOff.value = true;
-                logoVideoOff.value.play();
-            }, 500);
-            logoVideoOff.value.addEventListener('ended', () => {
-                logoGifOff.value = false;
-                logoOriginal.value = true;
-            });
-        } else if(status && !playerStore.show_sticky_player && router.currentRoute.value.name !== 'radio') {
-            logoOriginal.value = false;
-            logoGif.value = true;
-            logoVideo.value.play();
-            logoVideo.value.addEventListener('ended', () => {
-                logoGif.value = false;
-                logoSticky.value = true;
-                playerStore.toggleStickyPlayer(true);
-            });
         }
     });
 
@@ -167,20 +99,6 @@
         flex: 1 0 100px;
         @media screen and (max-width: 1400px) {
             flex: 1 0 80px;
-        }
-        &__logo {
-            cursor: pointer;
-            margin-right: 0.75rem;
-            height: 3.25rem;
-            * {
-                width: 9rem;
-                height: 3.25rem;
-            }
-            &--sticky {
-                * {
-                    width: auto;
-                }
-            }
         }
         &__links {
             @include flex-center-vert;

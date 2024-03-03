@@ -19,11 +19,12 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, watch } from 'vue';
+    import { usePlayerStore } from '@/stores/player';
     import 'loaders.css';
 
     const emit = defineEmits(['day-picked']);
-
+    const playerStore = usePlayerStore();
     const week = ref([]);
     const currentDayIndex = ref(-1);
 
@@ -35,6 +36,14 @@
     });
 
     onMounted(() => {
+        getWeek();
+    });
+
+    watch(() => playerStore.isFinished, (state) => {
+        if (state) getWeek();
+    });
+
+    const getWeek = () => {
         const currentDate = new Date();
         const daysOfWeek = [];
 
@@ -58,7 +67,7 @@
         week.value = daysOfWeek;
 
         emit('day-picked', daysOfWeek[currentDayIndex.value]);
-    });
+    }
 
     const getShortDayName = (date) => {
         const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -72,6 +81,7 @@
         background-color: $primary;
         padding: 1.5rem 3.5rem;
         grid-row: 1/2;
+        position: relative;
         .schedule__day {
             text-align: center;
             cursor: pointer;
