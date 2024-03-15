@@ -1,7 +1,7 @@
 <template>
     <button
         class="player-button"
-        :class="{ 'player-button--disabled' : isTouchEventDisabled}"
+        :class="{ 'player-button--disabled' : isTouchEventDisabled, 'player-button--loading' : playerStore.isLoading }"
         v-press="{ time: 150, scale: 0.96 }"
         @click="play(150)">
         <img v-show="!playerStore.isPlaying" src="@/assets/images/icons/play_button.svg" alt="play">
@@ -41,9 +41,22 @@
         &--disabled {
             pointer-events: none;
         }
+        &--loading {
+            animation: pulse 1s infinite ease-in-out alternate;
+        }
 
-        @media screen and (max-width: 1400px) {
+        @media screen and (max-width: 1600px) {
             width: 6.25rem;
+        }
+    }
+
+    @keyframes pulse {
+        from {
+            transform: scale(1);
+        }
+
+        to {
+            transform: scale(1.05);
         }
     }
 </style>

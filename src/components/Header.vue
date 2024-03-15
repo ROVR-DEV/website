@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/no-v-text-v-html-on-component -->
 <template>
     <header class="header">
-        <header-logo/>
+        <header-logo @pressed="isBurgerActive = false"/>
 
         <transition name="fade">
             <sticky-player v-if="playerStore.show_sticky_player"/>
@@ -96,10 +96,7 @@
         @include flex-center-sb;
         background-color: $black;
         padding: 1.5rem 3.75rem;
-        flex: 1 0 100px;
-        @media screen and (max-width: 1400px) {
-            flex: 1 0 80px;
-        }
+        flex: 1 0 6.25rem;
         &__links {
             @include flex-center-vert;
         }

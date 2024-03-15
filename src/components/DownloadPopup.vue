@@ -185,6 +185,7 @@
             }
             &__link {
                 @include font-size(18px);
+                align-items: center;
             }
             &__close {
                 width: 1.5rem;

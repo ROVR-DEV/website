@@ -1,12 +1,19 @@
+@media screen and (max-width: 1600px) {
+    #base-layout {
+        .header {
+            flex: 1 0 6.66rem;
+        }
+    }
+}
+
 @media screen and (max-width: 768px) {
     #base-layout {
         .header {
             padding: 1.5rem 2rem;
             position: relative;
-            flex: 1 0 80px;
             &__nav {
                 position: fixed;
-                top: 6.6rem;
+                top: 6.66rem;
                 left: 0;
                 width: 100%;
                 height: calc(100% - 10rem);
@@ -133,12 +140,6 @@
             &__logo {
                 * {
                     width: 9rem;
-                }
-                &--sticky {
-                    * {
-                        min-width: 35px;
-                        max-width: 35px;
-                    }
                 }
             }
         }

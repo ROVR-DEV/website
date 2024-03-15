@@ -36,7 +36,7 @@
             position: relative;
             width: 100%;
             margin-right: 1rem;
-            max-width: 400px;
+            max-width: 23rem;
         }
         .marquee-container {
             line-height: 0;
@@ -76,7 +76,7 @@
                 width: 14px;
                 aspect-ratio: 1;
             }
-            @media screen and (max-width: 1400px) {
+            @media screen and (max-width: 1600px) {
                 flex: 1 0 30px;
             }
         }

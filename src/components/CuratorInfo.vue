@@ -7,10 +7,15 @@
             <img :src="curator.photo" :alt="curator.name">
         </div>
         <div class="curator__info">
+            <div class="faux-crop">
+                <img :src="curator.photo" :alt="curator.name">
+            </div>
+
             <div class="curator__details">
                 <h1 class="curator__name" v-text="curator.name"/>
                 <p class="curator__about" v-text="curator.about"/>
             </div>
+
             <div class="curator__links" v-if="curator.links">
                 <a class="curator__link" v-for="(link, index) in links" :key="index" :href="link.href" target="_blank">
                     <img v-if="link.name === 'instagram'" src="@/assets/images/links/instagram.svg"  alt="instagram">
@@ -33,6 +38,7 @@
     const emit = defineEmits(['close']);
 
     let links = [];
+    const otherServices = ['bandcamp', 'youtube', 'soundcloud', 'mixcloud', 'deezer'];
 
     if (props.curator.links && props.curator.link_titles) {
         for (let i = 0; i < props.curator.links.length; i++) {
@@ -43,7 +49,7 @@
     for (let i = links.length - 1; i >= 0; i--) {
         if (links[i].name === 'linktree') {
             links[i].name = 'website';
-        } else if (links[i].name === 'bandcamp' || links[i].name === 'youtube' || links[i].name === 'soundcloud') {
+        } else if (otherServices.includes(links[i].name)) {
             links.splice(i, 1);
         }
     }
@@ -102,14 +108,21 @@
             flex: auto;
             padding: 4.5rem 2.5rem 4.5rem 4.5rem;
             color: $primary;
-            overflow-y: auto;
+            overflow: hidden;
+        }
+        &__details {
+            @include flex-column;
+            height: 100%;
+        }
+        .faux-crop {
+            display: none;
         }
         &__name {
             @include font-size(100px);
             font-family: 'GT Alpina', sans-serif;
             stroke: 1px solid $primary;
             font-style: italic;
-            margin: 0 0 3.5rem 0;
+            margin: 0 0 2rem 0;
             line-height: 1;
         }
         &__about {
@@ -118,9 +131,10 @@
             margin: 0;
             line-height: 1.25;
             white-space: pre-line;
-        }
-        &__details {
-            flex: 0 1 75%;
+            overflow: auto;
+            &::-webkit-scrollbar {
+                width: 0.25rem;
+            }
         }
         &__links {
             margin-left: 1rem;
@@ -141,10 +155,20 @@
             &:not(:last-child) {
                 margin-bottom: 1.25rem;
             }
-            &:hover {
-                background-color: $primary;
-                img {
-                    filter: brightness(0);
+            @media screen and (min-width: 768px) {
+                &:hover {
+                    background-color: $primary;
+                    img {
+                        filter: brightness(0);
+                    }
+                }
+            }
+            @media screen and (max-width: 768px) {
+                &:active {
+                    background-color: $primary;
+                    img {
+                        filter: brightness(0);
+                    }
                 }
             }
         }

@@ -1,50 +1,78 @@
 @media screen and (max-width: 768px) {
     #base-layout {
         main > .curator {
-            flex-direction: column;
+            display: block;
             .curator__photo {
-                position: absolute;
-                flex: auto;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
+                position: fixed;
+                height: 50%;
+                inset: 6.66rem 0 auto;
                 z-index: 1;
                 &::after {
-                    top: unset;
-                    bottom: 0;
-                    background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000 55.04%);
-                    height: 100%;
+                    height: 30%;
+                    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.97));
                 }
             }
             .curator__info {
-                position: absolute;
-                height: 55%;
-                bottom: 0;
-                z-index: 2;
-                padding: 2rem;
-                flex-direction: column;
-                overflow: hidden;
+                display: block;
+                padding: 0;
+                margin: 65vw 0 0;
+                padding-bottom: 5.5rem;
+                overflow: visible;
             }
             .curator__details {
-                flex: auto;
-                overflow-y: auto;
-                position: relative;
-                flex: 0 1 calc(100% - 5.25rem);
+                display: block;
+                height: auto;
             }
             .curator__name {
-                @include font-size(60px);
-                margin-bottom: 2.5rem;
+                @include font-size(42px);
+                position: sticky;
+                top: 7.5rem;
+                height: 2.5rem;
+                margin-bottom: 0;
+                padding-inline: 2.5rem;
+                z-index: 4;
+                &::before {
+                    content: '';
+                    position: absolute;
+                    inset: calc(26vw * -1) 0 0;
+                    height: calc(26vw + 2.5rem);
+                    background-image: linear-gradient(to top, $black, transparent);
+                    z-index: -1;
+                }
+            }
+            .faux-crop {
+                display: block;
+                position: fixed;
+                inset: 6.66rem 0 auto;
+                overflow: hidden;
+                height: 10rem;
+                z-index: 3;
+                img {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    object-position: top;
+                    position: relative;
+                    z-index: 1;
+                }
+            }
+            .curator__about {
+                position: relative;
+                z-index: 2;
+                padding: 1.5rem 2.5rem 0 2.5rem;
+                background-color: $black;
             }
             .curator__links {
                 @include flex-center-vert;
-                position: absolute;
+                position: fixed;
                 left: 0;
-                bottom: 0;
+                bottom: 4.5rem;
                 width: 100%;
                 background-color: $black;
                 margin-left: 0;
-                padding: 1.5rem 2.25rem;
+                padding: 1rem 2.5rem;
+                z-index: 2;
             }
             .curator__link {
                 width: 3rem;
@@ -57,8 +85,20 @@
                 }
             }
             .curator__close {
-                top: 2rem;
+                position: fixed;
+                top: 8.5rem;
                 left: 2rem;
+                z-index: 5;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    #base-layout {
+        main > .curator {
+            .curator__links {
+                bottom: 5rem;
             }
         }
     }

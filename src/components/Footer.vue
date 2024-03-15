@@ -38,7 +38,7 @@
             font-weight: bold;
             text-decoration: none;
             margin: 0;
-            line-height: 1;
+            line-height: 0;
             letter-spacing: 0.2px;
             &:not(:last-child) {
                 margin-right: 2.25rem;

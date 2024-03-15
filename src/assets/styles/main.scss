@@ -25,6 +25,9 @@ section {
     position: relative;
     overflow-y: auto;
     height: 100%;
+    &--lock {
+        overflow: hidden;
+    }
 }
 
 .fade-enter-active,

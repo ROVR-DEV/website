@@ -3,7 +3,7 @@
         <div id="base-layout">
             <Header />
 
-            <main class="main">
+            <main class="main" :class="{'main--lock' : showDownloadPopup}">
                 <transition name="fade">
                     <download-popup v-if="showDownloadPopup" @close="showDownloadPopup = false"/>
                 </transition>
@@ -29,6 +29,7 @@
 
 <script setup>
     import { onMounted, onUnmounted, ref, computed, watch } from "vue";
+    import { useRoute, useRouter } from 'vue-router';
     import io from 'socket.io-client';
     import Echo from 'laravel-echo';
     import axios from 'axios';
@@ -41,6 +42,9 @@
     import Header from "@/components/Header.vue";
     import Footer from "@/components/Footer.vue";
     import DownloadPopup from "@/components/DownloadPopup.vue";
+
+    const router = useRouter();
+    const route  = useRoute();
 
     const error = ref(false);
     const isDocumentHidden = ref(false);
@@ -60,6 +64,8 @@
         getCurators();
         getSchedule();
 
+        await router.isReady();
+
         window.io = io;
         window.Echo = new Echo(
             {
@@ -77,7 +83,10 @@
         document.addEventListener(visibilityChange, handleVisibilityChange, false);
 
         setTimeout(() => {
-            showDownloadPopup.value = true;
+            if(!route.query.webview) {
+                showDownloadPopup.value = true;
+                document.querySelector('.main').scrollTop = 0;
+            }
         }, 15000);
     });
 
@@ -95,8 +104,10 @@
     // updating schedule 
     watch(() => playerStore.isFinished, (state) => {
         if (state) {
-            scheduleStore.loadSchedule(null);
-            getSchedule();
+            setTimeout(() => {
+                scheduleStore.loadSchedule(null);
+                getSchedule();
+            }, 2000);
         }
     });
 
@@ -148,7 +159,13 @@
             lp: 'app'
         }
 
-        return radioStore.radio ? radioStore.radio.show.cover_app_radio.replace(/localhost|lp/gi, (matched) => replaceCover[matched]) : "";
+        if(radioStore.radio) {
+            if(radioStore.radio.show.cover_app_radio) {
+                return radioStore.radio.show.cover_app_radio.replace(/localhost|lp/gi, (matched) => replaceCover[matched]);
+            }
+        }
+
+        return radioStore.radio.show.cover_mobile ?? radioStore.radio.show.cover;
     });
 
     let hidden, visibilityChange;

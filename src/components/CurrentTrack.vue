@@ -4,8 +4,7 @@
         <div
             class="current-track__info"
             :class="{ 'current-track__info--fade-in': isAnimating && playerStore.isPlaying, 'current-track__info--fade-out': isAnimating && !playerStore.isPlaying }"
-            :style="opacity"
-            @animationend="isAnimating = false;">
+            :style="opacity">
                 <marquee-text marqueeClass="current-track__artist" :text="trackArtist"/>
                 <marquee-text marqueeClass="current-track__title" :text="trackTitle"/>
                 <em v-text="trackLabel" class="current-track__label"/>
@@ -27,6 +26,7 @@
 
     watch(() => playerStore.isPlaying, (state) => {
         isAnimating.value = true;
+        setTimeout(() => isAnimating.value = false, 1500);
 
         if(state) {
             trackArtist.value = playerStore.track.artist;

@@ -1,18 +1,23 @@
 <!-- eslint-disable vue/valid-template-root -->
 <template>
     <teleport to="#modal">
-        <transition name="fade">
+        <transition name="fade" v-if="!route.query.webview">
             <div class="preloader" v-if="!ready">
                 <img src="@/assets/images/logo/start_animation.gif" alt="">
             </div>
         </transition>
+        
     </teleport>
 </template>
 
 <script setup>
     import { onMounted, ref, watch } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
     import { usePlayerStore } from '@/stores/player';
     import jingleTrack from '@/assets/media/jingle.mp3';
+
+    const router = useRouter();
+    const route  = useRoute()
 
     const ready = ref(false);
     const player = ref(null);
@@ -24,6 +29,9 @@
         if (state) {
             player.value = new Audio(playerStore.stream_url);
             setInterval(() => playerTime.value++, 1000);
+            player.value.addEventListener('playing', () => {
+                playerStore.setLoading(false);
+            });
         }
     });
 
@@ -37,7 +45,9 @@
 
     watch(() => playerStore.track, () => setWidget(), { deep: true });
 
-    onMounted(() => {
+    onMounted(async () => {
+        await router.isReady();
+
         setTimeout(() => ready.value = true, 4000);
 
         setInterval(() => {
@@ -51,6 +61,7 @@
     const play = () => {
         player.value.play();
         player.value.currentTime = playerTime.value;
+        playerStore.setLoading(true);
         navigator.mediaSession.playbackState = "playing";
         setWidget();
 
@@ -74,24 +85,19 @@
             if(getMobileOS() === 'iOS') {
                 player.value.pause();
                 jingle.play();
-                console.log('no fade out fadeout');
             } else {
                 startFadeOut();
                 playerStore.setFinished(true);
                 setTimeout(() => jingle.play(), 2000);
-                console.log('fadeout');
             }
-
-            setTimeout(() => {
-                player.value.load(playerStore.stream_url);
-                playerTime.value = 0;
-            }, 5000);
 
             jingle.onended = () => {
                 jingle.pause();
                 jingle.currentTime = 0;
+                playerTime.value = 0;
+                player.value.load(playerStore.stream_url);
                 player.value.play();
-                player.value.currentTime = playerTime.value;
+                playerStore.setLoading(true);
                 player.value.volume = 1;
                 playerStore.setFinished(false);
             }
