@@ -28,6 +28,8 @@
 </template>
 
 <script setup>
+    import { onMounted } from 'vue';
+
     const props = defineProps({
         curator: {
             type: Object,
@@ -53,6 +55,8 @@
             links.splice(i, 1);
         }
     }
+
+    onMounted(() => document.querySelector('.main').scrollTop = 0);
 </script>
 
 <style lang="scss" scoped>

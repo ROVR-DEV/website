@@ -22,13 +22,11 @@
     const ready = ref(false);
     const player = ref(null);
     const playerStore = usePlayerStore();
-    const playerTime = ref(0);
     const jingle = new Audio(jingleTrack);
 
     watch(() => playerStore.stream_url, (state) => {
         if (state) {
             player.value = new Audio(playerStore.stream_url);
-            setInterval(() => playerTime.value++, 1000);
             player.value.addEventListener('playing', () => {
                 playerStore.setLoading(false);
             });
@@ -49,18 +47,11 @@
         await router.isReady();
 
         setTimeout(() => ready.value = true, 4000);
-
-        setInterval(() => {
-            if(!playerStore.isPlaying) {
-                player.value.load(playerStore.stream_url);
-                playerTime.value = 0;
-            }
-        }, 300000);
     });
 
     const play = () => {
+        player.value.load(playerStore.stream_url);
         player.value.play();
-        player.value.currentTime = playerTime.value;
         playerStore.setLoading(true);
         navigator.mediaSession.playbackState = "playing";
         setWidget();
@@ -89,15 +80,16 @@
                 startFadeOut();
                 playerStore.setFinished(true);
                 setTimeout(() => jingle.play(), 2000);
+                setTimeout(() => {
+                    player.value.load(playerStore.stream_url);
+                    player.value.play();
+                    player.value.volume = 0;
+                }, 3000);
             }
 
             jingle.onended = () => {
                 jingle.pause();
                 jingle.currentTime = 0;
-                playerTime.value = 0;
-                player.value.load(playerStore.stream_url);
-                player.value.play();
-                playerStore.setLoading(true);
                 player.value.volume = 1;
                 playerStore.setFinished(false);
             }

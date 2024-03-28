@@ -14,9 +14,8 @@
             }
             .curator__info {
                 display: block;
-                padding: 0;
-                margin: 65vw 0 0;
-                padding-bottom: 5.5rem;
+                padding: 0 0 5.5rem 0;
+                margin: 65vw 0 0 0;
                 overflow: visible;
             }
             .curator__details {
@@ -67,7 +66,7 @@
                 @include flex-center-vert;
                 position: fixed;
                 left: 0;
-                bottom: 4.5rem;
+                bottom: 5rem;
                 width: 100%;
                 background-color: $black;
                 margin-left: 0;
@@ -90,15 +89,10 @@
                 left: 2rem;
                 z-index: 5;
             }
-        }
-    }
-}
-
-@media screen and (max-width: 768px) {
-    #base-layout {
-        main > .curator {
-            .curator__links {
-                bottom: 5rem;
+            *::-webkit-scrollbar,
+            *::-webkit-scrollbar-track,
+            *::-webkit-scrollbar-thumb {
+                display: none;
             }
         }
     }
