@@ -48,7 +48,7 @@
             display: inline-block;
             margin-top: 6.5rem;
             width: 13rem;
-            @media screen and (max-width: 1600px) {
+            @media screen and (max-width: 1660px) {
                 margin-top: 3.5rem;
             }
         }

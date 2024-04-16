@@ -20,7 +20,7 @@
                     </a>
                 </div>
                 <div class="download-popup__links mobile">
-                    <a href="https://onelink.to/rovr" target="_blank" class="download-popup__link">
+                    <a href="https://onelink.to/rovr" target="_blank" class="download-popup__link appstore">
                         <img src="@/assets/images/icons/app-store.svg" alt="App Store">
                         App Store
                     </a>
@@ -83,19 +83,19 @@
             padding: 3rem 2rem;
             color: $primary;
             h1 {
-                font-size: 3vw;
+                font-size: 52px;
                 text-transform: uppercase;
-                margin: 3rem 0;
+                margin: 2.5rem 0;
                 line-height: 1;
             }
             p {
-                font-size: 1.25vw;
+                font-size: 24px;
                 font-family: 'GT Alpina', sans-serif;
                 font-style: italic;
-                margin: 0 0 2rem 0;
+                margin: 0 0 3rem 0;
             }
             h2 {
-                font-size: 1.625vw;
+                font-size: 30px;
                 text-transform: uppercase;
                 margin: 0 0 4rem 0;
                 line-height: 1;
@@ -103,7 +103,6 @@
         }
         &__logo {
             margin: 0 auto 1.5rem auto;
-            width: 8vw;
         }
         &__links {
             @include flex-center;
@@ -114,7 +113,7 @@
         &__link {
             @include flex-center-horiz;
             align-items: flex-end;
-            font-size: 1.25vw;
+            @include font-size(18px);
             font-weight: bold;
             text-decoration: none;
             color: $primary;
@@ -123,7 +122,7 @@
             }
             img {
                 margin-right: 0.5rem;
-                width: 1.5rem;
+                width: 1.25rem;
             }
         }
         &__close {
@@ -133,26 +132,37 @@
             cursor: pointer;
         }
 
-        @media screen and (max-width: 1600px) {
+        @media screen and (max-width: 1660px) {
             &__content {
                 height: 80%;
+                max-width: 750px;
+            }
+            &__logo {
+                width: 110px;
             }
             &__info {
                 h1 {
+                    font-size: 36px;
                     line-height: 1.1;
                     margin: 2rem 0;
                 }
                 p {
+                    font-size: 18px;
                     margin: 0;
+                    max-width: 450px;
                 }
                 h2 {
+                    font-size: 24px;
                     margin: 2rem 0;
                 }
 
             }
+            &__link {
+                font-size: 16px;
+            }
         }
 
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: 1024px) {
             &__content {
                 grid-template-columns: 1fr;
             }
@@ -166,13 +176,13 @@
                 border: 1px solid $primary;
                 border-radius: 1rem;
                 h1 {
-                    @include font-size(52px);
+                    font-size: 48px;
                 }
                 p {
-                    @include font-size(26px);
+                    font-size: 24px;
                 }
                 h2 {
-                    @include font-size(30px);
+                    font-size: 28px;
                 }
             }
             &__links {
@@ -184,11 +194,46 @@
                 }
             }
             &__link {
-                @include font-size(18px);
+                font-size: 18px;
                 align-items: center;
+                &.appstore {
+                    img {
+                        position: relative;
+                        top: -4px;
+                    }
+                }
+                img {
+                    width: 1.75rem;
+                }
             }
             &__close {
                 width: 1.5rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            &__info {
+                h1 {
+                    font-size: 30px;
+                }
+                p {
+                    font-size: 18px;
+                }
+                h2 {
+                    font-size: 20px;
+                }
+            }
+            &__link {
+                font-size: 16px;
+                align-items: center;
+                &.appstore {
+                    img {
+                        top: -2px;
+                    }
+                }
+                img {
+                    width: 1.5rem;
+                }
             }
         }
     }

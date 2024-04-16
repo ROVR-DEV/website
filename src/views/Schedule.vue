@@ -97,6 +97,9 @@
             z-index: 1;
             padding: 0 3.5rem 1.5rem 3.5rem;
             overflow-y: auto;
+            &::-webkit-scrollbar-thumb {
+                box-shadow: 0 0 10px rgba($color: $black, $alpha: 0.5);
+            }
         }
         &__empty {
             @include flex-center;

@@ -14,7 +14,12 @@
 
                 <!-- FOR MOBILE -->
                 <div class="show__cover" @touchstart="startScaling" @touchend="stopScaling">
-                    <img :src="radioCover" :style="{ transform: photoScaleStyle }" class="" alt="preview">
+                    <img 
+                        :src="radioCover"
+                        :style="{
+                        transform: photoScaleStyle }"
+                        oncontextmenu="return false;"
+                        alt="preview">
                 </div>
                 <!-- FOR MOBILE -->
             </div>
@@ -28,16 +33,21 @@
         <!-- FOR DESKTOP -->
     </section>
 
-    <curator-info v-if="showCuratorInfo" :curator="radioStore.radio.curator" @close="showCuratorInfo = false"/>
+    <transition name="slide">
+        <curator-info v-if="showCuratorInfo" :curator="radioStore.radio.curator" @close="showCuratorInfo = false"/>
+    </transition>
 </template>
 
 <script setup>
-    import { ref, computed } from 'vue';
+    import { ref, computed, onMounted, watch } from 'vue';
     import { useRadioStore } from "@/stores/radio";
+    import { useRoute } from 'vue-router';
     import PlayButton   from '@/components/PlayButton.vue';
     import RadioTimer   from '@/components/RadioTimer.vue';
     import CurrentTrack from '@/components/CurrentTrack.vue';
     import CuratorInfo  from '@/components/CuratorInfo.vue';
+
+    const route = useRoute();
 
     const radioStore = useRadioStore();
     const showCuratorInfo = ref(false);
@@ -45,6 +55,12 @@
     const showCuratorInfoHandler = (delay) => {
         setTimeout(() => showCuratorInfo.value = true, delay);
     }
+
+    const mobileImageHeight = ref(0);
+
+    onMounted(() => {
+        mobileImageHeight.value = (window.innerHeight / 730) * 371;
+    });
 
     // replacing radio cover (backend bug)
     const radioCover = computed(() => {
@@ -55,6 +71,8 @@
 
         return radioStore.radio ? radioStore.radio.show.cover.replace(/localhost|lp/gi, (matched) => replaceCover[matched]) : "";
     });
+
+    watch(route, () => showCuratorInfo.value = false);
 
     // image scale
     const isScaling = ref(false);
@@ -158,5 +176,18 @@
                 z-index: 2;
             }
         }
+    }
+
+    .slide-enter-active,
+    .slide-leave-active {
+        transition: right 0.6s ease-out;
+        @media screen and (max-width: 1024px) {
+            transition: none;
+        }
+    }
+
+    .slide-enter-from,
+    .slide-leave-to {
+        right: -100%;
     }
 </style>

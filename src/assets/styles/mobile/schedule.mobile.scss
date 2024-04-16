@@ -11,7 +11,7 @@
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
     #base-layout {
         .schedule {
             overflow: hidden;
@@ -139,7 +139,7 @@
                         grid-row: 2;
                         margin-bottom: 0.25rem;
                         max-width: 100%;
-                        align-self: flex-end;
+                        align-self: center;
                         line-height: 1;
                         -webkit-text-stroke: $primary 0.025px;
                     }
@@ -156,14 +156,14 @@
                         }
                     }
                     &__description {
-                        @include font-size(21px);
+                        @include font-size(20px);
                         font-weight: normal;
                         grid-column: 2/3;
                         grid-row: 4;
                         margin-bottom: 0;
                         line-height: 1.2;
                         max-width: 100%;
-                        align-self: flex-end;
+                        align-self: center;
                     }
                     .player-button {
                         grid-column: 1/2;
@@ -180,5 +180,12 @@
                 }
             }
         }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #base-layout .schedule__current .schedule-program__title,
+    #base-layout .schedule__current .schedule-program__description {
+        align-self: flex-end;
     }
 }

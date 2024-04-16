@@ -6,7 +6,7 @@
 
     ::-webkit-scrollbar-track {
         border-radius: 10px;
-        background: #434343;
+        background: #333;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -15,7 +15,16 @@
     }
 }
 
-@media screen and (max-width: 1600px) {
+@media screen and (max-width: 1024px) {
+    // SCROLL BAR
+    ::-webkit-scrollbar,
+    ::-webkit-scrollbar-track,
+    ::-webkit-scrollbar-thumb {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1660px) {
     html {
         font-size: 14px;
     }

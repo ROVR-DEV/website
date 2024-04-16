@@ -3,7 +3,7 @@
     <teleport to="#modal">
         <transition name="fade" v-if="!route.query.webview">
             <div class="preloader" v-if="!ready">
-                <img src="@/assets/images/logo/start_animation.gif" alt="">
+                <preloader-logo/>
             </div>
         </transition>
         
@@ -14,6 +14,7 @@
     import { onMounted, ref, watch } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { usePlayerStore } from '@/stores/player';
+    import PreloaderLogo from './animated_svg/PreloaderLogo.vue';
     import jingleTrack from '@/assets/media/jingle.mp3';
 
     const router = useRouter();
@@ -173,6 +174,7 @@
 
 <style lang="scss" scoped>
     .preloader {
+        @include flex-center;
         position: fixed;
         top: 0;
         left: 0;
@@ -180,12 +182,5 @@
         height: 100%;
         z-index: 50;
         background-color: $black;
-        img {
-            width: 20rem;
-            position: absolute;
-            top: 45%;
-            left: 50%;
-            transform: translate(-50%, -45%);
-        }
     }
 </style>

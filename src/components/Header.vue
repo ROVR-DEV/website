@@ -112,7 +112,7 @@
                 font-style: italic;
                 text-transform: uppercase;
                 transition: all 0.2s ease-in-out;
-                @media screen and (min-width: 769px) {
+                @media screen and (min-width: 1025px) {
                     background-image: linear-gradient(
                         to right,
                         $primary,

@@ -1,4 +1,4 @@
-@media screen and (max-width: 1600px) {
+@media screen and (max-width: 1660px) {
     #base-layout {
         .header {
             flex: 1 0 6.66rem;
@@ -6,7 +6,7 @@
     }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
     #base-layout {
         .header {
             padding: 1.5rem 2rem;
@@ -16,7 +16,7 @@
                 top: 6.66rem;
                 left: 0;
                 width: 100%;
-                height: calc(100% - 10rem);
+                height: calc(100% - 11rem);
                 background-color: $black;
                 opacity: 0;
                 z-index: -1;

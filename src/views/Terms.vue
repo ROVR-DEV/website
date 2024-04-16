@@ -166,13 +166,13 @@
 
             <div class="terms__partners">
                 <div class="partner">
-                    <img src="@/assets/images/sgae-logo.png" alt="sgae">
+                    <img src="@/assets/images/partners/sgae-logo.png" alt="sgae">
                 </div>
                 <div class="partner">
-                    <img src="@/assets/images/acum-logo.png" alt="acum">
+                    <img src="@/assets/images/partners/acum-logo.png" alt="acum">
                 </div>
                 <div class="partner">
-                    <img src="@/assets/images/tono-logo.png" alt="tono">
+                    <img src="@/assets/images/partners/tono-logo.png" alt="tono">
                 </div>
             </div>
         </div>
@@ -207,7 +207,7 @@
             padding-bottom: 3rem;
             border-bottom: 1px solid $primary;
             line-height: 1;
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 1024px) {
                 @include font-size(36px);
                 margin-bottom: 2.5rem;
                 padding-bottom: 2rem;
@@ -215,7 +215,7 @@
         }
         &__block {
             h2 {
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 1024px) {
                     @include font-size(24px);
                 }
             }
@@ -227,7 +227,7 @@
                 a {
                     color: inherit;
                 }
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 1024px) {
                     @include font-size(16px);
                 }
             }

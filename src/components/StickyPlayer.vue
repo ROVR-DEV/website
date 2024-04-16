@@ -76,7 +76,7 @@
                 width: 14px;
                 aspect-ratio: 1;
             }
-            @media screen and (max-width: 1600px) {
+            @media screen and (max-width: 1660px) {
                 flex: 1 0 30px;
             }
         }

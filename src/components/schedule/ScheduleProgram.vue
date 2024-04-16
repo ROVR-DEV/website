@@ -105,7 +105,7 @@
                 margin-right: 0.25rem;
                 
             }
-            @media screen and (max-width: 1600px) {
+            @media screen and (max-width: 1660px) {
                 @include font-size(20px);
                 strong {
                     @include font-size(46px);
@@ -123,7 +123,7 @@
             margin: 0 0 0.5rem;
             line-height: 1;
             -webkit-text-stroke: 0.5px $black;
-            @media screen and (max-width: 1600px) {
+            @media screen and (max-width: 1660px) {
                 @include font-size(32px);
             }
         }
@@ -138,7 +138,7 @@
                 margin-left: 0.25rem;
                 cursor: pointer;
             }
-            @media screen and (max-width: 1600px) {
+            @media screen and (max-width: 1660px) {
                 @include font-size(20px);
                 em {
                     @include font-size(32px);
@@ -151,7 +151,7 @@
             line-height: 1.2;
             font-weight: bold;
             max-width: 80%;
-            @media screen and (max-width: 1600px) {
+            @media screen and (max-width: 1660px) {
                 @include font-size(18px);
             }
         }

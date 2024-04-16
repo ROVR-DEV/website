@@ -12,6 +12,9 @@ const routes = [
     path: "/about",
     name: "about",
     component: AboutView,
+    meta: {
+      title: "ROVR - About"
+    }
   },
   {
     path: "/",
@@ -22,32 +25,51 @@ const routes = [
     path: "/schedule",
     name: "schedule",
     component: ScheduleView,
+    meta: {
+      title: "ROVR - Schedule"
+    }
   },
   {
     path: "/curators",
     name: "curators",
     component: CuratorsView,
+    meta: {
+      title: "ROVR - Curators"
+    }
   },
   {
     path: "/shop",
     name: "shop",
     component: ShopView,
+    meta: {
+      title: "ROVR - Shop"
+    }
   },
   {
     path: "/terms",
     name: "terms",
     component: TermsView,
+    meta: {
+      title: "ROVR - Terms & Conditions"
+    }
   },
   {
     path: "/privacy",
     name: "privacy",
     component: PrivacyView,
+    meta: {
+      title: "ROVR - Privacy Notice"
+    }
   },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+});
+
+router.beforeEach((to) => {
+  document.title = to.meta?.title ?? "ROVR - Radio Reinvented"
 });
 
 export default router;

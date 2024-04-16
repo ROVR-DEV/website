@@ -45,7 +45,7 @@
             animation: pulse 1s infinite ease-in-out alternate;
         }
 
-        @media screen and (max-width: 1600px) {
+        @media screen and (max-width: 1660px) {
             width: 6.25rem;
         }
     }

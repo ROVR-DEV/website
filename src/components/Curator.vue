@@ -36,7 +36,7 @@
             max-width: 10.75rem;
             aspect-ratio: 1;
             margin-right: 1.5rem;
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 1024px) {
                 min-width: 7.5rem;
                 max-width: 7.5rem;
                 margin-right: 1rem;
@@ -53,7 +53,7 @@
             position: relative;
             top: -0.825rem;
             left: 4px;
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 1024px) {
                 width: calc(100% - 7.5rem - 1rem);
             }
         }
@@ -67,7 +67,7 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             line-height: 1.5;
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 1024px) {
                 @include font-size(32px);
             }
         }
@@ -76,7 +76,7 @@
             font-weight: bold;
             display: block;
             text-transform: uppercase;
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 1024px) {
                 @include font-size(14px);
             }
         }

@@ -405,7 +405,7 @@
             border-bottom: 1px solid $primary;
             line-height: 1;
             text-transform: uppercase;
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 1024px) {
                 @include font-size(36px);
                 margin-bottom: 2.5rem;
                 padding-bottom: 2rem;
@@ -415,13 +415,13 @@
         &__block {
             h2 {
                 line-height: 1.5;
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 1024px) {
                     @include font-size(24px);
                 }
             }
 
             h3 {
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 1024px) {
                     @include font-size(20px);
                 }
             }
@@ -437,7 +437,7 @@
                     color: inherit;
                 }
 
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 1024px) {
                     @include font-size(16px);
                 }
             }
@@ -458,7 +458,7 @@
                     cursor: pointer;
                     line-height: 1.5;
                 }
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 1024px) {
                     &:not(.privacy__subnav) {
                         padding-left: 0;
                     }
@@ -490,7 +490,7 @@
                     margin-bottom: 0.5rem;
                 }
             }
-            @media screen and (max-width: 768px) {
+            @media screen and (max-width: 1024px) {
                 @include font-size(14px);
                 line-height: 1.5;
                 padding: 1rem ;
@@ -502,7 +502,7 @@
         &__kids {
             h2 {
                 @include font-size(36px);
-                @media screen and (max-width: 768px) {
+                @media screen and (max-width: 1024px) {
                     @include font-size(32px);
                 }
             }
@@ -516,7 +516,7 @@
                     &:not(:last-child) {
                         margin-bottom: 0.5rem;
                     }
-                    @media screen and (max-width: 768px) {
+                    @media screen and (max-width: 1024px) {
                         @include font-size(16px);
                     }
                 }

@@ -22,8 +22,8 @@
     </template>
 
     <div class="error" v-else>
-        <img src="/src/assets/images/error.svg" alt="error">
-        <p>An error occurred while loading application resources.</p>
+        <img src="/src/assets/images/logo/logo.svg" alt="logo">
+        <p>An error occurred while loading application resources, please try again later.</p>
     </div>
 </template>
 
@@ -78,6 +78,7 @@
         window.Echo.private('playnow.' + userStore.gmt).listen('.playnow', (e) => {
             radioStore.loadData(e.playnow.live);
             playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
+            error.value = false;
         });
 
         document.addEventListener(visibilityChange, handleVisibilityChange, false);
@@ -121,8 +122,9 @@
             radioStore.loadData(e.data.live);
             playerStore.setStreamUrl(radioStore.radio.stream_url);
             playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
+            error.value = false;
             console.log(radioStore.radio);
-        }).catch(() => console.log('axios error'));
+        }).catch(() => error.value = true);
     }
 
     const getSchedule = async () => {
@@ -201,8 +203,25 @@
     .error {
         @include flex-center-column;
         height: 100%;
+        img {
+            width: 20rem;
+            @media screen and (max-width: 1024px) {
+                width: 17rem;
+            }
+        }
         p {
-            @include font-size(24px);
+            @include font-size(20px);
+            color: $primary;
+            margin: 2rem 0;
+            max-width: 500px;
+            text-align: center;
+            padding: 0 1rem;
+            @media screen and (max-width: 1660px) {
+                max-width: 450px;
+            }
+            @media screen and (max-width: 1400px) {
+                max-width: 400px;
+            }
         }
     }
 </style>
