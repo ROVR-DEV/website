@@ -174,7 +174,6 @@
 
 <style lang="scss" scoped>
     .preloader {
-        @include flex-center;
         position: fixed;
         top: 0;
         left: 0;
@@ -182,5 +181,11 @@
         height: 100%;
         z-index: 50;
         background-color: $black;
+        & > * {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -45%);
+        }
     }
 </style>

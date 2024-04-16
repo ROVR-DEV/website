@@ -33,9 +33,7 @@
         <!-- FOR DESKTOP -->
     </section>
 
-    <transition name="slide">
-        <curator-info v-if="showCuratorInfo" :curator="radioStore.radio.curator" @close="showCuratorInfo = false"/>
-    </transition>
+    <curator-info v-if="showCuratorInfo" :curator="radioStore.radio.curator" @close="showCuratorInfo = false"/>
 </template>
 
 <script setup>
@@ -176,18 +174,5 @@
                 z-index: 2;
             }
         }
-    }
-
-    .slide-enter-active,
-    .slide-leave-active {
-        transition: right 0.6s ease-out;
-        @media screen and (max-width: 1024px) {
-            transition: none;
-        }
-    }
-
-    .slide-enter-from,
-    .slide-leave-to {
-        right: -100%;
     }
 </style>
