@@ -7,37 +7,33 @@
                 <p class="show__description" v-text="radioStore.radio.show.description ?? radioStore.radio.show.about"/>
                 <div class="show__player">
                     <play-button/>
-                    <radio-timer
-                        :until="Math.round(radioStore.radio.show.until)"
-                        :since="Math.round(radioStore.radio.show.since)"/>
+                    <radio-timer/>
                 </div>
-
-                <!-- FOR MOBILE -->
-                <div class="show__cover" @touchstart="startScaling" @touchend="stopScaling">
-                    <img 
-                        :src="radioCover"
-                        :style="{
-                        transform: photoScaleStyle }"
-                        oncontextmenu="return false;"
-                        alt="preview">
-                </div>
-                <!-- FOR MOBILE -->
             </div>
             
             <current-track/>
         </div>
-        <!-- FOR DESKTOP -->
-        <div class="radio__image" @mousedown="startScaling" @mouseup="stopScaling">
-            <img :src="radioCover" :style="{ transform: photoScaleStyle }" alt="preview">
+
+        <div class="radio__image"
+            @mousedown.prevent="isMobile ? null : startScaling()" 
+            @mouseup.prevent="isMobile ? null : stopScaling()"
+            @touchstart.prevent="isMobile ? startScaling() : null" 
+            @touchend.prevent="isMobile ? stopScaling() : null">
+            <img 
+                v-if="radioStore.radio"
+                :src="radioCover"
+                :style="{ transform: photoScaleStyle }" 
+                oncontextmenu="return false;"
+                alt="preview"
+                fetchpriority="high">
         </div>
-        <!-- FOR DESKTOP -->
     </section>
 
     <curator-info v-if="showCuratorInfo" :curator="radioStore.radio.curator" @close="showCuratorInfo = false"/>
 </template>
 
 <script setup>
-    import { ref, computed, onMounted, watch } from 'vue';
+    import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
     import { useRadioStore } from "@/stores/radio";
     import { useRoute } from 'vue-router';
     import PlayButton   from '@/components/PlayButton.vue';
@@ -50,15 +46,36 @@
     const radioStore = useRadioStore();
     const showCuratorInfo = ref(false);
 
+    const isMobile = ref(false);
+
+    const checkIfMobile = () => {
+        isMobile.value = window.innerWidth <= 1024;
+    }
+
+    onMounted(() => {
+        checkIfMobile();
+        window.addEventListener('resize', checkIfMobile);
+
+        watch(() => radioStore.radio, (state) => {
+            if(state) {
+                let preloadLink = document.createElement("link");
+                preloadLink.href = radioStore.radio.show.cover;
+                preloadLink.rel = "preload";
+                preloadLink.as = "image";
+                document.head.appendChild(preloadLink);
+            }
+        }, { once: true });
+    });
+
+    onUnmounted(() => {
+        onUnmounted(() => {
+            window.removeEventListener('resize', checkIfMobile);
+        });
+    });
+
     const showCuratorInfoHandler = (delay) => {
         setTimeout(() => showCuratorInfo.value = true, delay);
     }
-
-    const mobileImageHeight = ref(0);
-
-    onMounted(() => {
-        mobileImageHeight.value = (window.innerHeight / 730) * 371;
-    });
 
     // replacing radio cover (backend bug)
     const radioCover = computed(() => {

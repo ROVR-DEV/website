@@ -59,6 +59,8 @@
 
     const intervalId = ref(null);
 
+    let nextShowImg = new Image();
+
     onMounted(async () => {
         getRadio();
         getCurators();
@@ -77,6 +79,7 @@
 
         window.Echo.private('playnow.' + userStore.gmt).listen('.playnow', (e) => {
             radioStore.loadData(e.playnow.live);
+            console.log(radioStore.radio);
             playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
             error.value = false;
         });
@@ -105,6 +108,9 @@
     // updating schedule 
     watch(() => playerStore.isFinished, (state) => {
         if (state) {
+            radioStore.loadData(scheduleStore.schedule[1]);
+            radioStore.radio.show.since = 0;
+            radioStore.radio.show.until = 7200;
             setTimeout(() => {
                 scheduleStore.loadSchedule(null);
                 getSchedule();
@@ -123,7 +129,6 @@
             playerStore.setStreamUrl(radioStore.radio.stream_url);
             playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
             error.value = false;
-            console.log(radioStore.radio);
         }).catch(() => error.value = true);
     }
 
@@ -135,7 +140,7 @@
             }
         }).then(e => {
             scheduleStore.loadSchedule(e.data);
-            console.log(e.data);
+            nextShowImg.src = scheduleStore.schedule[1].show.cover;
         }).catch((e) => {
             console.log(e);
         });
@@ -148,7 +153,6 @@
             }
         }).then(e => {
             curatorsStore.loadCurators(e.data);
-            console.log(e.data);
         }).catch((e) => {
             console.log(e);
         });

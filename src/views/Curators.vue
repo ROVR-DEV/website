@@ -28,7 +28,6 @@
     const openCuratorInfo = (data) => {
         showCuratorInfo.value = true;
         selectedCurator.value = data;
-        console.log(data);
     }
 
     const closeCuratorInfo = () => {

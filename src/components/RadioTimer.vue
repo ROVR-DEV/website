@@ -9,40 +9,39 @@
 <script setup>
     import { computed, onMounted, ref, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
+    import { useRadioStore }  from '@/stores/radio';
 
     const playerStore = usePlayerStore();
+    const radioStore  = useRadioStore();
 
     const mode = ref('until');
 
-    const props = defineProps({
-        since: {
-            type: Number,
-            required: true
-        },
-        until: {
-            type: Number,
-            required: true
-        },
-    });
-
-    const timerSince = ref(props.since);
-    const timerUntil = ref(props.until);
+    const timerSince = ref(Math.round(radioStore.radio.show.since));
+    const timerUntil = ref(Math.round(radioStore.radio.show.until));
     const timeInterval = ref(null);
 
     onMounted(() => {
         updateTime();
+
+        // for dev testing
+        // radioStore.radio.show.until = 15;   
     });
 
-    watch(() => props.until, (newValue) => {
-        timerUntil.value = newValue;
+    watch(() => radioStore.radio.show.until, (newValue) => {
+        timerUntil.value = Math.round(newValue);
+    });
+
+    watch(() => radioStore.radio.show.since, (newValue) => {
+        timerSince.value = Math.round(newValue);
     });
 
     watch(timerUntil, (position) => {
-        if (position === 0) {
-            playerStore.setFinished(true);
-            timerUntil.value = 0;
-            timerSince.value = 0;
+        if (position === 5) {
+            playerStore.setFadeOut(true);
+            console.log("FADE OUT!!!");
         }
+
+        console.log(position);
     });
 
     const timer = computed(() => {

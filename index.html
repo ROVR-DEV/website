@@ -1,46 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- Google Tag Manager -->
-    <script>(function (w, d, s, l, i) {
-        w[l] = w[l] || []; w[l].push({
-          'gtm.start':
-            new Date().getTime(), event: 'gtm.js'
-        }); var f = d.getElementsByTagName(s)[0],
-          j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-      })(window, document, 'script', 'dataLayer', 'GTM-MXLW4XCW');</script>
-    <!-- End Google Tag Manager -->
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FX7N7NJ47L"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() { dataLayer.push(arguments); }
-      gtag('js', new Date());
-
-      gtag('config', 'G-FX7N7NJ47L');
-    </script>
-    <!-- End Google tag (gtag.js) -->
-
-    <!-- Meta Pixel Code -->
-    <script>
-      !function (f, b, e, v, n, t, s) {
-        if (f.fbq) return; n = f.fbq = function () {
-          n.callMethod ?
-          n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-        };
-        if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-        n.queue = []; t = b.createElement(e); t.async = !0;
-        t.src = v; s = b.getElementsByTagName(e)[0];
-        s.parentNode.insertBefore(t, s)
-      }(window, document, 'script',
-        'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '1121112732416587');
-      fbq('track', 'PageView');
-    </script>
-    <!-- End Meta Pixel Code -->
-
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico" sizes="48x48">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -48,6 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ROVR - Radio Reinvented</title>
     <meta name="description" content="A new-generation music discovery platform: 24/7 music, no interruptions, quality selectors, timezoned selections, anti-algorithm. Tune In">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://devsite.rovr.live/">
+    <meta property="og:title" content="ROVR - Radio Reinvented">
+    <meta property="og:description" content="A new-generation music discovery platform: 24/7 music, no interruptions, quality selectors, timezoned selections, anti-algorithm. Tune In">
+    <meta property="og:image" content="https://devsite.rovr.live/apple-touch-icon.png"/>
   </head>
   <body>
     <!-- Google Tag Manager (noscript) -->
@@ -62,6 +27,47 @@
 
     <div id="app"></div>
     <div id="modal"></div>
+
     <script type="module" src="/src/main.js"></script>
+
+    <!-- Google Tag Manager -->
+    <script>(function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+          'gtm.start':
+            new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+          j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+      })(window, document, 'script', 'dataLayer', 'GTM-MXLW4XCW');</script>
+    <!-- End Google Tag Manager -->
+    
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16569257578"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() { dataLayer.push(arguments); }
+      gtag('js', new Date()); 
+
+      gtag('config', 'AW-16569257578');
+    </script>
+    <!-- End Google tag (gtag.js) -->
+    
+    <!-- Meta Pixel Code -->
+    <script>
+      !function (f, b, e, v, n, t, s) {
+        if (f.fbq) return; n = f.fbq = function () {
+          n.callMethod ?
+            n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+        };
+        if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+        n.queue = []; t = b.createElement(e); t.async = !0;
+        t.src = v; s = b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t, s)
+      }(window, document, 'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+      fbq('init', '1121112732416587');
+      fbq('track', 'PageView');
+    </script>
+    <!-- End Meta Pixel Code -->
   </body>
 </html>

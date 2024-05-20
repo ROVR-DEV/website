@@ -5,6 +5,7 @@ export const usePlayerStore = defineStore("player", {
         isPlaying: false,
         isFinished: false,
         isLoading: false,
+        fade_out: false,
         stream_url: null,
         show_sticky_player: false,
         track: {
@@ -23,6 +24,9 @@ export const usePlayerStore = defineStore("player", {
         },
         setLoading(status) {
             this.isLoading = status;
+        },
+        setFadeOut(status) {
+            this.fade_out = status;
         },
         setStreamUrl(url) {
             this.stream_url = url;

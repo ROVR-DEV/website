@@ -2,6 +2,7 @@
     #base-layout {
         main > .curator {
             display: block;
+            overflow-y: auto;
             .curator__photo {
                 position: fixed;
                 height: 50%;

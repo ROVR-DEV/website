@@ -18,7 +18,7 @@
     import jingleTrack from '@/assets/media/jingle.mp3';
 
     const router = useRouter();
-    const route  = useRoute()
+    const route  = useRoute();
 
     const ready = ref(false);
     const player = ref(null);
@@ -38,7 +38,7 @@
         state ? play() : pause();
     });
 
-    watch(() => playerStore.isFinished, (state) => {
+    watch(() => playerStore.fade_out, (state) => {
         if (state) finish();
     });
 
@@ -69,24 +69,25 @@
 
     const pause = () => {
         player.value.pause();
+        jingle.pause();
         navigator.mediaSession.playbackState = "paused";
     }
 
     const finish = () => {
         if (!player.value.paused) {
-            if(getMobileOS() === 'iOS') {
-                player.value.pause();
-                jingle.play();
-            } else {
-                startFadeOut();
+            startFadeOut();
+
+            setTimeout(() => {
+                playerStore.setFadeOut(false);
                 playerStore.setFinished(true);
-                setTimeout(() => jingle.play(), 2000);
-                setTimeout(() => {
-                    player.value.load(playerStore.stream_url);
-                    player.value.play();
-                    player.value.volume = 0;
-                }, 3000);
-            }
+                jingle.play();
+            }, 5000);
+
+            setTimeout(() => {
+                player.value.load(playerStore.stream_url);
+                player.value.play();
+                player.value.volume = 0;
+            }, 6000);
 
             jingle.onended = () => {
                 jingle.pause();
@@ -107,27 +108,7 @@
                 player.value.volume = 0;
                 clearInterval(fadeOutInterval.value);
             }
-        }, 20);
-    }
-
-    const getMobileOS = () => {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-        // Windows Phone must come first because its UA also contains "Android"
-        if (/windows phone/i.test(userAgent)) {
-            return "Windows Phone";
-        }
-
-        if (/android/i.test(userAgent)) {
-            return "Android";
-        }
-
-        // iOS detection from: http://stackoverflow.com/a/9039885/177710
-        if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
-            return "iOS";
-        }
-
-        return "unknown";
+        }, 50);
     }
 
     const setWidget = () => {

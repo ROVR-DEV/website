@@ -2,19 +2,19 @@
     <footer class="footer">
         <a href="https://www.instagram.com/rovr_live/" target="_blank" class="footer__instagram"><img src="@/assets/images/icons/instagram.svg" alt="instagram"></a>
         <a href="https://apps.apple.com/app/id6448372142" target="_blank" class="footer__appstore">
-            <img src="@/assets/images/icons/app-store.svg" alt="App Store">
+            <img src="@/assets/images/icons/app-store.svg" alt="icon">
             App Store
         </a>
         <a href="https://play.google.com/store/apps/details?id=com.rovr.live" target="_blank" class="footer__googleplay">
-            <img src="@/assets/images/icons/google-play.svg" alt="Google Play">
+            <img src="@/assets/images/icons/google-play.svg" alt="icon">
             Google Play
         </a>
         <a href="https://onelink.to/rovr" target="_blank" class="footer__appstore mobile">
-            <img src="@/assets/images/icons/app-store.svg" alt="App Store">
+            <img src="@/assets/images/icons/app-store.svg" alt="icon">
             App Store
         </a>
         <a href="https://onelink.to/rovr" target="_blank" class="footer__googleplay mobile">
-            <img src="@/assets/images/icons/google-play.svg" alt="Google Play">
+            <img src="@/assets/images/icons/google-play.svg" alt="icon">
             Google Play
         </a>
         <router-link to="/privacy" class="footer__privacy">Privacy Notice</router-link>

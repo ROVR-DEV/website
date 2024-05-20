@@ -70,7 +70,7 @@
             width: 95%;
         }
         &__image {
-            background-image: url('../assets/images/app-bg.png');
+            background-image: url('../assets/images/app-bg.webp');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
