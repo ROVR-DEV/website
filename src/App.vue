@@ -79,7 +79,6 @@
 
         window.Echo.private('playnow.' + userStore.gmt).listen('.playnow', (e) => {
             radioStore.loadData(e.playnow.live);
-            console.log(radioStore.radio);
             playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
             error.value = false;
         });

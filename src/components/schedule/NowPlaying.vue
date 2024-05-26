@@ -12,7 +12,7 @@
             <em
                 v-text="program.curator.name"
                 v-press="{ time: 250, scale: 0.97 }"
-                @click="showCuratorInfoHandler(program.curator, 500)"/>
+                @click="$router.push(`/curator/${program.curator.name.replace(/\s+/g, '-')}`)"/>
         </span>
         <p class="schedule-program__description" v-text="program.show.description"/>
         <play-button/>
@@ -28,8 +28,6 @@
             required: true
         }
     });
-
-    const emit = defineEmits(['show-curator-info']);
 
     const getTime = (part, time) => {
         const parts = time.split(/[/ :]/);
@@ -49,10 +47,6 @@
             return hours;
         }
         if (part === 'format') return format;
-    }
-
-    const showCuratorInfoHandler = (curator, delay) => {
-        setTimeout(() => emit('show-curator-info', curator), delay);
     }
 </script>
 

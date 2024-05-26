@@ -20,12 +20,7 @@
     const timerUntil = ref(Math.round(radioStore.radio.show.until));
     const timeInterval = ref(null);
 
-    onMounted(() => {
-        updateTime();
-
-        // for dev testing
-        // radioStore.radio.show.until = 15;   
-    });
+    onMounted(() => updateTime());
 
     watch(() => radioStore.radio.show.until, (newValue) => {
         timerUntil.value = Math.round(newValue);
@@ -38,10 +33,7 @@
     watch(timerUntil, (position) => {
         if (position === 5) {
             playerStore.setFadeOut(true);
-            console.log("FADE OUT!!!");
         }
-
-        console.log(position);
     });
 
     const timer = computed(() => {

@@ -6,6 +6,7 @@ import CuratorsView from "@/views/Curators.vue";
 import ShopView     from "@/views/Shop.vue";
 import TermsView    from "@/views/Terms.vue";
 import PrivacyView  from "@/views/Privacy.vue";
+import CuratorView  from "@/views/Curator.vue";
 
 const routes = [
   {
@@ -35,6 +36,15 @@ const routes = [
     component: CuratorsView,
     meta: {
       title: "ROVR - Curators"
+    }
+  },
+  {
+    path: "/curator/:name",
+    name: "curator",
+    component: CuratorView,
+    props: route => ({ name: route.params.name.replace(/-/g, ' ') }),
+    meta: {
+        title: route => `ROVR - ${route.params.name.replace(/-/g, ' ')}`
     }
   },
   {
@@ -69,7 +79,13 @@ const router = createRouter({
 });
 
 router.beforeEach((to) => {
-  document.title = to.meta?.title ?? "ROVR - Radio Reinvented"
+  if (to.name === 'curator' && to.params.name) {
+    const curatorName = to.params.name.replace(/-/g, ' ');
+    document.title = `ROVR - ${curatorName}`;
+  } else {
+    document.title = to.meta?.title ?? "ROVR - Radio Reinvented";
+  }
 });
+
 
 export default router;

@@ -1,9 +1,9 @@
 <template>
-    <section class="radio" v-if="radioStore.radio" v-show="!showCuratorInfo">
+    <section class="radio" v-if="radioStore.radio">
         <div class="radio__info">
             <div class="show">
                 <h1 class="show__title" v-text="radioStore.radio.show.title"/>
-                <h2 class="show__author">BY <em v-text="radioStore.radio.curator.name" v-press="{ time: 250, scale: 0.97 }" @click="showCuratorInfoHandler(500)"/></h2>
+                <h2 class="show__author">BY <em v-text="radioStore.radio.curator.name" v-press="{ time: 250, scale: 0.97 }" @click="$router.push(`/curator/${radioStore.radio.curator.name.replace(/\s+/g, '-')}`)"/></h2>
                 <p class="show__description" v-text="radioStore.radio.show.description ?? radioStore.radio.show.about"/>
                 <div class="show__player">
                     <play-button/>
@@ -28,24 +28,18 @@
                 fetchpriority="high">
         </div>
     </section>
-
-    <curator-info v-if="showCuratorInfo" :curator="radioStore.radio.curator" @close="showCuratorInfo = false"/>
 </template>
 
 <script setup>
     import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
     import { useRadioStore } from "@/stores/radio";
-    import { useRoute } from 'vue-router';
+    import { useRouter } from 'vue-router';
     import PlayButton   from '@/components/PlayButton.vue';
     import RadioTimer   from '@/components/RadioTimer.vue';
     import CurrentTrack from '@/components/CurrentTrack.vue';
-    import CuratorInfo  from '@/components/CuratorInfo.vue';
 
-    const route = useRoute();
-
+    const router = useRouter();
     const radioStore = useRadioStore();
-    const showCuratorInfo = ref(false);
-
     const isMobile = ref(false);
 
     const checkIfMobile = () => {
@@ -73,10 +67,6 @@
         });
     });
 
-    const showCuratorInfoHandler = (delay) => {
-        setTimeout(() => showCuratorInfo.value = true, delay);
-    }
-
     // replacing radio cover (backend bug)
     const radioCover = computed(() => {
         const replaceCover = {
@@ -86,8 +76,6 @@
 
         return radioStore.radio ? radioStore.radio.show.cover.replace(/localhost|lp/gi, (matched) => replaceCover[matched]) : "";
     });
-
-    watch(route, () => showCuratorInfo.value = false);
 
     // image scale
     const isScaling = ref(false);
@@ -108,7 +96,7 @@
         setTimeout(() => {
             photoScaleStyle.value = 'scale(1)';
             setTimeout(() => {
-                showCuratorInfo.value = true;
+                router.push(`/curator/${radioStore.radio.curator.id}`)
             }, 300);
         }, 100);
     }

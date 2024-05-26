@@ -7,8 +7,7 @@
                 <schedule-program
                     v-for="program in filteredSchedule"
                     :key="program.id"
-                    :program="program"
-                    @show-curator-info="curator => showCuratorInfoHandler(curator)"/>
+                    :program="program"/>
             </div>
 
             <div
@@ -17,12 +16,10 @@
                 v-text="`That's it for ${selectedDate.name}!`"/>
 
             <div class="schedule__current">
-                <now-playing :program="schedule[0]" @show-curator-info="curator => showCuratorInfoHandler(curator)"/>
+                <now-playing :program="schedule[0]"/>
             </div>
         </div>
     </section>
-
-    <curator-info v-if="showCuratorInfo" :curator="selectedCurator" @close="showCuratorInfo = false"/>
 </template>
 
 <script setup>
@@ -31,13 +28,10 @@
     import WeekDays from '@/components/schedule/WeekDays.vue';
     import ScheduleProgram from '@/components/schedule/ScheduleProgram.vue';
     import NowPlaying from '@/components/schedule/NowPlaying.vue';
-    import CuratorInfo from '@/components/CuratorInfo.vue';
 
     const scheduleStore = useScheduleStore();
     const schedule = ref(scheduleStore.schedule);
     const selectedDate = ref(null);
-    const showCuratorInfo = ref(false);
-    const selectedCurator = ref(null);
     const scrollParent = ref(null);
     const preloader = ref(false);
 
@@ -61,12 +55,6 @@
     const loadDaySchedule = (date) => {
         selectedDate.value = date;
         scrollParent.value.scrollTop = 0;
-    }
-
-    const showCuratorInfoHandler = (curator) => {
-        showCuratorInfo.value = true;
-        selectedCurator.value = curator;
-        console.log(curator);
     }
 
     const currentDate = computed(() => {
