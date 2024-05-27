@@ -1,6 +1,6 @@
 <template>
     <div class="schedule-program" v-if="program">
-        <img :src="program.show.cover" class="schedule-program__photo" alt="cover">
+        <img :src="programCover" class="schedule-program__photo" alt="cover">
         <span class="schedule-program__nowplaying">now playing</span>
         <h2 class="schedule-program__time">
             <strong v-text="getTime('hours', program.start_time)"/>
@@ -12,7 +12,7 @@
             <em
                 v-text="program.curator.name"
                 v-press="{ time: 250, scale: 0.97 }"
-                @click="$router.push(`/curator/${program.curator.name.replace(/\s+/g, '-')}`)"/>
+                @click="$router.push(`/curator/${slugify(program.curator.name)}`)"/>
         </span>
         <p class="schedule-program__description" v-text="program.show.description"/>
         <play-button/>
@@ -20,12 +20,36 @@
 </template>
 
 <script setup>
+    import { ref, computed, onMounted, onUnmounted } from 'vue';
+    import { slugify } from '@/utils/slugify';
     import PlayButton from '../PlayButton.vue';
 
-    defineProps({
+    const props = defineProps({
         program: {
             type: Object,
             required: true
+        }
+    });
+
+    const screenWidth = ref(window.innerWidth);
+
+    const updateScreenWidth = () => {
+        screenWidth.value = window.innerWidth;
+    };
+
+    onMounted(() => {
+        window.addEventListener('resize', updateScreenWidth);
+    });
+
+    onUnmounted(() => {
+        window.removeEventListener('resize', updateScreenWidth);
+    });
+
+    const programCover = computed(() => {
+        if (screenWidth.value < 1024) {
+            return props.program.show.cover;
+        } else {
+            return props.program.show.cover_desktop ?? props.program.show.cover;
         }
     });
 

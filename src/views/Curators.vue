@@ -1,12 +1,13 @@
 <template>
     <section class="curators">
-        <curator v-for="curator in sortedCurators" :key="curator.id" :curator="curator" @click="$router.push(`/curator/${curator.name.replace(/\s+/g, '-')}`)"/>
+        <curator v-for="curator in sortedCurators" :key="curator.id" :curator="curator" @click="$router.push(`/curator/${slugify(curator.name)}`)"/>
     </section>
 </template>
 
 <script setup>
     import { ref, computed, watch } from 'vue';
     import { useCuratorsStore } from '@/stores/curators';
+    import { slugify } from '@/utils/slugify';
     import Curator from '@/components/Curator.vue';
 
     const curatorsStore = useCuratorsStore();

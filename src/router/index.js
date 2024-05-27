@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from "vue-router";
+import { deslugify } from '@/utils/slugify';
 import AboutView    from "@/views/About.vue";
 import RadioView    from "@/views/Radio.vue";
 import ScheduleView from "@/views/Schedule.vue";
@@ -42,9 +43,9 @@ const routes = [
     path: "/curator/:name",
     name: "curator",
     component: CuratorView,
-    props: route => ({ name: route.params.name.replace(/-/g, ' ') }),
+    props: route => ({ name: deslugify(route.params.name) }),
     meta: {
-        title: route => `ROVR - ${route.params.name.replace(/-/g, ' ')}`
+      title: "ROVR - 1"
     }
   },
   {
@@ -80,7 +81,8 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   if (to.name === 'curator' && to.params.name) {
-    const curatorName = to.params.name.replace(/-/g, ' ');
+    //const curatorName = to.params.name.replace(/-/g, ' ');
+    const curatorName = deslugify(to.params.name);
     document.title = `ROVR - ${curatorName}`;
   } else {
     document.title = to.meta?.title ?? "ROVR - Radio Reinvented";

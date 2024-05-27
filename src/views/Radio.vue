@@ -3,7 +3,7 @@
         <div class="radio__info">
             <div class="show">
                 <h1 class="show__title" v-text="radioStore.radio.show.title"/>
-                <h2 class="show__author">BY <em v-text="radioStore.radio.curator.name" v-press="{ time: 250, scale: 0.97 }" @click="$router.push(`/curator/${radioStore.radio.curator.name.replace(/\s+/g, '-')}`)"/></h2>
+                <h2 class="show__author">BY <em v-text="radioStore.radio.curator.name" v-press="{ time: 250, scale: 0.97 }" @click="$router.push(`/curator/${slugify(radioStore.radio.curator.name)}`)"/></h2>
                 <p class="show__description" v-text="radioStore.radio.show.description ?? radioStore.radio.show.about"/>
                 <div class="show__player">
                     <play-button/>
@@ -34,6 +34,7 @@
     import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
     import { useRadioStore } from "@/stores/radio";
     import { useRouter } from 'vue-router';
+    import { slugify } from '@/utils/slugify';
     import PlayButton   from '@/components/PlayButton.vue';
     import RadioTimer   from '@/components/RadioTimer.vue';
     import CurrentTrack from '@/components/CurrentTrack.vue';
@@ -62,9 +63,7 @@
     });
 
     onUnmounted(() => {
-        onUnmounted(() => {
-            window.removeEventListener('resize', checkIfMobile);
-        });
+        window.removeEventListener('resize', checkIfMobile);
     });
 
     // replacing radio cover (backend bug)
@@ -74,7 +73,19 @@
             lp: 'app'
         }
 
-        return radioStore.radio ? radioStore.radio.show.cover.replace(/localhost|lp/gi, (matched) => replaceCover[matched]) : "";
+        if (radioStore.radio && radioStore.radio.show) {
+            let cover;
+
+            if(!isMobile.value) {
+                cover = radioStore.radio.show.cover_desktop ?? radioStore.radio.show.cover;
+            } else {
+                cover = radioStore.radio.show.cover;
+            }
+
+            return cover.replace(/localhost|lp/gi, (matched) => replaceCover[matched]);
+        } else {
+            return "";
+        }
     });
 
     // image scale
@@ -96,7 +107,7 @@
         setTimeout(() => {
             photoScaleStyle.value = 'scale(1)';
             setTimeout(() => {
-                router.push(`/curator/${radioStore.radio.curator.id}`)
+                router.push(`/curator/${slugify(radioStore.radio.curator.name)}`)
             }, 300);
         }, 100);
     }

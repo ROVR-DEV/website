@@ -128,6 +128,7 @@
             playerStore.setStreamUrl(radioStore.radio.stream_url);
             playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
             error.value = false;
+            console.log(e.data.live);
         }).catch(() => error.value = true);
     }
 

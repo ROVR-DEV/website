@@ -4,11 +4,11 @@
             <img src="@/assets/images/icons/arrow-left.svg" alt="back">
         </div>
         <div class="curator__photo">
-            <img :src="curator.photo" :alt="curator.name">
+            <img :src="curatorPhoto" :alt="curator.name">
         </div>
         <div class="curator__info">
             <div class="faux-crop">
-                <img :src="curator.photo" :alt="curator.name">
+                <img :src="curatorPhoto" :alt="curator.name">
             </div>
 
             <div class="curator__details">
@@ -28,7 +28,7 @@
 </template>
 
 <script setup>
-    import { onMounted, ref, watch, computed } from 'vue';
+    import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
     import { useCuratorsStore } from '@/stores/curators';
 
     const curator = ref(null);
@@ -45,6 +45,7 @@
 
     onMounted(() => {
         getCurator();
+        window.addEventListener('resize', updateScreenWidth);
     });
 
     const formatName = (name) => {
@@ -95,6 +96,24 @@
             }
         }
     }
+
+    const screenWidth = ref(window.innerWidth);
+
+    const updateScreenWidth = () => {
+        screenWidth.value = window.innerWidth;
+    }
+
+    onUnmounted(() => {
+        window.removeEventListener('resize', updateScreenWidth);
+    });
+
+    const curatorPhoto = computed(() => {
+        if (screenWidth.value < 1024) {
+            return curator.value.photo;
+        } else {
+            return curator.value.shows[0].cover_desktop ?? props.curator.photo;
+        }
+    });
 </script>
 
 <style lang="scss" scoped>

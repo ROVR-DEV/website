@@ -14,7 +14,7 @@
                 <em
                     v-text="program.curator.name"
                     v-press="{ time: 250, scale: 0.97 }"
-                    @click="$router.push(`/curator/${program.curator.name.replace(/\s+/g, '-')}`)"/>
+                    @click="$router.push(`/curator/${slugify(program.curator.name)}`)"/>
             </span>
             <p class="schedule-program__description" v-text="program.show.description"/>
         </div>
@@ -22,6 +22,8 @@
 </template>
 
 <script setup>
+    import { slugify } from '@/utils/slugify';
+
     defineProps({
         program: {
             type: Object,
