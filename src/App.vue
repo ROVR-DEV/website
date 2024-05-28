@@ -5,7 +5,7 @@
 
             <main class="main" :class="{'main--lock' : showDownloadPopup}">
                 <transition name="fade">
-                    <download-popup v-if="showDownloadPopup" @close="showDownloadPopup = false"/>
+                    <download-popup v-if="showDownloadPopup" @close="showDownloadPopup = false; curatorsStore.popupShowing(false);"/>
                 </transition>
 
                 <router-view v-slot="{ Component }">
@@ -87,7 +87,9 @@
 
         setTimeout(() => {
             if(!route.query.webview) {
+                curatorsStore.setScrollPosition(document.querySelector('.main').scrollTop);
                 showDownloadPopup.value = true;
+                curatorsStore.popupShowing(true);
                 document.querySelector('.main').scrollTop = 0;
             }
         }, 15000);
@@ -128,7 +130,6 @@
             playerStore.setStreamUrl(radioStore.radio.stream_url);
             playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
             error.value = false;
-            console.log(e.data.live);
         }).catch(() => error.value = true);
     }
 

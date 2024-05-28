@@ -111,7 +111,7 @@
         if (screenWidth.value < 1024) {
             return curator.value.photo;
         } else {
-            return curator.value.shows[0].cover_desktop ?? props.curator.photo;
+            return curator.value.shows[0].cover_desktop ?? curator.value.photo;
         }
     });
 </script>

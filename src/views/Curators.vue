@@ -17,6 +17,13 @@
         if (state) curators.value = state;
     });
 
+    watch(() => curatorsStore.isPopupShown, (status) => {
+        if (!status) {
+            document.querySelector('.main').scrollTop = curatorsStore.scrollPosition;
+            console.log(curatorsStore.scrollPosition);
+        }
+    });
+
     const sortedCurators = computed(() => {
         if (curators.value) {
             return curators.value.slice().sort((a, b) => {

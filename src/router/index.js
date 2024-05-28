@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import { deslugify } from '@/utils/slugify';
+import { nextTick } from 'vue';
 import AboutView    from "@/views/About.vue";
 import RadioView    from "@/views/Radio.vue";
 import ScheduleView from "@/views/Schedule.vue";
@@ -79,13 +80,39 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to) => {
+router.beforeEach((to, from, next) => {
   if (to.name === 'curator' && to.params.name) {
-    //const curatorName = to.params.name.replace(/-/g, ' ');
     const curatorName = deslugify(to.params.name);
     document.title = `ROVR - ${curatorName}`;
   } else {
     document.title = to.meta?.title ?? "ROVR - Radio Reinvented";
+  }
+
+  if (from.name === 'curators') {
+    sessionStorage.setItem('scrollPosition', parseInt(document.querySelector('.main').scrollTop));
+  }
+
+  next();
+});
+
+
+router.afterEach((to, from) => {
+  if (to.name === 'curators' && from.name === 'curator') {
+    const savedPosition = sessionStorage.getItem('scrollPosition');
+    if (savedPosition) {
+      const restoreScroll = () => {
+        const mainElement = document.querySelector('.main');
+        if (mainElement) {
+          mainElement.scrollTop = parseInt(savedPosition);
+          sessionStorage.removeItem('scrollPosition');
+        } else {
+          requestAnimationFrame(restoreScroll);
+        }
+      };
+      nextTick(() => {
+        requestAnimationFrame(restoreScroll);
+      });
+    }
   }
 });
 
