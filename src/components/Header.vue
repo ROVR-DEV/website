@@ -85,6 +85,11 @@
         },
         {
             id: 5,
+            name: "archive",
+            title: "archive",
+        },
+        {
+            id: 6,
             name: "shop",
             title: "shop",
         },

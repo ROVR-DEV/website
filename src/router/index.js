@@ -5,6 +5,8 @@ import AboutView    from "@/views/About.vue";
 import RadioView    from "@/views/Radio.vue";
 import ScheduleView from "@/views/Schedule.vue";
 import CuratorsView from "@/views/Curators.vue";
+import ArchiveVue   from "@/views/Archive.vue";
+import ArchiveShowVue from "@/views/ArchiveShow.vue";
 import ShopView     from "@/views/Shop.vue";
 import TermsView    from "@/views/Terms.vue";
 import PrivacyView  from "@/views/Privacy.vue";
@@ -47,6 +49,23 @@ const routes = [
     props: route => ({ name: deslugify(route.params.name) }),
     meta: {
       title: "ROVR - 1"
+    }
+  },
+  {
+    path: "/archive",
+    name: "archive",
+    component: ArchiveVue,
+    meta: {
+      title: "ROVR - Archive"
+    }
+  },
+  {
+    path: "/show/:publisher_id",
+    name: "show",
+    component: ArchiveShowVue,
+    props: route => ({ publisher_id: route.params.publisher_id }),
+    meta: {
+      title: "ROVR - Archive show"
     }
   },
   {

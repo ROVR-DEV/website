@@ -1,12 +1,12 @@
 @media screen and (min-width: 480px) {
     // SCROLL BAR
     ::-webkit-scrollbar {
-        width: 0.5rem;
+        width: 0.35rem;
     }
 
     ::-webkit-scrollbar-track {
         border-radius: 10px;
-        background: #333;
+        background: #222;
     }
 
     ::-webkit-scrollbar-thumb {
@@ -37,7 +37,8 @@
 }
 
 @import "./mobile/header.mobile.scss";
-@import "./mobile/radio.mobile.scss";
+@import "./mobile/show.mobile.scss";
 @import "./mobile/schedule.mobile.scss";
 @import "./mobile/curator-info.mobile.scss";
+@import "./mobile/archive.mobile.scss";
 @import "./mobile/footer.mobile.scss";

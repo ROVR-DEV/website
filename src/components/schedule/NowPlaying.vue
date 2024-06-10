@@ -22,7 +22,7 @@
 <script setup>
     import { ref, computed, onMounted, onUnmounted } from 'vue';
     import { slugify } from '@/utils/slugify';
-    import PlayButton from '../PlayButton.vue';
+    import PlayButton from '@/components/ui/PlayButton.vue';
 
     const props = defineProps({
         program: {

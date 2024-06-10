@@ -31,6 +31,32 @@ section {
     }
 }
 
+.share-button {
+    @include flex-center;
+    width: 3rem;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 1px solid $primary;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    img {
+        display: block;
+        width: 1.25rem;
+        height: auto;
+        position: relative;
+        left: -2px;
+        transition: filter 0.2s ease-in;
+    }
+    &:hover {
+        background-color: $primary;
+        img {
+            filter: brightness(0);
+        }
+    }
+}
+
+/* -------------- VUE TRANSITION --------------- */
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity 0.5s linear;
@@ -39,6 +65,153 @@ section {
 .fade-enter-from,
 .fade-leave-to {
     opacity: 0;
+}
+/* --------------------------------------------- */
+
+
+/* -------------- VUE DATE-PICKER STYLES --------------- */
+.vc-container,
+.vc-weekday,
+.vc-title-wrapper span {
+    color: $primary;
+    text-transform: uppercase;
+}
+
+.vc-pane-header-wrapper {
+    position: relative;
+}
+
+.vc-header {
+    height: auto;
+    margin-top: 0;
+    .vc-arrow {
+        background: $primary;
+        color: $black;
+        border-radius: 50%;
+        width: 3rem;
+        height: 3rem;
+        aspect-ratio: 1;
+        border: 2px solid $primary;
+        transition: all 0.2s ease-in;
+        box-shadow: none;
+        outline: none;
+        &:hover {
+            background: transparent;
+            color: $primary;
+        }
+    }
+}
+
+.vc-pane {
+    .vc-header {
+        height: 0;
+        position: relative;
+        bottom: 2.625rem;
+        margin-bottom: 1rem;
+        .vc-title {
+            pointer-events: none;
+        }
+    }
+}
+
+.vc-day {
+    .vc-day-content {
+        @include font-size(24px);
+        font-family: 'Kern Standard', sans-serif;
+        font-weight: bold;
+        width: 3.5rem;
+        height: 3.5rem;
+        aspect-ratio: 1;
+        line-height: normal;
+        border: 2px solid $primary;
+        background-color: $black;
+        border-radius: 50%;
+        transition: all 0.2s ease-in;
+        box-shadow: none;
+        outline: none;
+        &.vc-highlight-content-solid {
+            background-color: $primary;
+            color: $black;
+        }
+        @media(hover: hover) {
+            &:hover {
+                background-color: $primary;
+                color: $black;
+            }
+        }
+        @media(hover: none) {
+            &:active {
+                background-color: $primary;
+                color: $black;
+            }
+        }
+    }
+}
+
+.vc-weeks {
+    & > *:not(:last-child) {
+        margin-bottom: 2rem;
+    }
+}
+
+.vc-highlight-bg-solid {
+    background-color: transparent;
+}
+
+/* ------------------------------------------------------ */
+
+
+/* ------- SHOW COMPONENT STYLES (Radio, Archive) ------- */
+.show {
+    display: flex;
+    overflow: hidden;
+    &__info {
+        @include flex-column;
+        flex: 0 1 55%;
+    }
+    &__details {
+        @include flex-column;
+        flex: auto;
+        background-color: $black;
+        color: $primary;
+        padding: 3rem 3.5rem;
+    }
+    &__cover {
+        display: none;
+    }
+    &__title {
+        @include font-size(72px);
+        line-height: 102%;
+        letter-spacing: -1.659px;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin: 0;
+    }
+    &__author {
+        @include font-size(48px);
+        font-weight: bold;
+        margin: 0 0 1rem 0;
+        line-height: 1;
+        em {
+            @include font-size(80px);
+            display: inline-block;
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+    }
+    &__description {
+        @include font-size(22px);
+        margin: 0;
+        font-weight: normal;
+        letter-spacing: 0.23px;
+        line-height: 125%;
+        max-width: 620px;
+        margin: 0 0 2.25rem 0;
+    }
+    &__player {
+        @include flex-center-vert;
+        margin-top: auto;
+    }
 }
 
 @import "media";

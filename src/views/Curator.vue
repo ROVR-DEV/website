@@ -1,11 +1,11 @@
 <template>
     <section class="curator" v-if="curator">
-        <div class="curator__close" v-if="showBackButton" @click="$router.back()">
-            <img src="@/assets/images/icons/arrow-left.svg" alt="back">
-        </div>
+        <close-button class="curator__close"/>
+
         <div class="curator__photo">
             <img :src="curatorPhoto" :alt="curator.name">
         </div>
+        
         <div class="curator__info">
             <div class="faux-crop">
                 <img :src="curatorPhoto" :alt="curator.name">
@@ -30,6 +30,7 @@
 <script setup>
     import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
     import { useCuratorsStore } from '@/stores/curators';
+    import CloseButton from '@/components/ui/CloseButton.vue';
 
     const curator = ref(null);
     const curatorsStore = useCuratorsStore();
@@ -40,8 +41,6 @@
             required: true,
         }
     });
-
-    const showBackButton = computed(() => window.history.state && window.history.state.back !== null);
 
     onMounted(() => {
         getCurator();
@@ -127,28 +126,15 @@
         background-color: $black;
         z-index: 5;
         overflow: hidden;
-
         &__close {
-            @include flex-center;
-            width: 2.75rem;
-            aspect-ratio: 1;
-            background-color: $black;
-            border-radius: 50%;
-            cursor: pointer;
             position: absolute;
             top: 3rem;
             left: 3rem;
             z-index: 3;
-
-            img {
-                width: 1.5rem;
-            }
         }
-
         &__photo {
             flex: 1 0 45%;
             position: relative;
-
             img {
                 display: block;
                 width: 100%;
@@ -158,7 +144,6 @@
                 position: relative;
                 z-index: 1;
             }
-
             &::after {
                 content: "";
                 position: absolute;
@@ -170,7 +155,6 @@
                 z-index: 2;
             }
         }
-
         &__info {
             @include flex(row, flex-start, space-between);
             flex: auto;
@@ -178,16 +162,13 @@
             color: $primary;
             overflow: hidden;
         }
-
         &__details {
             @include flex-column;
             height: 100%;
         }
-
         .faux-crop {
             display: none;
         }
-
         &__name {
             @include font-size(100px);
             font-family: 'GT Alpina', sans-serif;
@@ -195,8 +176,8 @@
             font-style: italic;
             margin: 0 0 2rem 0;
             line-height: 1;
+            user-select: text;
         }
-
         &__about {
             @include font-size(18px);
             font-weight: normal;
@@ -204,16 +185,14 @@
             line-height: 1.25;
             white-space: pre-line;
             overflow: auto;
-
+            user-select: text;
             &::-webkit-scrollbar {
                 width: 0.25rem;
             }
         }
-
         &__links {
             margin-left: 1rem;
         }
-
         &__link {
             @include flex-center;
             text-decoration: none;
@@ -223,30 +202,24 @@
             width: 2.5rem;
             aspect-ratio: 1;
             transition: $transition;
-
             img {
                 width: 1.25rem;
                 transition: $transition;
             }
-
             &:not(:last-child) {
                 margin-bottom: 1.25rem;
             }
-
             @media screen and (min-width: 768px) {
                 &:hover {
                     background-color: $primary;
-
                     img {
                         filter: brightness(0);
                     }
                 }
             }
-
             @media screen and (max-width: 1024px) {
                 &:active {
                     background-color: $primary;
-
                     img {
                         filter: brightness(0);
                     }

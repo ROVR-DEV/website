@@ -1,7 +1,7 @@
 <template>
     <div class="sticky-player">
         <div class="sticky-player__info">
-            <span class="sticky-player__source">radio</span>
+            <span class="sticky-player__source" v-text="playerStore.source"/>
             <marquee-text marqueeClass="sticky-player__track">
                 {{ playerStore.track.title }} <strong>by {{ playerStore.track.artist }}</strong>
             </marquee-text>

@@ -35,7 +35,11 @@
     });
 
     watch(() => playerStore.isPlaying, (state) => {
-        state ? play() : pause();
+        if(state && playerStore.source === 'radio') {
+            play();
+        } else {
+            pause();
+        }
     });
 
     watch(() => playerStore.fade_out, (state) => {
@@ -63,7 +67,7 @@
             setTimeout(() => {
                 jingle.pause();
                 jingle.currentTime = 0;
-            }, 10);
+            }, 20);
         }, 500);
     }
 

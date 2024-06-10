@@ -10,14 +10,17 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "@vueuse/core": "^10.10.0",
     "axios": "^1.6.5",
     "laravel-echo": "^1.15.3",
     "loaders.css": "^0.1.2",
     "pinia": "^2.1.7",
     "socket.io-client": "^2.5.0",
+    "v-calendar": "^3.1.2",
     "vue": "^3.3.11",
-    "vue-marquee-text-component": "^2.0.1",
-    "vue-router": "^4.2.5"
+    "vue-router": "^4.2.5",
+    "vue-virtual-scroll-grid": "^1.11.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.6.2",

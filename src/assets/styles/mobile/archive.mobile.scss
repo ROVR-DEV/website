@@ -1,0 +1,156 @@
+@media screen and (max-width: 1660px) {
+    .main {
+        .archive {
+            &__shows {
+                grid-gap: 3rem 2rem;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 1024px) {
+    .main {
+        .archive {
+            flex-direction: column;
+            &__filters {
+                flex: 0 1 auto;
+                padding: 3rem 2rem;
+                margin-bottom: 0;
+                border: none;
+                .vc-container {
+                    .vc-weeks {
+                        padding: 0 2rem;
+                        & > *:not(:last-child) {
+                            margin-bottom: 1.25rem;
+                        }
+                    }
+                    .vc-day .vc-day-content {
+                        width: 3.25rem;
+                        height: 3.25rem;
+                        font-size: 1.325rem;
+                    }
+                    .vc-header {
+                        padding: 0 2rem;
+                        .vc-arrow {
+                            &:hover {
+                                background-color: $primary;
+                                color: $black;
+                            }
+                        }
+                    }
+                }
+            }
+            &__search {
+                margin-bottom: 0;
+                &-input::placeholder {
+                    opacity: 0.45;
+                    font-weight: bold;
+                }
+                &-clear {
+                    &--mobile {
+                        @include flex-center;
+                    }
+                    &--desktop {
+                        display: none;
+                    }
+                }
+            }
+            &__calendar--desktop {
+                display: none;
+            }
+            &__calendar--mobile {
+                display: none;
+                position: absolute;
+                top: 6.7rem;
+                left: 0;
+                background-color: $black;
+                width: 100%;
+                height: calc(100% - 6.7rem);
+                z-index: 4;
+                &.active {
+                    @include flex-column;
+                }
+                &-controls {
+                    @include grid(2, 1rem);
+                    margin-top: auto;
+                    padding: 0 2rem 2rem 2rem;
+                    button {
+                        @include flex-center;
+                        @include font-size(18px);
+                        width: 100%;
+                        padding: 1rem;
+                        border: 1px solid $primary;
+                        text-align: center;
+                        text-transform: uppercase;
+                        font-weight: bold;
+                        line-height: 1;
+                        &.archive__calendar--mobile-cancel {
+                            background-color: transparent;
+                            color: $primary;
+                        }
+                        &.archive__calendar--mobile-confirm {
+                            background-color: $primary;
+                            color: $black;
+                        }
+                    }
+                }
+            }
+            &__calendar-open {
+                display: block;
+                text-align: center;
+                margin-left: 1rem;
+                button {
+                    @include flex-center;
+                    width: 2.5rem;
+                    aspect-ratio: 1;
+                    border-radius: 50%;
+                    border: 1px solid $primary;
+                    cursor: pointer;
+                    margin: 0 auto;
+                    img {
+                        display: block;
+                        width: 1rem;
+                    }
+                }
+                span {
+                    display: block;
+                    color: $primary;
+                    font-size: 0.75rem;
+                    font-weight: normal;
+                    margin-top: 5px;
+                }
+            }
+            &__scroller {
+                flex: auto;
+                padding: 0 2rem 3rem 2rem;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main {
+        .archive {
+            &__filters {
+                padding: 2rem;
+            }
+            &__search {
+                &-input {
+                    font-size: 16px;
+                }
+                &-clear {
+                    @include font-size(16px);
+                    line-height: 1;
+                    top: 4px;
+                    img {
+                        width: 0.75rem;
+                        margin-left: 0.5rem;
+                    }
+                }
+            }
+            &__shows {
+                grid-template-columns: 1fr;
+            }
+        }
+    }
+}

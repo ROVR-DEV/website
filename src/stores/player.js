@@ -5,6 +5,7 @@ export const usePlayerStore = defineStore("player", {
         isPlaying: false,
         isFinished: false,
         isLoading: false,
+        source: null,
         fade_out: false,
         stream_url: null,
         show_sticky_player: false,
@@ -16,8 +17,9 @@ export const usePlayerStore = defineStore("player", {
         }
     }),
     actions: {
-        togglePlaying() {
+        togglePlaying(source) {
             this.isPlaying = !this.isPlaying;
+            if(source) this.source = source;
         },
         setFinished(status) {
             this.isFinished = status;

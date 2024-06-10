@@ -37,6 +37,7 @@
     import { useRadioStore } from "@/stores/radio";
     import { useCuratorsStore } from '@/stores/curators';
     import { useScheduleStore } from '@/stores/schedule';
+    import { useArchiveStore } from '@/stores/archive';
     import { usePlayerStore } from "./stores/player";
     import Player from "./components/Player.vue";
     import Header from "@/components/Header.vue";
@@ -55,6 +56,7 @@
     const userStore = useUserStore();
     const curatorsStore = useCuratorsStore();
     const scheduleStore = useScheduleStore();
+    const archiveStore = useArchiveStore();
     const playerStore = usePlayerStore();
 
     const intervalId = ref(null);
@@ -65,6 +67,7 @@
         getRadio();
         getCurators();
         getSchedule();
+        getArchive();
 
         await router.isReady();
 
@@ -92,7 +95,7 @@
                 curatorsStore.popupShowing(true);
                 document.querySelector('.main').scrollTop = 0;
             }
-        }, 15000);
+        }, 1500000);
     });
 
     onUnmounted(() => {
@@ -157,6 +160,17 @@
         }).catch((e) => {
             console.log(e);
         });
+    }
+
+    const getArchive = async () => {
+        try {
+            const response = await axios.get('https://corsproxy.io/?https://arh.rovr.live/get-sounds-from-db?requestAuthToken=kBPA828rg6ppypFKjkadjkajkdHJhkd739817hHJhjkbdsjkbbHHdak31');
+            const archiveSortedByDate = response.data.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
+            archiveStore.loadArchive(archiveSortedByDate);
+            console.log(archiveStore.archive);
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     // replacing radio cover (backend bug)
