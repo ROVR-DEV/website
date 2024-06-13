@@ -8,6 +8,7 @@ export const usePlayerStore = defineStore("player", {
         source: null,
         fade_out: false,
         stream_url: null,
+        soundcloud_secret: null,
         show_sticky_player: false,
         track: {
             title: null,
@@ -17,9 +18,26 @@ export const usePlayerStore = defineStore("player", {
         }
     }),
     actions: {
+        play(source) {
+            if (this.source && this.source !== source) {
+                this.stop();
+            }
+            this.source = source;
+            this.isPlaying = true;
+        },
+        pause() {
+            this.isPlaying = false;
+        },
+        stop() {
+            this.isPlaying = false;
+            this.source = null;
+        },
         togglePlaying(source) {
-            this.isPlaying = !this.isPlaying;
-            if(source) this.source = source;
+            if (this.source === source && this.isPlaying) {
+                this.pause();
+            } else {
+                this.play(source);
+            }
         },
         setFinished(status) {
             this.isFinished = status;
@@ -33,11 +51,14 @@ export const usePlayerStore = defineStore("player", {
         setStreamUrl(url) {
             this.stream_url = url;
         },
+        setSoundcloudSecret(url) {
+            this.soundcloud_secret = url;
+        },
         updateTrack(title, artist, label, cover) {
             this.track.title  = title;
             this.track.artist = artist;
             this.track.label  = label;
-            this.track.cover  = cover;
+            if(cover) this.track.cover  = cover;
         },
         toggleStickyPlayer(status) {
             this.show_sticky_player = status;

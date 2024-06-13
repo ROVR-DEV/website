@@ -11,10 +11,11 @@
 </template>
 
 <script setup>
-    import { onMounted, ref, watch } from 'vue';
+    import { onMounted, ref, watch, computed } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { usePlayerStore } from '@/stores/player';
-    import PreloaderLogo from './animated_svg/PreloaderLogo.vue';
+    import { useRadioStore } from '@/stores/radio';
+    import PreloaderLogo from '@/components/animated_svg/PreloaderLogo.vue';
     import jingleTrack from '@/assets/media/jingle.mp3';
 
     const router = useRouter();
@@ -23,6 +24,7 @@
     const ready = ref(false);
     const player = ref(null);
     const playerStore = usePlayerStore();
+    const radioStore = useRadioStore();
     const jingle = new Audio(jingleTrack);
 
     watch(() => playerStore.stream_url, (state) => {
@@ -35,10 +37,16 @@
     });
 
     watch(() => playerStore.isPlaying, (state) => {
-        if(state && playerStore.source === 'radio') {
+        if (state && playerStore.source === 'radio') {
             play();
         } else {
             pause();
+        }
+    });
+
+    watch(() => playerStore.source, (newSource, oldSource) => {
+        if(player.value && oldSource !== null) {
+            newSource !== 'radio' ? pause() : play();
         }
     });
 
@@ -58,6 +66,7 @@
         player.value.load(playerStore.stream_url);
         player.value.play();
         playerStore.setLoading(true);
+        playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
         navigator.mediaSession.playbackState = "playing";
         setWidget();
 
@@ -155,6 +164,22 @@
             });
         }
     }
+
+    // replacing radio cover (backend bug)
+    const metadataCover = computed(() => {
+        const replaceCover = {
+            localhost: 'app.rovr.live',
+            lp: 'app'
+        }
+
+        if (radioStore.radio) {
+            if (radioStore.radio.show.cover_app_radio) {
+                return radioStore.radio.show.cover_app_radio.replace(/localhost|lp/gi, (matched) => replaceCover[matched]);
+            }
+        }
+
+        return radioStore.radio.show.cover_mobile ?? radioStore.radio.show.cover;
+    });
 </script>
 
 <style lang="scss" scoped>

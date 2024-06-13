@@ -91,13 +91,13 @@
 <style lang="scss" scoped>
     .archive__tracklist {
         flex: 0 1 45%;
-        border-left: 2px solid $primary;
         &-close {
             @include flex-center;
             position: sticky;
             top: 3rem;
             right: 3rem;
             margin-left: auto;
+            margin-right: 2rem;
             width: 3rem;
             aspect-ratio: 1;
             border-radius: 50%;

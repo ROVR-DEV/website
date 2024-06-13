@@ -19,7 +19,7 @@
                 </div>
             </div>
             
-            <current-track/>
+            <current-track type="radio"/>
         </div>
 
         <show-image is-radio :curator="radioStore.radio.curator.name"/>

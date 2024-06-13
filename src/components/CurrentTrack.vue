@@ -3,7 +3,10 @@
         <p>Track:</p>
         <div
             class="current-track__info"
-            :class="{ 'current-track__info--fade-in': isAnimating && playerStore.isPlaying, 'current-track__info--fade-out': isAnimating && !playerStore.isPlaying }"
+            :class="{
+                'current-track__info--fade-in': isAnimating && playerStore.isPlaying,
+                'current-track__info--fade-out': isAnimating && !playerStore.isPlaying
+            }"
             :style="opacity">
                 <marquee-text marqueeClass="current-track__artist" :text="trackArtist"/>
                 <marquee-text marqueeClass="current-track__title" :text="trackTitle"/>
@@ -24,14 +27,21 @@
     const trackTitle  = ref('Title');
     const trackLabel  = ref('Label');
 
-    watch(() => playerStore.isPlaying, (state) => {
-        isAnimating.value = true;
-        setTimeout(() => isAnimating.value = false, 1500);
+    const props = defineProps({
+        type: {
+            type: String,
+            required: true,
+        }
+    })
 
-        if(state) {
+    watch(() => playerStore.isPlaying, (state) => {
+        if(state && playerStore.source === props.type) {
             trackArtist.value = playerStore.track.artist;
             trackTitle.value  = playerStore.track.title;
             trackLabel.value  = playerStore.track.label;
+
+            isAnimating.value = true;
+            setTimeout(() => isAnimating.value = false, 1500);
         } else {
             setTimeout(() => {
                 trackArtist.value = 'Artist';
@@ -42,18 +52,22 @@
     });
 
     watch(() => playerStore.track, () => {
-        if(playerStore.isPlaying) {
+        if(playerStore.isPlaying && playerStore.source === props.type) {
             trackArtist.value = playerStore.track.artist;
             trackTitle.value = playerStore.track.title;
             trackLabel.value = playerStore.track.label;
+        } else {
+            trackArtist.value = 'Artist';
+            trackTitle.value = 'Title';
+            trackLabel.value = 'Label';
         }
     }, { deep: true });
 
     const opacity = computed(() => {
         if (isAnimating.value) {
-            return { opacity: playerStore.isPlaying ? '1' : '0.32' };
+            return { opacity: playerStore.isPlaying && playerStore.source === props.type ? '1' : '0.32' };
         } else {
-            return { opacity: playerStore.isPlaying ? '1' : '0.32' };
+            return { opacity: playerStore.isPlaying && playerStore.source === props.type ? '1' : '0.32' };
         }
     });
 </script>

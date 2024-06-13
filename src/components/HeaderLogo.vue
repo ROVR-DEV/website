@@ -20,15 +20,29 @@
     const sticky = ref(false);
 
     watch(route, () => {
-        if (router.currentRoute.value.name !== 'radio' && playerStore.isPlaying) {
-            if (!sticky.value) {
-                collapse();
-                setTimeout(() => playerStore.toggleStickyPlayer(true), 1000);
+        if(playerStore.source === 'radio' && playerStore.isPlaying) {
+            if (router.currentRoute.value.name !== 'radio') {
+                if (!sticky.value) {
+                    collapse();
+                    setTimeout(() => playerStore.toggleStickyPlayer(true), 1000);
+                }
+            } else {
+                if (playerStore.isPlaying) {
+                    playerStore.toggleStickyPlayer(false);
+                    setTimeout(() => expand(), 1000);
+                }
             }
-        } else {
-            if (playerStore.isPlaying) {
-                playerStore.toggleStickyPlayer(false);
-                setTimeout(() => expand(), 1000);
+        } else if(playerStore.source === 'archive' && playerStore.isPlaying) {
+            if (router.currentRoute.value.name !== 'show') {
+                if (!sticky.value) {
+                    collapse();
+                    setTimeout(() => playerStore.toggleStickyPlayer(true), 1000);
+                }
+            } else {
+                if (playerStore.isPlaying) {
+                    playerStore.toggleStickyPlayer(false);
+                    setTimeout(() => expand(), 1000);
+                }
             }
         }
     });
@@ -37,9 +51,16 @@
         if (!status && playerStore.show_sticky_player) {
             playerStore.toggleStickyPlayer(false);
             setTimeout(() => expand(), 500);
-        } else if (status && !playerStore.show_sticky_player && router.currentRoute.value.name !== 'radio') {
+        } else if (status && !playerStore.show_sticky_player && (router.currentRoute.value.name !== 'radio' && router.currentRoute.value.name !== 'show')) {
             collapse();
             setTimeout(() => playerStore.toggleStickyPlayer(true), 1000);
+        }
+    });
+
+    watch(() => playerStore.source, (newSource, oldSource) => {
+        if (playerStore.isPlaying && playerStore.show_sticky_player && newSource !== oldSource) {
+            playerStore.toggleStickyPlayer(false);
+            setTimeout(() => expand(), 500);
         }
     });
 

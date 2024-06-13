@@ -9,7 +9,8 @@
                 </transition>
 
                 <router-view v-slot="{ Component }">
-                    <player />
+                    <radio-player />
+                    <archive-player />
 
                     <keep-alive>
                         <component :is="Component" />
@@ -38,8 +39,9 @@
     import { useCuratorsStore } from '@/stores/curators';
     import { useScheduleStore } from '@/stores/schedule';
     import { useArchiveStore } from '@/stores/archive';
-    import { usePlayerStore } from "./stores/player";
-    import Player from "./components/Player.vue";
+    import { usePlayerStore } from "@/stores/player";
+    import RadioPlayer from "@/components/players/RadioPlayer.vue";
+    import ArchivePlayer from "@/components/players/ArchivePlayer.vue";
     import Header from "@/components/Header.vue";
     import Footer from "@/components/Footer.vue";
     import DownloadPopup from "@/components/DownloadPopup.vue";
@@ -82,7 +84,11 @@
 
         window.Echo.private('playnow.' + userStore.gmt).listen('.playnow', (e) => {
             radioStore.loadData(e.playnow.live);
-            playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
+
+            if(playerStore.isPlaying && playerStore.source === 'radio') {
+                playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
+            }
+            
             error.value = false;
         });
 
@@ -131,7 +137,6 @@
         }).then(e => {
             radioStore.loadData(e.data.live);
             playerStore.setStreamUrl(radioStore.radio.stream_url);
-            playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
             error.value = false;
         }).catch(() => error.value = true);
     }

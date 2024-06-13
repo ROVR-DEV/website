@@ -8,7 +8,7 @@
             <em class="sticky-player__label" v-text="playerStore.track.label"/>
         </div>
 
-        <button class="sticky-player__stop" @click="playerStore.togglePlaying();"/>
+        <button class="sticky-player__stop" @click="playerStore.stop();"/>
     </div>
 </template>
 

@@ -25,11 +25,11 @@
                 <p class="show__description" v-text="necessary_data.publisher_metadata.description" />
 
                 <div class="show__player">
-                    <player v-if="show" :soundcloud_secret="show.soundcloud_secret"/>
+                    <show-player v-if="show"/>
                 </div>
             </div>
 
-            <current-track />
+            <current-track type="archive"/>
         </div>
 
         <show-image
@@ -54,16 +54,18 @@
 <script setup>
     import { ref, onMounted, watch } from "vue";
     import { useArchiveStore } from "@/stores/archive";
+    import { usePlayerStore } from "@/stores/player";
     import { slugify } from '@/utils/slugify';
     import { formatDate } from "@/utils/formatDate";
     import axios from "axios";
-    import Player from "@/components/archive/Player.vue";
+    import ShowPlayer from "@/components/archive/ShowPlayer.vue";
     import CurrentTrack from '@/components/CurrentTrack.vue';
     import CloseButton from '@/components/ui/CloseButton.vue';
     import ShowImage from '@/components/ShowImage.vue';
     import Tracklist from "@/components/archive/Tracklist.vue";
 
     const archiveStore = useArchiveStore();
+    const playerStore = usePlayerStore();
     const show = ref(null);
     const necessary_data = ref(null);
     const isTracklistShown = ref(false);
@@ -96,6 +98,7 @@
         await axios.get(`https://corsproxy.io/?https://app.rovr.live/site/playlist/${props.publisher_id}`)
             .then(response => {
                 show.value = response.data;
+                playerStore.setSoundcloudSecret(show.value.soundcloud_secret);
                 console.log(response.data);
             })
             .catch(error => {
@@ -107,10 +110,11 @@
 <style lang="scss" scoped>
     .show {
         border-top: 2px solid $primary;
+        flex-direction: row-reverse;
         &__close {
             position: absolute;
             top: 3rem;
-            right: 3rem;
+            left: 3rem;
             z-index: 3;
         }
         &__row {

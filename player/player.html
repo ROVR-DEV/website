@@ -27,16 +27,26 @@
             console.log('ready');
         });
 
-        const togglePlayer = () => {
-            player.toggle();
-            console.log('togglePlayer called');
+        const play = () => {
+            player.play();
+            console.log('play called');
+        }
+
+        const pause = () => {
+            player.pause();
+            console.log('pause called');
         }
 
         window.addEventListener('message', (event) => {
             const { action } = event.data;
 
-            if (action === 'togglePlayer') {
-                togglePlayer();
+            switch(action) {
+                case 'play':
+                    play();
+                    break;
+                case 'pause':
+                    pause();
+                    break;
             }
         }, false);
     </script>
