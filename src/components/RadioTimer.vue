@@ -1,5 +1,5 @@
 <template>
-    <div class="radio__timer" :class="{'radio__timer--active' : playerStore.isPlaying}">
+    <div class="radio__timer" :class="{'radio__timer--active' : playerStore.isPlaying && playerStore.source === 'radio'}">
         <span
             v-text="timer"
             @click="switchTimerMode"/>
