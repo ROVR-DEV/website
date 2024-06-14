@@ -22,9 +22,17 @@
         $(iframe).attr('src', `https://w.soundcloud.com/player/?url=${getParams('url')}`);
 
         const player = SC.Widget(iframe);
+        let duration;
 
-        player.bind(SC.Widget.Events.READY, () => {
+        player.bind(SC.Widget.Events.READY, async () => {
             console.log('ready');
+
+            duration = await getDuration();
+            window.parent.postMessage({ action: 'duration', value: duration }, '*');
+
+            player.bind(SC.Widget.Events.PLAY_PROGRESS, (e) => {
+                window.parent.postMessage({ action: 'position', value: e.currentPosition }, '*');
+            });
         });
 
         const play = () => {
@@ -37,15 +45,37 @@
             console.log('pause called');
         }
 
-        window.addEventListener('message', (event) => {
-            const { action } = event.data;
+        const seekTo = (position) => {
+            player.seekTo(position);
+            console.log(`seek-to: ${formatPosition(position)}`);
+        }
 
-            switch(action) {
+        const getDuration = () => {
+            return new Promise((resolve) => {
+                player.getDuration(data => resolve(data));
+            });
+        }
+
+        const formatPosition = (ms) => {
+            let s = Math.round(ms / 1000),
+                h = Math.floor(s / 3600),
+                m = Math.floor((s % 3600) / 60);
+            s = s % 60;
+            return (h ? h + ':' : '') + (h && m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+        }
+
+        window.addEventListener('message', (event) => {
+            const { action, value } = event.data;
+
+            switch (action) {
                 case 'play':
                     play();
                     break;
                 case 'pause':
                     pause();
+                    break;
+                case 'seekTo':
+                    seekTo(value);
                     break;
             }
         }, false);
