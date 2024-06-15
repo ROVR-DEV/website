@@ -26,8 +26,8 @@
                 :id="`archive__track-${track.id}`"
                 v-for="track in tracks"
                 :key="track.id"
-                :class="{ active: track.id === activeTrackId }"
-                @click="setActiveTrack(track.id)">
+                :class="{ active: track.id === activeTrackId || track.title === playerStore.track.title }"
+                @click="playTrack(track)">
                     <div class="archive__track-number" v-text="trackNumber(track.pivot.order)"/>
                 
                     <div class="archive__track-info">
@@ -41,32 +41,15 @@
 </template>
 
 <script setup>
-    import { ref, nextTick } from "vue";
+    import { ref, nextTick, watch } from "vue";
     import { formatDate } from '@/utils/formatDate';
+    import { usePlayerStore } from "@/stores/player";
 
+    const playerStore = usePlayerStore();
     const activeTrackId = ref(null);
     const tracksContainer = ref(null);
 
-    const setActiveTrack = async (id) => {
-        activeTrackId.value = id;
-        await nextTick();
-        const trackElement = document.querySelector(`#archive__track-${id}`);
-        const parentElement = tracksContainer.value;
-
-        if (trackElement && parentElement) {
-            const trackRect = trackElement.getBoundingClientRect();
-            const parentRect = parentElement.getBoundingClientRect();
-
-            const offset = trackRect.top - parentRect.top + parentElement.scrollTop;
-            parentElement.scrollTo({ top: offset - 10, behavior: 'smooth' });
-        }
-    }
-
-    const trackNumber = (order) => {
-        return order < 9 ? `0${order + 1}` : (order + 1);
-    }
-
-    defineProps({
+    const props = defineProps({
         tracks: {
             type: Array,
             required: true
@@ -86,6 +69,45 @@
     });
 
     const emit = defineEmits(['close']);
+
+    const setActiveTrack = async (id) => {
+        activeTrackId.value = id;
+        await nextTick();
+        scrollToActiveTrack();
+    }
+
+    const playTrack = (track) => {
+        const startTime = track.start * 1000;
+        window.parent.postMessage({ action: 'seekTo', value: startTime }, '*');
+        playerStore.play('archive');
+        playerStore.updateTrack(track.title, track.artist, track.label, track.cover);
+        setActiveTrack(track.id);
+    }
+
+    const scrollToActiveTrack = () => {
+        const trackElement = document.querySelector(`#archive__track-${activeTrackId.value}`);
+        const parentElement = tracksContainer.value;
+
+        if (trackElement && parentElement) {
+            const trackRect = trackElement.getBoundingClientRect();
+            const parentRect = parentElement.getBoundingClientRect();
+
+            const offset = trackRect.top - parentRect.top + parentElement.scrollTop;
+            parentElement.scrollTo({ top: offset - 10, behavior: 'smooth' });
+        }
+    }
+
+    const trackNumber = (order) => {
+        return order < 9 ? `0${order + 1}` : (order + 1);
+    }
+
+    watch(() => playerStore.track.title, () => {
+        const currentTrack = props.tracks.find(track => track.title === playerStore.track.title);
+
+        if (currentTrack) {
+            setActiveTrack(currentTrack.id);
+        }
+    });
 </script>
 
 <style lang="scss" scoped>

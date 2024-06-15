@@ -13,6 +13,7 @@
     import { usePlayerStore } from '@/stores/player';
 
     const iframe = ref(null);
+    const position = ref(0);
     const playerStore = usePlayerStore();
 
     watch(() => playerStore.isPlaying, (isPlaying) => {
@@ -41,12 +42,16 @@
 
     const handleMessage = (event) => {
         const { action, value } = event.data;
+
         if(action === 'seekTo') seekTo(value);
+        if(action === 'position') position.value = value;
     }
 
     const play = () => {
         iframe.value.contentWindow.postMessage({ action: 'play' }, '*');
-        playerStore.updateTrack('Title', 'Artist', 'Label');
+        if(Math.round(position.value / 1000) < 16 && playerStore.source === 'archive') {
+            playerStore.updateTrack('Incoming...', 'ROVR', '');
+        }
     }
 
     const pause = () => {
@@ -60,6 +65,9 @@
 
 <style lang="scss" scoped>
     iframe {
-        display: none;
+        display: block;
+        position: absolute;
+        z-index: -1;
+        opacity: 0;
     }
 </style>

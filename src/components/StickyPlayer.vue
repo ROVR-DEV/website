@@ -5,7 +5,7 @@
             <marquee-text marqueeClass="sticky-player__track">
                 {{ playerStore.track.title }} <strong>by {{ playerStore.track.artist }}</strong>
             </marquee-text>
-            <em class="sticky-player__label" v-text="playerStore.track.label"/>
+            <em class="sticky-player__label" v-if="playerStore.track.label" v-text="playerStore.track.label"/>
         </div>
 
         <button class="sticky-player__stop" @click="playerStore.stop();"/>

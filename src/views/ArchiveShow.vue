@@ -25,7 +25,7 @@
                 <p class="show__description" v-text="necessary_data.publisher_metadata.description" />
 
                 <div class="show__player">
-                    <show-player v-if="show"/>
+                    <show-player v-if="show" :tracks="show.tracks"/>
                 </div>
             </div>
 
@@ -37,15 +37,13 @@
             :path="necessary_data.publisher_metadata.cover"
             :curator="necessary_data.publisher_metadata.artist"/>
 
-        <keep-alive>
-            <tracklist
-                v-if="show && isTracklistShown"
-                :tracks="show.tracks"
-                :title="necessary_data.publisher_metadata.release_title"
-                :date="necessary_data.release_date"
-                :author="necessary_data.publisher_metadata.artist"
-                @close="isTracklistShown = false"/>
-        </keep-alive>
+        <tracklist
+            v-if="show && isTracklistShown"
+            :tracks="show.tracks"
+            :title="necessary_data.publisher_metadata.release_title"
+            :date="necessary_data.release_date"
+            :author="necessary_data.publisher_metadata.artist"
+            @close="isTracklistShown = false"/>
 
         <close-button v-if="!isTracklistShown" class="show__close"/>
     </section>

@@ -1,5 +1,5 @@
 <template>
-    <play-button archive />
+    <play-button archive/>
 
     <div class="archive-player">
         <img src="@/assets/images/icons/soundcloud.svg" class="archive-player__icon" alt="soundcloud">
@@ -12,14 +12,26 @@
 
 <script setup>
     import { ref, onMounted, onUnmounted } from 'vue';
+    import { usePlayerStore } from '@/stores/player';
     import PlayButton from '../ui/PlayButton.vue';
 
+    const playerStore = usePlayerStore();
     const duration = ref(0);
     const timeline = ref(null);
     const range = ref(null);
     const isDragging = ref(false);
     const startX = ref(0);
     const startLeft = ref(0);
+
+    const props = defineProps({
+        tracks: {
+            type: Array,
+            required: true,
+        }
+    });
+
+    const currentTrackTitle = ref('');
+    const currentTrackArtist = ref('');
 
     const startDragging = (event) => {
         isDragging.value = true;
@@ -65,6 +77,9 @@
 
         // Update the range position after seeking
         updateRangePosition(newPosition);
+
+        // Update current track after seeking
+        updateTrackInfo(newPosition);
     }
 
     const updateRangePosition = (position) => {
@@ -75,18 +90,39 @@
         }
     }
 
+    const updateTrackInfo = (position) => {
+        if (!props.tracks || props.tracks.length === 0) return;
+
+        const currentTrack = props.tracks.find(track => position >= track.start * 1000 && position < track.end * 1000);
+
+        if(Math.round(position / 1000) < 16) {
+            currentTrackTitle.value = 'Incoming...';
+            currentTrackArtist.value = 'ROVR';
+            playerStore.updateTrack(currentTrackTitle.value, currentTrackArtist.value, '');
+        } else if(Math.round(position / 1000) > 16 && currentTrack) {
+            if (currentTrack.title !== currentTrackTitle.value || currentTrack.artist !== currentTrackArtist.value) {
+                currentTrackTitle.value = currentTrack.title;
+                currentTrackArtist.value = currentTrack.artist;
+                console.log(currentTrack);
+                playerStore.updateTrack(currentTrack.title, currentTrack.artist, currentTrack.label, currentTrack.cover);
+            }
+        }
+    }
+
     const seekTo = (position) => {
         window.parent.postMessage({ action: 'seekTo', value: position }, '*');
     }
 
     const handleMessage = (event) => {
         const { action, value } = event.data;
+
         switch(action) {
             case 'duration':
                 duration.value = value;
                 break;
             case 'position':
                 updateRangePosition(value);
+                updateTrackInfo(value);
                 break;
         }
     }

@@ -35,19 +35,21 @@
     })
 
     watch(() => playerStore.isPlaying, (state) => {
-        if(state && playerStore.source === props.type) {
-            trackArtist.value = playerStore.track.artist;
-            trackTitle.value  = playerStore.track.title;
-            trackLabel.value  = playerStore.track.label;
-
+        if(playerStore.source === props.type) {
             isAnimating.value = true;
             setTimeout(() => isAnimating.value = false, 1500);
-        } else {
-            setTimeout(() => {
-                trackArtist.value = 'Artist';
-                trackTitle.value  = 'Title';
-                trackLabel.value  = 'Label';
-            }, 800);
+            
+            if (state) {
+                trackArtist.value = playerStore.track.artist;
+                trackTitle.value = playerStore.track.title;
+                trackLabel.value = playerStore.track.label;
+            } else {
+                setTimeout(() => {
+                    trackArtist.value = 'Artist';
+                    trackTitle.value = 'Title';
+                    trackLabel.value = 'Label';
+                }, 800);
+            }
         }
     });
 
