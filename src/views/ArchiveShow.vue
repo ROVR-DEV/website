@@ -45,7 +45,7 @@
             :author="necessary_data.publisher_metadata.artist"
             @close="isTracklistShown = false"/>
 
-        <close-button v-if="!isTracklistShown" class="show__close"/>
+        <close-button v-if="!isTracklistShown" disabled @click="$router.push({ name: 'archive'})" class="show__close"/>
 
         <span v-if="archiveStore.now_playing_id === +necessary_data.publisher_metadata.publisher" class="show__nowplaying">now playing</span>
     </section>
@@ -108,10 +108,6 @@
         } else {
             archiveStore.setNowPlayingId(show.value.id);
         }
-    });
-
-    watch(() => archiveStore.now_playing_id, (id) => {
-        console.log(id);
     });
 
     const getShow = async () => {
