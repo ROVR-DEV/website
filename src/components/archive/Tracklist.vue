@@ -113,6 +113,8 @@
 <style lang="scss" scoped>
     .archive__tracklist {
         flex: 0 1 45%;
+        position: relative;
+        z-index: 4;
         &-close {
             @include flex-center;
             position: sticky;

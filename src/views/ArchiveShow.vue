@@ -46,6 +46,8 @@
             @close="isTracklistShown = false"/>
 
         <close-button v-if="!isTracklistShown" class="show__close"/>
+
+        <span v-if="archiveStore.now_playing_id === +necessary_data.publisher_metadata.publisher" class="show__nowplaying">now playing</span>
     </section>
 </template>
 
@@ -92,6 +94,26 @@
         if(archive) necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
     });
 
+    watch(() => playerStore.isPlaying, (isPlaying) => {
+        if (isPlaying && playerStore.source === 'archive') {
+            archiveStore.setNowPlayingId(show.value.id);
+        } else {
+            archiveStore.setNowPlayingId(null);
+        }
+    });
+
+    watch(() => playerStore.source, (source) => {
+        if(source !== 'archive') {
+            archiveStore.setNowPlayingId(null);
+        } else {
+            archiveStore.setNowPlayingId(show.value.id);
+        }
+    });
+
+    watch(() => archiveStore.now_playing_id, (id) => {
+        console.log(id);
+    });
+
     const getShow = async () => {
         await axios.get(`https://corsproxy.io/?https://app.rovr.live/site/playlist/${props.publisher_id}`)
             .then(response => {
@@ -114,6 +136,17 @@
             top: 3rem;
             left: 3rem;
             z-index: 3;
+        }
+        &__nowplaying {
+            @include font-size(14px);
+            position: absolute;
+            top: 3.5rem;
+            left: 40%;
+            transform: translateX(-40%);
+            z-index: 3;
+            color: $primary;
+            text-transform: uppercase;
+            text-shadow: 1px 2px 1px rgba($color: $black, $alpha: 0.7);
         }
         &__row {
             @include flex-center-vert;

@@ -3,7 +3,10 @@
         <img :src="show.publisher_metadata.image" alt="cover" class="archive-preview__image">
         
         <div class="archive-preview__info">
-            <span v-text="formatDate(show.release_date)" class="archive-preview__date"/>
+            <div class="archive-preview__top">
+                <span v-text="formatDate(show.release_date)" class="archive-preview__date"/>
+                <span v-if="+show.publisher_metadata.publisher === archiveStore.now_playing_id" class="archive-preview__nowplaying">now playing</span>
+            </div>
             <h2 v-text="show.publisher_metadata.release_title" class="archive-preview__title"/>
             <h3 class="archive-preview__author">
                 BY
@@ -33,6 +36,9 @@
 <script setup>
     import { slugify }    from '@/utils/slugify';
     import { formatDate } from '@/utils/formatDate';
+    import { useArchiveStore } from '@/stores/archive';
+
+    const archiveStore = useArchiveStore();
 
     defineProps({
         show: {
@@ -78,13 +84,19 @@
             z-index: 3;
         }
         &__info {
+            width: 100%;
             margin-bottom: 1.5rem;
         }
         &__date {
             @include font-size(14px);
             display: block;
             font-weight: normal;
-            margin-bottom: 1rem;
+        }
+        &__nowplaying {
+            @include font-size(12px);
+            display: block;
+            text-transform: uppercase;
+            color: $primary;
         }
         &__title {
             @include font-size(36px);
@@ -107,6 +119,10 @@
         }
         &__row {
             @include flex-center-vert;
+        }
+        &__top {
+            @include flex-center-sb;
+            margin-bottom: 1rem;
         }
         &__buttons {
             @include flex-center;

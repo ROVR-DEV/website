@@ -110,7 +110,13 @@
             }
             &__row .show__share {
                 display: none;
-            } 
+            }
+            &__nowplaying {
+                top: 3rem;
+                left: unset;
+                right: 2rem;
+                transform: none;
+            }
             .current-track {
                 padding: 1.5rem 2rem;
                 height: 9.25rem;

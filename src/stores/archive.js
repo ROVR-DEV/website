@@ -3,14 +3,14 @@ import { defineStore } from "pinia";
 export const useArchiveStore = defineStore("archive", {
     state: () => ({
         archive: null,
-        isPlaying: false,
+        now_playing_id: null,
     }),
     actions: {
         loadArchive(data) {
             this.archive = data;
         },
-        togglePlaying() {
-            this.isPlaying = !this.isPlaying;
+        setNowPlayingId(id) {
+            this.now_playing_id = id;
         }
     },
 });

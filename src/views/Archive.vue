@@ -38,13 +38,7 @@
                 class="archive__shows">
                 <!-- When the item is not loaded, a placeholder is rendered -->
                 <template v-slot:placeholder="{ style }">
-                    <div class="archive__preview-placeholder" :style="style">
-                        <div class="archive__preview-loader">
-                            <div class="ball-beat">
-                                <div></div><div></div><div></div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="archive__preview-placeholder" :style="style">...</div>
                 </template>
 
                 <!-- Render a loaded item -->
@@ -175,22 +169,9 @@
         }
         &__preview-placeholder {
             @include flex-center;
-            width: 100%;
-            height: 100%;
-            background-color: $black;
-        }
-        &__preview-loader {
-            @include flex-center;
-            width: 100%;
-            position: absolute;
-            bottom: -0.325rem;
-            left: 0;
-            z-index: 3;
-            .ball-beat > div {
-                background-color: $primary;
-                width: 0.75rem;
-                height: 0.75rem;
-            }
+            font-size: 2rem;
+            font-weight: bold;
+            color: $primary;
         }
     }
 </style>
