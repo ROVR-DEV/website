@@ -1,5 +1,5 @@
 <template>
-    <section class="archive">
+    <section class="archive" v-if="filteredArchive.length">
         <div class="archive__filters">
             <div class="archive__nav">
                 <search-input :date="date ? formatDate('full', date) : ''" :isConfirmed="isDateConfirmed"

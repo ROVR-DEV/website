@@ -25,11 +25,15 @@
                 <p class="show__description" v-text="necessary_data.publisher_metadata.description" />
 
                 <div class="show__player">
-                    <show-player v-if="show" :tracks="show.tracks"/>
+                    <show-player
+                        v-if="show"
+                        :tracks="show.tracks"
+                        :show_id="+necessary_data.publisher_metadata.publisher"
+                        :sc_secret="show.soundcloud_secret"/>
                 </div>
             </div>
 
-            <current-track type="archive"/>
+            <current-track type="archive" :archive_id="+necessary_data.publisher_metadata.publisher"/>
         </div>
 
         <show-image
@@ -47,7 +51,7 @@
 
         <close-button v-if="!isTracklistShown" disabled @click="$router.push({ name: 'archive'})" class="show__close"/>
 
-        <span v-if="archiveStore.now_playing_id === +necessary_data.publisher_metadata.publisher" class="show__nowplaying">now playing</span>
+        <span v-if="playerStore.now_playing_archive === +necessary_data.publisher_metadata.publisher" class="show__nowplaying">now playing</span>
     </section>
 </template>
 
@@ -96,25 +100,32 @@
 
     watch(() => playerStore.isPlaying, (isPlaying) => {
         if (isPlaying && playerStore.source === 'archive') {
-            archiveStore.setNowPlayingId(show.value.id);
+            playerStore.setNowPlayingArchive(show.value.id);
         } else {
-            archiveStore.setNowPlayingId(null);
+            playerStore.setNowPlayingArchive(null);
         }
     });
 
     watch(() => playerStore.source, (source) => {
         if(source !== 'archive') {
-            archiveStore.setNowPlayingId(null);
+            playerStore.setNowPlayingArchive(null);
         } else {
-            archiveStore.setNowPlayingId(show.value.id);
+            playerStore.setNowPlayingArchive(show.value.id);
+        }
+    });
+
+    watch(show, (newShow) => {
+        if(newShow) {
+            if(playerStore.source !== 'archive' && playerStore.now_playing_archive !== show.value.id) {
+                playerStore.setSoundcloudSecret(show.value.soundcloud_secret);
+            }
         }
     });
 
     const getShow = async () => {
-        await axios.get(`https://corsproxy.io/?https://app.rovr.live/site/playlist/${props.publisher_id}`)
+        await axios.get(`https://app.rovr.live/site/playlist/${props.publisher_id}`)
             .then(response => {
                 show.value = response.data;
-                playerStore.setSoundcloudSecret(show.value.soundcloud_secret);
                 console.log(response.data);
             })
             .catch(error => {

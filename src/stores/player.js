@@ -10,6 +10,7 @@ export const usePlayerStore = defineStore("player", {
         stream_url: null,
         soundcloud_secret: null,
         show_sticky_player: false,
+        now_playing_archive: null,
         track: {
             title: null,
             artist: null,
@@ -62,6 +63,9 @@ export const usePlayerStore = defineStore("player", {
         },
         toggleStickyPlayer(status) {
             this.show_sticky_player = status;
+        },
+        setNowPlayingArchive(id) {
+            this.now_playing_archive = id;
         }
     },
 });

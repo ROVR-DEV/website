@@ -33,7 +33,7 @@
                 }
             }
         } else if(playerStore.source === 'archive' && playerStore.isPlaying) {
-            if (router.currentRoute.value.name !== 'show') {
+            if (router.currentRoute.value.name !== 'show' || (router.currentRoute.value.name === 'show' && +router.currentRoute.value.params.publisher_id !== playerStore.now_playing_archive)) {
                 if (!sticky.value) {
                     collapse();
                     setTimeout(() => playerStore.toggleStickyPlayer(true), 1000);
@@ -81,7 +81,9 @@
     let letTM_collapse;
     let letTM_expand;
 
-    onMounted(() => {
+    onMounted(async () => {
+        await router.isReady();
+
         letR2_collapse = document.getElementById('letter-r2-collapse');
         letR2_expand   = document.getElementById('letter-r2-expand');
         letV_collapse  = document.getElementById('letter-v-collapse');

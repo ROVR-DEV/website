@@ -2,41 +2,91 @@
     <button class="player-button player-button--radio"
         :class="{ 'player-button--disabled': isTouchEventDisabled, 'player-button--loading': playerStore.isLoading }"
         v-press="{ time: 150, scale: 0.96 }" @click="play(150)">
-        <img v-show="(!archive && !playerStore.isPlaying) || (!archive && playerStore.isPlaying && playerStore.source === 'archive')"
-            src="@/assets/images/ui/play_button.svg" alt="play">
-        <img v-show="(archive && !playerStore.isPlaying) || (archive && playerStore.isPlaying && playerStore.source === 'radio')"
-            src="@/assets/images/ui/play_button.svg" alt="play">
-        <img v-show="!archive && playerStore.isPlaying && playerStore.source === 'radio'"
-            src="@/assets/images/ui/stop_button.svg" alt="play">
-        <img v-show="archive && playerStore.isPlaying && playerStore.source === 'archive'"
-            src="@/assets/images/ui/pause_button.svg" alt="play">
+
+        <img v-show="shouldShowPlayButton" src="@/assets/images/ui/play_button.svg" alt="play">
+        <img v-show="shouldShowStopButton" src="@/assets/images/ui/stop_button.svg" alt="stop">
+        <img v-show="shouldShowPauseButton" src="@/assets/images/ui/pause_button.svg" alt="pause">
     </button>
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref, computed, onMounted, onUnmounted } from 'vue';
     import { usePlayerStore } from '@/stores/player';
 
     const playerStore = usePlayerStore();
     const isTouchEventDisabled = ref(false);
+    const shouldNewArchivePlay = ref(false);
 
     const props = defineProps({
         archive: {
             type: Boolean,
             required: false
+        },
+        archive_id: {
+            type: Number,
+            required: false
+        },
+        soundcloud_secret: {
+            type: String,
+            required: false
         }
     });
 
-    const play = (delay) => {
-        setTimeout(() => {
-            playerStore.togglePlaying(props.archive ? 'archive' : 'radio');
-            console.log(playerStore.isPlaying, playerStore.source);
-        }, delay);
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
+    const play = async (delayTime) => {
         isTouchEventDisabled.value = true;
         setTimeout(() => isTouchEventDisabled.value = false, 2500);
+
+        await delay(delayTime);
+        playerStore.togglePlaying(props.archive ? 'archive' : 'radio');
+
+        await delay(1000);
+        if (props.archive && playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
+            playerStore.setSoundcloudSecret(props.soundcloud_secret);
+            shouldNewArchivePlay.value = true;
+        }
+
+        console.log(playerStore.isPlaying, playerStore.source);
     }
+
+    const handleMessage = (event) => {
+        const { action } = event.data;
+
+        if (action === 'is_ready') {
+            if (shouldNewArchivePlay.value) {
+                playerStore.play('archive');
+                playerStore.updateTrack('Incoming...', 'ROVR', '');
+            }
+            shouldNewArchivePlay.value = false;
+        }
+    }
+
+    const shouldShowPlayButton = computed(() => {
+        return (!props.archive && !playerStore.isPlaying) ||
+            (!props.archive && playerStore.isPlaying && playerStore.source === 'archive') ||
+            (props.archive && !playerStore.isPlaying) ||
+            (props.archive && playerStore.isPlaying && playerStore.source === 'radio') ||
+            (props.archive && playerStore.isPlaying && playerStore.now_playing_archive !== props.archive_id);
+    });
+
+    const shouldShowStopButton = computed(() => {
+        return !props.archive && playerStore.isPlaying && playerStore.source === 'radio';
+    });
+
+    const shouldShowPauseButton = computed(() => {
+        return props.archive && playerStore.isPlaying && playerStore.source === 'archive' && playerStore.now_playing_archive === props.archive_id;
+    });
+
+    onMounted(() => {
+        window.addEventListener('message', handleMessage);
+    });
+
+    onUnmounted(() => {
+        window.removeEventListener('message', handleMessage);
+    });
 </script>
+
 
 <style lang="scss" scoped>
     .player-button {

@@ -26,6 +26,7 @@
 
         player.bind(SC.Widget.Events.READY, async () => {
             console.log('ready');
+            window.parent.postMessage({ action: 'is_ready'}, '*');
 
             duration = await getDuration();
             window.parent.postMessage({ action: 'duration', value: duration }, '*');

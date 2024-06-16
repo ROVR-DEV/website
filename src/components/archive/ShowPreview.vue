@@ -5,7 +5,7 @@
         <div class="archive-preview__info">
             <div class="archive-preview__top">
                 <span v-text="formatDate(show.release_date)" class="archive-preview__date"/>
-                <span v-if="+show.publisher_metadata.publisher === archiveStore.now_playing_id" class="archive-preview__nowplaying">now playing</span>
+                <span v-if="+show.publisher_metadata.publisher === playerStore.now_playing_archive" class="archive-preview__nowplaying">now playing</span>
             </div>
             <h2 v-text="show.publisher_metadata.release_title" class="archive-preview__title"/>
             <h3 class="archive-preview__author">
@@ -36,9 +36,9 @@
 <script setup>
     import { slugify }    from '@/utils/slugify';
     import { formatDate } from '@/utils/formatDate';
-    import { useArchiveStore } from '@/stores/archive';
+    import { usePlayerStore } from '@/stores/player';
 
-    const archiveStore = useArchiveStore();
+    const playerStore = usePlayerStore();
 
     defineProps({
         show: {

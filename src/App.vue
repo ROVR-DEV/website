@@ -169,7 +169,7 @@
 
     const getArchive = async () => {
         try {
-            const response = await axios.get('https://corsproxy.io/?https://arh.rovr.live/get-sounds-from-db?requestAuthToken=kBPA828rg6ppypFKjkadjkajkdHJhkd739817hHJhjkbdsjkbbHHdak31');
+            const response = await axios.get('https://arh.rovr.live/get-sounds-from-db?requestAuthToken=kBPA828rg6ppypFKjkadjkajkdHJhkd739817hHJhjkbdsjkbbHHdak31');
             const archiveSortedByDate = response.data.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
             archiveStore.loadArchive(archiveSortedByDate);
             console.log(archiveStore.archive);

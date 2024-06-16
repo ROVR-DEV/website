@@ -1,5 +1,5 @@
 <template>
-    <play-button archive/>
+    <play-button archive :archive_id="show_id" :soundcloud_secret="sc_secret"/>
 
     <div class="archive-player">
         <img src="@/assets/images/icons/soundcloud.svg" class="archive-player__icon" alt="soundcloud">
@@ -27,6 +27,14 @@
         tracks: {
             type: Array,
             required: true,
+        },
+        show_id: {
+            type: Number,
+            required: true
+        },
+        sc_secret: {
+            type: String,
+            required: true
         }
     });
 
@@ -83,7 +91,7 @@
     }
 
     const updateRangePosition = (position) => {
-        if(!isDragging.value) {
+        if(!isDragging.value && playerStore.now_playing_archive === props.show_id) {
             const timelineWidth = timeline.value.offsetWidth;
             const newLeft = (position / duration.value) * timelineWidth;
             range.value.style.left = `${newLeft}px`;
@@ -93,18 +101,20 @@
     const updateTrackInfo = (position) => {
         if (!props.tracks || props.tracks.length === 0) return;
 
-        const currentTrack = props.tracks.find(track => position >= track.start * 1000 && position < track.end * 1000);
+        if(playerStore.now_playing_archive === props.show_id) {
+            const currentTrack = props.tracks.find(track => position >= track.start * 1000 && position < track.end * 1000);
 
-        if(Math.round(position / 1000) < 16) {
-            currentTrackTitle.value = 'Incoming...';
-            currentTrackArtist.value = 'ROVR';
-            playerStore.updateTrack(currentTrackTitle.value, currentTrackArtist.value, '');
-        } else if(Math.round(position / 1000) > 16 && currentTrack) {
-            if (currentTrack.title !== currentTrackTitle.value || currentTrack.artist !== currentTrackArtist.value) {
-                currentTrackTitle.value = currentTrack.title;
-                currentTrackArtist.value = currentTrack.artist;
-                console.log(currentTrack);
-                playerStore.updateTrack(currentTrack.title, currentTrack.artist, currentTrack.label, currentTrack.cover);
+            if (Math.round(position / 1000) < 16) {
+                currentTrackTitle.value = 'Incoming...';
+                currentTrackArtist.value = 'ROVR';
+                playerStore.updateTrack(currentTrackTitle.value, currentTrackArtist.value, '');
+            } else if (Math.round(position / 1000) > 16 && currentTrack) {
+                if (currentTrack.title !== currentTrackTitle.value || currentTrack.artist !== currentTrackArtist.value) {
+                    currentTrackTitle.value = currentTrack.title;
+                    currentTrackArtist.value = currentTrack.artist;
+                    console.log(currentTrack);
+                    playerStore.updateTrack(currentTrack.title, currentTrack.artist, currentTrack.label, currentTrack.cover);
+                }
             }
         }
     }

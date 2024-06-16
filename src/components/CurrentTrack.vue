@@ -18,10 +18,13 @@
 <script setup>
     import { usePlayerStore } from '@/stores/player';
     import { ref, watch, computed } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
     import MarqueeText from './MarqueeText.vue';
 
     const playerStore = usePlayerStore();
     const isAnimating = ref(false);
+    const route = useRoute();
+    const router = useRouter();
 
     const trackArtist = ref('Artist');
     const trackTitle  = ref('Title');
@@ -31,8 +34,12 @@
         type: {
             type: String,
             required: true,
+        },
+        archive_id: {
+            type: Number,
+            required: false
         }
-    })
+    });
 
     watch(() => playerStore.isPlaying, (state) => {
         if(playerStore.source === props.type) {
@@ -66,10 +73,21 @@
     }, { deep: true });
 
     const opacity = computed(() => {
-        if (isAnimating.value) {
-            return { opacity: playerStore.isPlaying && playerStore.source === props.type ? '1' : '0.32' };
+        const isRadio = playerStore.source === 'radio';
+        const isPlaying = playerStore.isPlaying && playerStore.source === props.type;
+
+        if (isRadio) {
+            return { opacity: isPlaying ? '1' : '0.32' };
         } else {
-            return { opacity: playerStore.isPlaying && playerStore.source === props.type ? '1' : '0.32' };
+            return { opacity: isPlaying && playerStore.now_playing_archive === props.archive_id ? '1' : '0.32' };
+        }
+    });
+
+    watch(route, () => {
+        if(router.currentRoute.value.name === 'show' && playerStore.isPlaying && playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
+            trackArtist.value = 'Artist';
+            trackTitle.value = 'Title';
+            trackLabel.value = 'Label';
         }
     });
 </script>
