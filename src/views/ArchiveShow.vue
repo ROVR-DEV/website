@@ -37,12 +37,13 @@
         </div>
 
         <show-image
-            v-if="!isTracklistShown"
+            v-show="!isTracklistShown"
             :path="necessary_data.publisher_metadata.cover"
             :curator="necessary_data.publisher_metadata.artist"/>
 
         <tracklist
-            v-if="show && isTracklistShown"
+            v-if="show"
+            v-show="isTracklistShown"
             :tracks="show.tracks"
             :title="necessary_data.publisher_metadata.release_title"
             :date="necessary_data.release_date"
@@ -56,7 +57,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch } from "vue";
+    import { ref, onMounted, watch, nextTick } from "vue";
     import { useArchiveStore } from "@/stores/archive";
     import { usePlayerStore } from "@/stores/player";
     import { slugify } from '@/utils/slugify';
@@ -119,6 +120,23 @@
             if(playerStore.source !== 'archive' && playerStore.now_playing_archive !== show.value.id) {
                 playerStore.setSoundcloudSecret(show.value.soundcloud_secret);
             }
+        }
+    });
+
+    watch(() => isTracklistShown.value, (status) => {
+        if (status) {
+            nextTick(() => {
+                let activeTrack = document.querySelector('.archive__track.active');
+
+                if (activeTrack) {
+                    const trackRect = activeTrack.getBoundingClientRect();
+                    const parentElement = activeTrack.parentNode;
+                    const parentRect = parentElement.getBoundingClientRect();
+
+                    const offset = trackRect.top - parentRect.top + parentElement.scrollTop;
+                    parentElement.scrollTop = offset - 10;
+                }
+            });
         }
     });
 
