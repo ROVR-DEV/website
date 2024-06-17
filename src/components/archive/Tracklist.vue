@@ -14,7 +14,7 @@
                 <button class="archive__tracklist-mobile-close" @click="emit('close')">
                     <img src="@/assets/images/icons/close-small-thin.svg" alt="close">
                 </button>
-                <button class="archive__tracklist-mobile-share">
+                <button class="archive__tracklist-mobile-share" @click="emit('share')">
                     <img src="@/assets/images/icons/share.svg" alt="share">
                 </button>
             </div>
@@ -68,7 +68,7 @@
         }
     });
 
-    const emit = defineEmits(['close']);
+    const emit = defineEmits(['close', 'share']);
 
     const setActiveTrack = async (id) => {
         activeTrackId.value = id;

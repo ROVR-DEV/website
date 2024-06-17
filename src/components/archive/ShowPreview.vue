@@ -1,5 +1,5 @@
 <template>
-    <div class="archive-preview" height="285px">
+    <div class="archive-preview">
         <img :src="show.publisher_metadata.image" alt="cover" class="archive-preview__image">
         
         <div class="archive-preview__info">
@@ -23,7 +23,7 @@
                     @click="$router.push(`/show/${show.publisher_metadata.publisher}`)">
                         <img src="@/assets/images/icons/arrow-right.svg" alt="arrow">
                 </button>
-                <button class="archive-preview__button share-button">
+                <button class="archive-preview__button share-button" @click="emit('share', show)">
                     <img src="@/assets/images/icons/share.svg" alt="share">
                 </button>
             </div>
@@ -39,6 +39,8 @@
     import { usePlayerStore } from '@/stores/player';
 
     const playerStore = usePlayerStore();
+
+    const emit = defineEmits(['share']);
 
     defineProps({
         show: {

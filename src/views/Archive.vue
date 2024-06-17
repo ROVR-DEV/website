@@ -1,5 +1,5 @@
 <template>
-    <section class="archive" v-if="filteredArchive.length">
+    <section class="archive">
         <div class="archive__filters">
             <div class="archive__nav">
                 <search-input :date="date ? formatDate('full', date) : ''" :isConfirmed="isDateConfirmed"
@@ -43,11 +43,13 @@
 
                 <!-- Render a loaded item -->
                 <template v-slot:default="{ item, style }">
-                    <show-preview :style="style" :show="item"/>
+                    <show-preview :style="style" :show="item" @share="data => shareArchive(data)"/>
                 </template>
             </Grid>
         </div>
     </section>
+
+    <share-popup v-if="isShareOpen" :metadata="sharingMetadata" :id="sharingId" @close="isShareOpen = false"/>
 </template>
 
 <script setup>
@@ -57,6 +59,7 @@
     import { useArchiveStore } from '@/stores/archive';
     import SearchInput from '@/components/archive/SearchInput.vue';
     import ShowPreview from '@/components/archive/ShowPreview.vue';
+    import SharePopup from '@/components/popups/SharePopup.vue';
     import 'v-calendar/style.css';
     import 'loaders.css';
 
@@ -67,6 +70,9 @@
     const isCalendarVisible = ref(false);
     const isDateConfirmed = ref(false);
     const gridKey = ref(0);
+    const isShareOpen = ref(false);
+    const sharingMetadata = ref(null);
+    const sharingId = ref(null);
 
     const pageProvider = (pageNumber, pageSize) =>
     new Promise((resolve) => {
@@ -108,6 +114,18 @@
             return `${month}.${day}.${year.slice(-2)}`;
         } else {
             return 'error';
+        }
+    }
+
+    const shareArchive = (data) => {
+        isShareOpen.value = true;
+        sharingId.value = data.publisher_metadata.publisher;
+
+        sharingMetadata.value = {
+            cover: data.publisher_metadata.cover,
+            source: 'archive',
+            title: data.publisher_metadata.release_title,
+            artist: data.publisher_metadata.artist
         }
     }
 

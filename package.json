@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
-    "@vueuse/core": "^10.10.0",
+    "@vueuse/core": "^10.11.0",
     "axios": "^1.6.5",
     "laravel-echo": "^1.15.3",
     "loaders.css": "^0.1.2",
@@ -20,6 +20,8 @@
     "v-calendar": "^3.1.2",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5",
+    "vue-socialmedia-share": "^1.0.1",
+    "vue-socials": "^2.0.5",
     "vue-virtual-scroll-grid": "^1.11.0"
   },
   "devDependencies": {

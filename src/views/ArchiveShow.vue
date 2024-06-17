@@ -9,7 +9,7 @@
                         <img src="@/assets/images/ui/tracklist_button.svg" alt="tracklist">
                     </button>
                     
-                    <button class="show__share share-button">
+                    <button class="show__share share-button" @click="isShareOpen = true;">
                         <img src="@/assets/images/icons/share.svg" alt="share">
                     </button>
                 </div>
@@ -48,12 +48,15 @@
             :title="necessary_data.publisher_metadata.release_title"
             :date="necessary_data.release_date"
             :author="necessary_data.publisher_metadata.artist"
+            @share="isShareOpen = true"
             @close="isTracklistShown = false"/>
 
         <close-button v-if="!isTracklistShown" disabled @click="$router.push({ name: 'archive'})" class="show__close"/>
 
         <span v-if="playerStore.now_playing_archive === +necessary_data.publisher_metadata.publisher" class="show__nowplaying">now playing</span>
     </section>
+
+    <share-popup v-if="isShareOpen" :metadata="sharingMetadata" :id="necessary_data.publisher_metadata.publisher" @close="isShareOpen = false"/>
 </template>
 
 <script setup>
@@ -68,12 +71,15 @@
     import CloseButton from '@/components/ui/CloseButton.vue';
     import ShowImage from '@/components/ShowImage.vue';
     import Tracklist from "@/components/archive/Tracklist.vue";
+    import SharePopup from '@/components/popups/SharePopup.vue';
 
     const archiveStore = useArchiveStore();
     const playerStore = usePlayerStore();
     const show = ref(null);
     const necessary_data = ref(null);
     const isTracklistShown = ref(false);
+    const isShareOpen = ref(false);
+    const sharingMetadata = ref(null);
 
     const props = defineProps({
         publisher_id: {
@@ -84,19 +90,27 @@
 
     onMounted(() => {
         getShow();
-        if(archiveStore.archive) necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
+
+        if(archiveStore.archive) {
+            necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
+            loadSharingMetadata(necessary_data.value);
+        }
     });
 
     watch(() => props.publisher_id, (newId, oldId) => {
         if(archiveStore.archive) necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
         if(newId !== oldId) {
             getShow();
+            loadSharingMetadata(necessary_data.value);
             isTracklistShown.value = false;
         }
     });
 
     watch(() => archiveStore.archive, (archive) => {
-        if(archive) necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
+        if(archive) {
+            necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
+            loadSharingMetadata(necessary_data.value);
+        }
     });
 
     watch(() => playerStore.isPlaying, (isPlaying) => {
@@ -150,24 +164,34 @@
                 console.log(error);
             });
     }
+
+    const loadSharingMetadata = (data) => {
+        sharingMetadata.value = {
+            title: data.publisher_metadata.release_title,
+            artist: data.publisher_metadata.artist,
+            cover: data.publisher_metadata.cover,
+            source: 'archive',
+        }
+    }
 </script>
 
 <style lang="scss" scoped>
     .show {
         border-top: 2px solid $primary;
-        flex-direction: row-reverse;
+        &__info {
+            border-right: 2px solid $primary;
+        }
         &__close {
             position: absolute;
             top: 3rem;
-            left: 3rem;
+            right: 3rem;
             z-index: 3;
         }
         &__nowplaying {
             @include font-size(14px);
             position: absolute;
             top: 3.5rem;
-            left: 40%;
-            transform: translateX(-40%);
+            right: 38%;
             z-index: 3;
             color: $primary;
             text-transform: uppercase;
