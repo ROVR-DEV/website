@@ -29,23 +29,11 @@
         </div>
 
         <div class="archive__scroller">
-            <Grid
-                :key="gridKey"
-                :length="filteredArchive.length"
-                :pageSize="30"
-                :pageProvider="pageProvider"
-                scrollBehavior="smooth"
-                class="archive__shows">
-                <!-- When the item is not loaded, a placeholder is rendered -->
-                <template v-slot:placeholder="{ style }">
-                    <div class="archive__preview-placeholder" :style="style">...</div>
+            <VirtualList :items="filteredArchive" :itemHeight="showHeight">
+                <template #default="{ item }">
+                    <show-preview :show="item" @share="data => shareArchive(data)" />
                 </template>
-
-                <!-- Render a loaded item -->
-                <template v-slot:default="{ item, style }">
-                    <show-preview :style="style" :show="item" @share="data => shareArchive(data)"/>
-                </template>
-            </Grid>
+            </VirtualList>
         </div>
     </section>
 
@@ -53,15 +41,14 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch } from 'vue';
+    import { ref, onMounted, watch, onUnmounted } from 'vue';
     import { DatePicker } from 'v-calendar';
-    import Grid from "vue-virtual-scroll-grid";
     import { useArchiveStore } from '@/stores/archive';
+    import VirtualList from '@/components/archive/VirtualList.vue';
     import SearchInput from '@/components/archive/SearchInput.vue';
     import ShowPreview from '@/components/archive/ShowPreview.vue';
     import SharePopup from '@/components/popups/SharePopup.vue';
     import 'v-calendar/style.css';
-    import 'loaders.css';
 
     const archiveStore = useArchiveStore();
     const filteredArchive = ref([]);
@@ -69,24 +56,38 @@
     const searchQuery = ref('');
     const isCalendarVisible = ref(false);
     const isDateConfirmed = ref(false);
-    const gridKey = ref(0);
     const isShareOpen = ref(false);
     const sharingMetadata = ref(null);
     const sharingId = ref(null);
+    const showHeight = ref(0);
 
-    const pageProvider = (pageNumber, pageSize) =>
-    new Promise((resolve) => {
-        const start = pageNumber * pageSize;
-        const end = start + pageSize;
-        const pageItems = filteredArchive.value.slice(start, end);
-        resolve(pageItems);
-    });
-
+    const updateShowHeight = () => {
+        const screenWidth = window.innerWidth;
+        if (screenWidth >= 1660) {
+            showHeight.value = 285;
+        } else if (screenWidth < 1660 && screenWidth >= 1200) {
+            showHeight.value = 220;
+        } else if (screenWidth < 1200 && screenWidth >= 480) {
+            showHeight.value = 200;
+        } else if (screenWidth < 480) {
+            showHeight.value = 230;
+        }
+    }
 
     onMounted(() => {
         if (archiveStore.archive) {
             filteredArchive.value = archiveStore.archive;
         }
+
+        updateShowHeight();
+
+        window.addEventListener('resize', () => {
+            updateShowHeight();
+        });
+    });
+    
+    onUnmounted(() => {
+        window.removeEventListener('resize', updateShowHeight());
     });
 
     watch(() => archiveStore.archive, (newArchive) => {
@@ -94,8 +95,6 @@
             filteredArchive.value = newArchive;
         }
     });
-
-    watch(filteredArchive, () => gridKey.value++);
 
     const searchShow = (query) => {
         searchQuery.value = query.toLowerCase();
@@ -176,20 +175,10 @@
         &__scroller {
             flex: 1 0 60%;
             padding: 3rem;
-            overflow-y: auto;
-        }
-        &__shows {
-            @include grid(2, 3rem);
         }
         &__calendar--mobile,
         &__calendar-open {
             display: none;        
-        }
-        &__preview-placeholder {
-            @include flex-center;
-            font-size: 2rem;
-            font-weight: bold;
-            color: $primary;
         }
     }
 </style>

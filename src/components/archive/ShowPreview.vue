@@ -57,9 +57,7 @@
         color: $primary;
         padding: 1.75rem;
         width: 100%;
-        min-height: 285px;
-        max-height: 285px;
-        height: 100%;
+        height: 285px;
         &::before {
             content: '';
             position: absolute;
@@ -181,8 +179,7 @@
 
     @media screen and (max-width: 1660px) {
         .archive-preview {
-            min-height: 220px;
-            max-height: 220px;
+            height: 220px;
             padding: 1.5rem;
             &__title {
                 @include font-size(33px);
@@ -192,15 +189,13 @@
 
     @media screen and (max-width: 1200px) {
         .archive-preview {
-            min-height: 200px;
-            max-height: 200px;
+            height: 200px;
         }
     }
 
     @media screen and (max-width: 480px) {
         .archive-preview {
-            min-height: 230px;
-            max-height: 230px;
+            height: 230px;
         }
     }
 </style>
