@@ -20,9 +20,7 @@
     "v-calendar": "^3.1.2",
     "vue": "^3.3.11",
     "vue-router": "^4.2.5",
-    "vue-socialmedia-share": "^1.0.1",
-    "vue-socials": "^2.0.5",
-    "vue-virtual-scroll-grid": "^1.11.0"
+    "vue-socials": "^2.0.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.6.2",
