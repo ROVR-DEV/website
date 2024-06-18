@@ -18,8 +18,7 @@
 
                 <h3 class="show__author">
                     BY
-                    <em v-text="necessary_data.publisher_metadata.artist"
-                        @click="$router.push(`/curator/${slugify(necessary_data.publisher_metadata.artist)}`)"/>
+                    <curator-link :artist="necessary_data.publisher_metadata.artist"/>
                 </h3>
 
                 <p class="show__description" v-text="necessary_data.publisher_metadata.description" />
@@ -63,13 +62,13 @@
     import { ref, onMounted, watch, nextTick } from "vue";
     import { useArchiveStore } from "@/stores/archive";
     import { usePlayerStore } from "@/stores/player";
-    import { slugify } from '@/utils/slugify';
     import { formatDate } from "@/utils/formatDate";
     import axios from "axios";
     import ShowPlayer from "@/components/archive/ShowPlayer.vue";
     import CurrentTrack from '@/components/CurrentTrack.vue';
     import CloseButton from '@/components/ui/CloseButton.vue';
     import ShowImage from '@/components/ShowImage.vue';
+    import CuratorLink from "@/components/CuratorLink.vue";
     import Tracklist from "@/components/archive/Tracklist.vue";
     import SharePopup from '@/components/popups/SharePopup.vue';
 

@@ -101,7 +101,7 @@
                 curatorsStore.popupShowing(true);
                 document.querySelector('.main').scrollTop = 0;
             }
-        }, 15000);
+        }, 1500000);
     });
 
     onUnmounted(() => {

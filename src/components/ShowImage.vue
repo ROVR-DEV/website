@@ -1,12 +1,12 @@
 <template>
-    <div class="show__image"
+    <div class="show__image" :class="{ 'show__image--gradient' : isRadio }"
         @mousedown.prevent="isMobile ? null : startScaling()" 
         @mouseup.prevent="isMobile ? null : stopScaling()"
         @touchstart.prevent="isMobile ? startScaling() : null" 
         @touchend.prevent="isMobile ? stopScaling() : null">
         <img 
             :src="isRadio ? radioCover : path"
-            :style="{ transform: photoScaleStyle }" 
+            :style="{ transform: photoScaleStyle }"
             oncontextmenu="return false;"
             alt="preview"
             fetchpriority="high">
@@ -35,7 +35,7 @@
         curator: {
             type: String,
             required: true
-        }
+        },
     });
 
     const checkIfMobile = () => {
@@ -114,7 +114,7 @@
             z-index: 1;
             transition: all 0.2s linear;
         }
-        &::after {
+        &--gradient::after {
             content: "";
             position: absolute;
             bottom: 0;

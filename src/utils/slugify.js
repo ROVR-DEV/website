@@ -1,15 +1,17 @@
 export function slugify(text) {
     return text
-        .toString() // Ensure text is a string
-        .normalize('NFD') // Normalize to NFD form (decomposed)
-        .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
-        .trim() // Trim whitespace
+        .toString()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
         .replace(/[-\s]+/g, '-') // Replace spaces and hyphens with a single hyphen
-        .toLowerCase(); // Convert to lowercase
+        .toLowerCase()
+        .replace(/w\//g, 'w-slash'); // Special handling for "w/"
 }
 
 export function deslugify(slug) {
     return slug
-        .replace(/-/g, ' ') // Replace hyphens with spaces
-        .replace(/\b\w/g, char => char.toUpperCase()); // Capitalize the first letter of each word
+        .replace(/w-slash/g, 'w/') // Special handling for "w/"
+        .replace(/-/g, ' ')
+        .replace(/\b\w/g, char => char.toUpperCase());
 }

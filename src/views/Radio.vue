@@ -6,9 +6,7 @@
 
                 <h3 class="show__author">
                     BY
-                    <em
-                        v-text="radioStore.radio.curator.name"
-                        @click="$router.push(`/curator/${slugify(radioStore.radio.curator.name)}`)"/>
+                    <curator-link :artist="radioStore.radio.curator.name"/>
                 </h3>
 
                 <p class="show__description" v-text="radioStore.radio.show.description ?? radioStore.radio.show.about"/>
@@ -28,15 +26,11 @@
 
 <script setup>
     import { useRadioStore } from "@/stores/radio";
-    import { slugify } from '@/utils/slugify';
     import PlayButton   from '@/components/ui/PlayButton.vue';
     import RadioTimer   from '@/components/RadioTimer.vue';
     import CurrentTrack from '@/components/CurrentTrack.vue';
     import ShowImage    from '@/components/ShowImage.vue';
+    import CuratorLink  from "@/components/CuratorLink.vue";
 
     const radioStore = useRadioStore();
 </script>
-
-<style lang="scss" scoped>
-    
-</style>

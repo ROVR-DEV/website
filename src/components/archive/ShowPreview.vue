@@ -1,52 +1,56 @@
 <template>
     <div class="archive-preview">
         <img :src="show.publisher_metadata.image" alt="cover" class="archive-preview__image">
-        
+
         <div class="archive-preview__info">
             <div class="archive-preview__top">
-                <span v-text="formatDate(show.release_date)" class="archive-preview__date"/>
-                <span v-if="+show.publisher_metadata.publisher === playerStore.now_playing_archive" class="archive-preview__nowplaying">now playing</span>
+                <span v-text="formatDate(show.release_date)" class="archive-preview__date" />
+                <span v-if="+show.publisher_metadata.publisher === playerStore.now_playing_archive"
+                    class="archive-preview__nowplaying">now playing</span>
             </div>
-            <h2 v-text="show.publisher_metadata.release_title" class="archive-preview__title"/>
+            <h2 v-text="show.publisher_metadata.release_title" class="archive-preview__title" />
             <h3 class="archive-preview__author">
                 BY
-                <em
-                    v-text="show.publisher_metadata.artist"
-                    @click="$router.push(`/curator/${slugify(show.publisher_metadata.artist)}`)"/>
+                <curator-link :artist="show.publisher_metadata.artist"/>
             </h3>
         </div>
 
         <div class="archive-preview__row">
             <div class="archive-preview__buttons">
-                <button
-                    class="archive-preview__button archive-preview__button--visit"
+                <button class="archive-preview__button archive-preview__button--visit"
                     @click="$router.push(`/show/${show.publisher_metadata.publisher}`)">
-                        <img src="@/assets/images/icons/arrow-right.svg" alt="arrow">
+                    <img src="@/assets/images/icons/arrow-right.svg" alt="arrow">
                 </button>
                 <button class="archive-preview__button share-button" @click="emit('share', show)">
                     <img src="@/assets/images/icons/share.svg" alt="share">
                 </button>
             </div>
 
-            <p class="archive-preview__description" v-text="show.publisher_metadata.description"/>
+            <p class="archive-preview__description" v-text="show.publisher_metadata.description" />
         </div>
     </div>
 </template>
 
 <script setup>
-    import { slugify }    from '@/utils/slugify';
+    import { computed } from 'vue';
     import { formatDate } from '@/utils/formatDate';
     import { usePlayerStore } from '@/stores/player';
+    import CuratorLink from '@/components/CuratorLink.vue';
 
     const playerStore = usePlayerStore();
 
     const emit = defineEmits(['share']);
 
-    defineProps({
+    const props = defineProps({
         show: {
             type: Object,
             required: true
         }
+    });
+
+    const mainCurator = computed(() => {
+        const curators = props.show.publisher_metadata.artist.split(' w/ ');
+        return curators[0].trim();
     });
 </script>
 

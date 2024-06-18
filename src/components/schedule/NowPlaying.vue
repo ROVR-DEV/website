@@ -9,10 +9,7 @@
         <h3 class="schedule-program__title" v-text="program.show.title"/>
         <span class="schedule-program__author">
             BY
-            <em
-                v-text="program.curator.name"
-                v-press="{ time: 250, scale: 0.97 }"
-                @click="$router.push(`/curator/${slugify(program.curator.name)}`)"/>
+            <curator-link :artist="program.curator.name"/>
         </span>
         <p class="schedule-program__description" v-text="program.show.description"/>
         <play-button/>
@@ -21,8 +18,8 @@
 
 <script setup>
     import { ref, computed, onMounted, onUnmounted } from 'vue';
-    import { slugify } from '@/utils/slugify';
     import PlayButton from '@/components/ui/PlayButton.vue';
+    import CuratorLink from '@/components/CuratorLink.vue';
 
     const props = defineProps({
         program: {
