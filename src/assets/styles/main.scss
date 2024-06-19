@@ -101,6 +101,11 @@ section {
             background: transparent;
             color: $primary;
         }
+        &.disabled {
+            background-color: rgba($color: $primary, $alpha: 0.25);
+            color: $primary;
+            pointer-events: none;
+        }
     }
 }
 
@@ -135,14 +140,19 @@ section {
             background-color: $primary;
             color: $black;
         }
+        &.vc-disabled {
+            background-color: rgba($color: $primary, $alpha: 0.25);
+            color: $primary;
+            pointer-events: none;
+        }
         @media(hover: hover) {
-            &:hover {
+            &:not(.vc-disabled):hover {
                 background-color: $primary;
                 color: $black;
             }
         }
         @media(hover: none) {
-            &:active {
+            &:not(.vc-disabled):active {
                 background-color: $primary;
                 color: $black;
             }

@@ -17,8 +17,8 @@
 
         <div class="archive-preview__row">
             <div class="archive-preview__buttons">
-                <button class="archive-preview__button archive-preview__button--visit"
-                    @click="$router.push(`/show/${show.publisher_metadata.publisher}`)">
+                <button class="archive-preview__button archive-preview__button--visit" v-press="{ time: 150, scale: 0.96 }"
+                    @click="gotoArchive(300)">
                     <img src="@/assets/images/icons/arrow-right.svg" alt="arrow">
                 </button>
                 <button class="archive-preview__button share-button" @click="emit('share', show)">
@@ -32,13 +32,13 @@
 </template>
 
 <script setup>
-    import { computed } from 'vue';
+    import { useRouter } from 'vue-router';
     import { formatDate } from '@/utils/formatDate';
     import { usePlayerStore } from '@/stores/player';
     import CuratorLink from '@/components/CuratorLink.vue';
 
+    const router = useRouter();
     const playerStore = usePlayerStore();
-
     const emit = defineEmits(['share']);
 
     const props = defineProps({
@@ -48,10 +48,16 @@
         }
     });
 
-    const mainCurator = computed(() => {
-        const curators = props.show.publisher_metadata.artist.split(' w/ ');
-        return curators[0].trim();
-    });
+    //const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const gotoArchive = async (delayTime) => {
+        //await delay(delayTime);
+        setTimeout(() => {
+            router.push(`/show/${props.show.publisher_metadata.publisher}`);
+        }, delayTime);
+    }
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -146,15 +152,8 @@
                 overflow: hidden;
                 img {
                     display: block;
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%, -50%);
                     width: 1.75rem;
                     height: 1.25rem;
-                }
-                &:hover img {
-                    animation: move-arrow 0.5s ease-in-out;
                 }
             }
         }
@@ -162,22 +161,6 @@
             @include font-size(14px);
             font-weight: normal;
             margin: 0 0 0 1.5rem;
-        }
-    }
-
-    
-    @keyframes move-arrow {
-        0% {
-            transform: translate(-50%, -50%);
-        }
-        50% {
-            transform: translate(200%, -50%);
-        }
-        51% {
-            transform: translate(-300%, -50%);
-        }
-        100% {
-            transform: translate(-50%, -50%);
         }
     }
 

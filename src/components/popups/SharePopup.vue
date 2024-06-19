@@ -6,8 +6,6 @@
                     <img src="@/assets/images/icons/close-small.svg" alt="close">
                 </div>
 
-                <p class="share-popup__tip">Sharing show:</p>
-
                 <div class="share-popup__preview">
                     <div class="share-popup__cover">
                         <img :src="metadata.cover" alt="cover">
@@ -155,6 +153,7 @@
             padding: 1.5rem;
             background-color: $primary;
             border-radius: 1rem;
+            margin-top: 2rem;
         }
         &__cover {
             margin-right: 1rem;
@@ -265,6 +264,7 @@
                 padding: 2rem;
             }
             &__close {
+                top: 1.25rem;
                 img {
                     width: 1.5rem;
                 }

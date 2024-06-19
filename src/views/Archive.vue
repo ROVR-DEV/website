@@ -15,11 +15,11 @@
 
             <date-picker v-if="!isCalendarVisible" v-model="date" @update:modelValue="searchShow(searchQuery)"
                 class="archive__calendar--desktop" borderless transparent locale="en" expanded :first-day-of-week="2"
-                :masks="{ weekdays: 'WWW' }" />
+                :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates"/>
 
             <div class="archive__calendar--mobile" :class="{ active: isCalendarVisible }">
                 <date-picker v-if="isCalendarVisible" v-model="date" borderless transparent locale="en" expanded
-                    :first-day-of-week="2" :masks="{ weekdays: 'WWW' }" />
+                    :first-day-of-week="2" :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates"/>
 
                 <div class="archive__calendar--mobile-controls">
                     <button class="archive__calendar--mobile-cancel" @click="cancelDateFilter()">cancel</button>
@@ -29,11 +29,13 @@
         </div>
 
         <div class="archive__scroller">
-            <VirtualList :items="filteredArchive" :itemHeight="showHeight">
+            <VirtualList v-show="filteredArchive.length" :items="filteredArchive" :itemHeight="showHeight">
                 <template #default="{ item }">
                     <show-preview :show="item" @share="data => shareArchive(data)" />
                 </template>
             </VirtualList>
+
+            <p v-show="!filteredArchive.length" class="archive__empty">Could not find any shows with this data</p>
         </div>
     </section>
 
@@ -41,7 +43,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch, onUnmounted } from 'vue';
+    import { ref, onMounted, watch, onUnmounted, computed } from 'vue';
     import { DatePicker } from 'v-calendar';
     import { useArchiveStore } from '@/stores/archive';
     import VirtualList from '@/components/archive/VirtualList.vue';
@@ -61,19 +63,6 @@
     const sharingId = ref(null);
     const showHeight = ref(0);
 
-    const updateShowHeight = () => {
-        const screenWidth = window.innerWidth;
-        if (screenWidth >= 1660) {
-            showHeight.value = 285;
-        } else if (screenWidth < 1660 && screenWidth >= 1200) {
-            showHeight.value = 220;
-        } else if (screenWidth < 1200 && screenWidth >= 480) {
-            showHeight.value = 200;
-        } else if (screenWidth < 480) {
-            showHeight.value = 230;
-        }
-    }
-
     onMounted(() => {
         if (archiveStore.archive) {
             filteredArchive.value = archiveStore.archive;
@@ -81,8 +70,43 @@
 
         updateShowHeight();
 
-        window.addEventListener('resize', () => {
-            updateShowHeight();
+        window.addEventListener('resize', updateShowHeight);
+
+        const addArrowClickListeners = () => {
+            document.querySelectorAll('.vc-arrow').forEach(item => {
+                item.addEventListener('click', function () {
+                    document.querySelectorAll('.vc-title span').forEach(title => {
+                        if (title.textContent === 'March 2024' && item.classList.contains('vc-prev')) {
+                            document.querySelectorAll('.vc-arrow.vc-prev').forEach(prevArrow => {
+                                prevArrow.classList.add('disabled');
+                            });
+                        } else {
+                            document.querySelectorAll('.vc-arrow.vc-prev').forEach(prevArrow => {
+                                prevArrow.classList.remove('disabled');
+                            });
+                        }
+                    });
+                });
+            });
+        };
+
+        // Initial setup
+        addArrowClickListeners();
+
+        // Setup a MutationObserver to handle dynamically added elements
+        const observer = new MutationObserver((mutationsList, observer) => {
+            for (let mutation of mutationsList) {
+                if (mutation.type === 'childList') {
+                    addArrowClickListeners();
+                }
+            }
+        });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        onUnmounted(() => {
+            window.removeEventListener('resize', updateShowHeight);
+            observer.disconnect();
         });
     });
     
@@ -139,6 +163,40 @@
         });
     }
 
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    const generateDisabledDates = (startDate) => {
+        const dates = [];
+        const endDate = new Date(startDate.getFullYear() + 10, 11, 31);
+        let currentDate = new Date(startDate);
+
+        while (currentDate <= endDate) {
+            dates.push(new Date(currentDate));
+            currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        return dates;
+    }
+
+    const disableFutureDatesArray = generateDisabledDates(tomorrow);
+    disableFutureDatesArray.push(today);
+    const disableFutureDates = ref(disableFutureDatesArray);
+
+    const updateShowHeight = () => {
+        const screenWidth = window.innerWidth;
+        if (screenWidth >= 1660) {
+            showHeight.value = 285;
+        } else if (screenWidth < 1660 && screenWidth >= 1200) {
+            showHeight.value = 220;
+        } else if (screenWidth < 1200 && screenWidth >= 480) {
+            showHeight.value = 200;
+        } else if (screenWidth < 480) {
+            showHeight.value = 230;
+        }
+    }
+
     const clearFilter = () => {
         searchShow('');
         searchQuery.value = '';
@@ -179,6 +237,11 @@
         &__calendar--mobile,
         &__calendar-open {
             display: none;        
+        }
+        &__empty {
+            color: rgba($color: $primary, $alpha: 0.25);
+            margin: 0;
+            line-height: 1;
         }
     }
 </style>
