@@ -3,7 +3,7 @@
         <div class="archive__filters">
             <div class="archive__nav">
                 <search-input :date="date ? formatDate('full', date) : ''" :isConfirmed="isDateConfirmed"
-                    @search="query => searchShow(query)" @clear="clearFilter()" />
+                    @search="query => searchShow(query)" :query="queryCurator" @clear="clearFilter()" />
 
                 <div class="archive__calendar-open">
                     <button @click="isCalendarVisible = !isCalendarVisible">
@@ -43,9 +43,10 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch, onUnmounted, computed } from 'vue';
+    import { ref, onMounted, watch, onUnmounted } from 'vue';
     import { DatePicker } from 'v-calendar';
     import { useArchiveStore } from '@/stores/archive';
+    import { useRoute, useRouter } from 'vue-router';
     import VirtualList from '@/components/archive/VirtualList.vue';
     import SearchInput from '@/components/archive/SearchInput.vue';
     import ShowPreview from '@/components/archive/ShowPreview.vue';
@@ -62,10 +63,25 @@
     const sharingMetadata = ref(null);
     const sharingId = ref(null);
     const showHeight = ref(0);
+    const route = useRoute();
+    const router = useRouter();
+    const queryCurator = ref(null);
+
+    const props = defineProps({
+        curator: {
+            type: String,
+            required: false
+        }
+    });
 
     onMounted(() => {
         if (archiveStore.archive) {
             filteredArchive.value = archiveStore.archive;
+
+            if (route.query.curator) {
+                queryCurator.value = route.query.curator;
+                filterArchive(route.query.curator);
+            }
         }
 
         updateShowHeight();
@@ -88,12 +104,10 @@
                     });
                 });
             });
-        };
+        }
 
-        // Initial setup
         addArrowClickListeners();
 
-        // Setup a MutationObserver to handle dynamically added elements
         const observer = new MutationObserver((mutationsList, observer) => {
             for (let mutation of mutationsList) {
                 if (mutation.type === 'childList') {
@@ -103,26 +117,34 @@
         });
 
         observer.observe(document.body, { childList: true, subtree: true });
-
-        onUnmounted(() => {
-            window.removeEventListener('resize', updateShowHeight);
-            observer.disconnect();
-        });
     });
     
     onUnmounted(() => {
-        window.removeEventListener('resize', updateShowHeight());
+        window.removeEventListener('resize', updateShowHeight);
+        observer.disconnect();
     });
 
     watch(() => archiveStore.archive, (newArchive) => {
         if (newArchive) {
             filteredArchive.value = newArchive;
+
+            if (route.query.curator) {
+                queryCurator.value = route.query.curator;
+                filterArchive(route.query.curator);
+            }
+        }
+    });
+
+    watch(() => route.query.curator, (newQuery) => {
+        if(newQuery) {
+            queryCurator.value = newQuery;
+            filterArchive(route.query.curator);
         }
     });
 
     const searchShow = (query) => {
         searchQuery.value = query.toLowerCase();
-        filterArchive();
+        queryCurator.value ? filterArchive(queryCurator.value) : filterArchive();
     }
 
     const formatDate = (type, date) => {
@@ -152,9 +174,15 @@
         }
     }
 
-    const filterArchive = () => {
+    const filterArchive = (curator) => {
         const formattedDate = date.value ? formatDate('full', date.value) : '';
-        filteredArchive.value = archiveStore.archive.filter(show => {
+        let filteredShows = archiveStore.archive;
+
+        if (curator) {
+            filteredShows = filteredShows.filter(show => show.publisher_metadata.artist === curator);
+        }
+
+        filteredArchive.value = filteredShows.filter(show => {
             const showDate = formatDate('full', new Date(show.release_date));
             const matchesDate = formattedDate ? showDate === formattedDate : true;
             const matchesSearch = (show.publisher_metadata.artist && show.publisher_metadata.artist.toLowerCase().includes(searchQuery.value)) ||
@@ -162,6 +190,7 @@
             return matchesDate && matchesSearch;
         });
     }
+
 
     const today = new Date();
     const tomorrow = new Date(today);
@@ -202,6 +231,10 @@
         searchQuery.value = '';
         date.value = '';
         isDateConfirmed.value = false;
+        if(route.query.curator) {
+            queryCurator.value = '';
+            router.push({ name: 'archive' });
+        }
     }
 
     const confirmDateFilter = () => {

@@ -24,12 +24,12 @@
 </template>
 
 <script setup>
-    import { ref } from 'vue';
+    import { ref, watch } from 'vue';
 
     const input = ref('');
     const emit  = defineEmits(['search', 'clear']);
 
-    defineProps({
+    const props = defineProps({
         date: {
             type: String,
             required: false
@@ -37,6 +37,16 @@
         isConfirmed: {
             type: Boolean,
             required: false
+        },
+        query: {
+            type: String,
+            required: false
+        }
+    });
+
+    watch(() => props.query, (newQuery) => {
+        if(newQuery) {
+            input.value = newQuery;
         }
     });
 

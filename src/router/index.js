@@ -55,6 +55,7 @@ const routes = [
     path: "/archive",
     name: "archive",
     component: ArchiveVue,
+    props: (route) => ({ curator: route.query.curator }),
     meta: {
       title: "ROVR - Archive"
     }

@@ -22,6 +22,9 @@
                     <img v-else-if="link.name === 'twitter'" src="@/assets/images/links/twitter.svg" alt="twitter">
                     <img v-else-if="link.name === 'website'" src="@/assets/images/links/website.svg" alt="website">
                 </a>
+                <router-link :to="{ name: 'archive', query: { curator: curator.name } }" class="curator__link">
+                    <img src="@/assets/images/links/archive.svg" alt="archive">
+                </router-link>
             </div>
         </div>
     </section>
