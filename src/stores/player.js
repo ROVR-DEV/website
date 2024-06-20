@@ -3,7 +3,8 @@ import { defineStore } from "pinia";
 export const usePlayerStore = defineStore("player", {
     state: () => ({
         isPlaying: false,
-        isFinished: false,
+        is_radio_finished: false,
+        is_archive_finished: false,
         isLoading: false,
         source: null,
         fade_out: false,
@@ -40,8 +41,13 @@ export const usePlayerStore = defineStore("player", {
                 this.play(source);
             }
         },
-        setFinished(status) {
-            this.isFinished = status;
+        setFinished(source, status) {
+            if(source === 'radio') {
+                this.is_radio_finished = status;
+            } else if(source === 'archive') {
+                this.is_archive_finished = status;
+            }
+            
         },
         setLoading(status) {
             this.isLoading = status;

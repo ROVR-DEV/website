@@ -23,6 +23,7 @@
 
         const player = SC.Widget(iframe);
         let duration;
+        let is_finished;
 
         player.bind(SC.Widget.Events.READY, async () => {
             console.log('ready');
@@ -33,6 +34,10 @@
 
             player.bind(SC.Widget.Events.PLAY_PROGRESS, (e) => {
                 window.parent.postMessage({ action: 'position', value: e.currentPosition }, '*');
+
+                if( !is_finished && Math.round(e.currentPosition / 1000) === Math.round(duration / 1000 - 1) ) {
+                    finish();
+                }
             });
         });
 
@@ -44,6 +49,15 @@
         const pause = () => {
             player.pause();
             console.log('pause called');
+        }
+
+        const finish = () => {
+            is_finished = true;
+            player.seekTo(0);
+            pause();
+            window.parent.postMessage({ action: 'position', value: 0 }, '*');
+            window.parent.postMessage({ action: 'finish' }, '*');
+            setTimeout(() => is_finished = false, 1000);
         }
 
         const seekTo = (position) => {

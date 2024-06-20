@@ -116,7 +116,7 @@
     });
 
     // updating schedule 
-    watch(() => playerStore.isFinished, (state) => {
+    watch(() => playerStore.is_radio_finished, (state) => {
         if (state) {
             radioStore.loadData(scheduleStore.schedule[1]);
             radioStore.radio.show.since = 0;

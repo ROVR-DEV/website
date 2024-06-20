@@ -170,7 +170,9 @@
             cover: data.publisher_metadata.cover,
             source: 'archive',
             title: data.publisher_metadata.release_title,
-            artist: data.publisher_metadata.artist
+            artist: data.publisher_metadata.artist,
+            description: data.publisher_metadata.description,
+            date: data.release_date,
         }
     }
 

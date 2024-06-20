@@ -4,6 +4,13 @@
     <div class="archive-player">
         <img src="@/assets/images/icons/soundcloud.svg" class="archive-player__icon" alt="soundcloud">
 
+        <div class="archive-player__finish" v-if="playerStore.is_archive_finished">
+            Next Show 
+            <div class="ball-beat">
+                <div></div><div></div><div></div>
+            </div>
+        </div>
+
         <div class="archive-player__timeline" ref="timeline" @mousedown="startDragging" @touchstart="startDragging">
             <span class="archive-player__range" ref="range" />
         </div>
@@ -11,9 +18,10 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, onUnmounted } from 'vue';
+    import { ref, onMounted, onUnmounted, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
     import PlayButton from '../ui/PlayButton.vue';
+    import 'loaders.css';
 
     const playerStore = usePlayerStore();
     const duration = ref(0);
@@ -40,6 +48,13 @@
 
     const currentTrackTitle = ref('');
     const currentTrackArtist = ref('');
+
+    watch(() => props.show_id, (newId, oldId) => {
+        if(newId !== oldId) {
+            updateRangePosition(0);
+            isDragging.value = false;
+        }
+    });
 
     const startDragging = (event) => {
         isDragging.value = true;
@@ -91,9 +106,10 @@
     }
 
     const updateRangePosition = (position) => {
-        if(!isDragging.value && playerStore.now_playing_archive === props.show_id) {
+        if (!isDragging.value && playerStore.now_playing_archive === props.show_id) {
             const timelineWidth = timeline.value.offsetWidth;
-            const newLeft = (position / duration.value) * timelineWidth;
+            const rangeWidth = range.value.offsetWidth;
+            const newLeft = Math.min((position / duration.value) * timelineWidth, timelineWidth - rangeWidth);
             range.value.style.left = `${newLeft}px`;
         }
     }
@@ -186,6 +202,23 @@
             top: -9px;
             left: 0;
             cursor: grab;
+        }
+
+        &__finish {
+            @include flex-center;
+            @include font-size(14px);
+            color: $primary;
+            position: absolute;
+            top: -3.75rem;
+            right: 5rem;
+            .ball-beat {
+                margin-left: 1rem;
+                * {
+                    background-color: $primary;
+                    width: 0.625rem;
+                    height: 0.625rem;
+                }
+            }
         }
 
         &__range.grabbing {

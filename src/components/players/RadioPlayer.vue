@@ -92,7 +92,7 @@
 
             setTimeout(() => {
                 playerStore.setFadeOut(false);
-                playerStore.setFinished(true);
+                playerStore.setFinished('radio', true);
                 jingle.play();
             }, 5000);
 
@@ -106,7 +106,7 @@
                 jingle.pause();
                 jingle.currentTime = 0;
                 player.value.volume = 1;
-                playerStore.setFinished(false);
+                playerStore.setFinished('radio', false);
             }
         }
     }

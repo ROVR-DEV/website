@@ -3,6 +3,7 @@
         v-if="playerStore.soundcloud_secret"
         :src="`../../../player/player.html?url=${playerStore.soundcloud_secret}`"
         ref="iframe"
+        width="400"
         scrolling="no"
         frameborder="no"
         allow="autoplay"/>
@@ -13,6 +14,7 @@
     import { usePlayerStore } from '@/stores/player';
 
     const iframe = ref(null);
+    const duration = ref(null);
     const position = ref(0);
     const playerStore = usePlayerStore();
 
@@ -43,8 +45,20 @@
     const handleMessage = (event) => {
         const { action, value } = event.data;
 
-        if(action === 'seekTo') seekTo(value);
-        if(action === 'position') position.value = value;
+        switch (action) {
+            case 'duration':
+                duration.value = value;
+                break;
+            case 'seekTo':
+                seekTo(value);
+                break;
+            case 'position':
+                position.value = value;
+                break;
+            case 'finish':
+                finish();
+                break;
+        }
     }
 
     const play = () => {
@@ -61,13 +75,20 @@
     const seekTo = (position) => {
         iframe.value.contentWindow.postMessage({ action: 'seekTo', value: position }, '*');
     }
+
+    const finish = () => {
+        playerStore.pause();
+        playerStore.setFinished('archive', true);
+    }
 </script>
 
 <style lang="scss" scoped>
     iframe {
-        display: block;
+        display: none;
         position: absolute;
+        top: 300px;
         z-index: -1;
         opacity: 0;
+        width: 100%;
     }
 </style>

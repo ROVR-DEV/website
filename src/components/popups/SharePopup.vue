@@ -11,7 +11,7 @@
                         <img :src="metadata.cover" alt="cover">
                     </div>
                     <div class="share-popup__details">
-                        <span class="share-popup__source" v-text="metadata.source"/>
+                        <span class="share-popup__source">{{ metadata.source }} - {{ formatDate(metadata.date) }}</span>
                         <h3 v-text="metadata.title" class="share-popup__title"/>
                         <h4 class="share-popup__artist">BY <em v-text="metadata.artist"/></h4>
                     </div>
@@ -60,10 +60,13 @@
 <script setup>
     import { onMounted, ref, computed } from 'vue';
     import { SFacebook, STelegram, STwitter } from 'vue-socials';
-    import { onClickOutside } from '@vueuse/core'
+    import { onClickOutside } from '@vueuse/core';
+    import { formatDate } from '@/utils/formatDate';
+    import axios from 'axios';
 
     const currentUrl = new URL(window.location.href);
     const url = ref(null);
+    const shareLink = ref('');
     const copySuccess = ref(false);
     const target = ref(null);
 
@@ -84,6 +87,8 @@
 
     onMounted(() => {
         if (props.id) {
+            // shareLink.value = `https://share.rovr.live/showarchive.html?release_date=${props.metadata.date}&title=${props.metadata.title}&description=${props.metadata.description}&image=${props.metadata.cover}`;
+            // createShortLink(shareLink.value);
             url.value = `${currentUrl.origin}/#/show/${props.id}`;
         }
     });
@@ -104,6 +109,20 @@
         text: `ROVR Archive: ${props.metadata.title} by ${props.metadata.artist}`,
         hashtags: ['Radio', 'Music'],
     }));
+
+    const createShortLink = async (link) => {
+        const params = {
+            url: link
+        };
+
+        await axios.post('https://go.rovr.live/shortlink', params)
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+            });
+    }
 
     const copy = () => {
         navigator.clipboard.writeText(url.value)

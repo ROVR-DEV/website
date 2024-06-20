@@ -5,7 +5,7 @@
                 <div class="show__row">
                     <h2 class="show__date">streamed on {{ formatDate(necessary_data.release_date) }}</h2>
 
-                    <button class="show-tracklist-button" @click="isTracklistShown = !isTracklistShown">
+                    <button class="show-tracklist-button" @click="isTracklistShown = !isTracklistShown" :class="{ ready: show && publisher_id && show.id === +publisher_id }">
                         <img src="@/assets/images/ui/tracklist_button.svg" alt="tracklist">
                     </button>
                     
@@ -59,9 +59,10 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch, nextTick } from "vue";
+    import { ref, onMounted, watch, nextTick, onUnmounted } from "vue";
     import { useArchiveStore } from "@/stores/archive";
     import { usePlayerStore } from "@/stores/player";
+    import { useRouter } from "vue-router";
     import { formatDate } from "@/utils/formatDate";
     import axios from "axios";
     import ShowPlayer from "@/components/archive/ShowPlayer.vue";
@@ -72,6 +73,7 @@
     import Tracklist from "@/components/archive/Tracklist.vue";
     import SharePopup from '@/components/popups/SharePopup.vue';
 
+    const router = useRouter();
     const archiveStore = useArchiveStore();
     const playerStore = usePlayerStore();
     const show = ref(null);
@@ -79,6 +81,7 @@
     const isTracklistShown = ref(false);
     const isShareOpen = ref(false);
     const sharingMetadata = ref(null);
+    const is_next_archive_ready = ref(false);
 
     const props = defineProps({
         publisher_id: {
@@ -94,6 +97,10 @@
             necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
             loadSharingMetadata(necessary_data.value);
         }
+    });
+
+    onUnmounted(() => {
+        window.removeEventListener('message', handleMessage);
     });
 
     watch(() => props.publisher_id, (newId, oldId) => {
@@ -125,6 +132,21 @@
             playerStore.setNowPlayingArchive(null);
         } else {
             playerStore.setNowPlayingArchive(show.value.id);
+        }
+    });
+
+    watch(() => playerStore.is_archive_finished, (is_finished) => {
+        if (is_finished) {
+            switchToNextOrPreviousShow();
+        }
+    });
+
+    watch(is_next_archive_ready, (status) => {
+        if (status) {
+            playerStore.play('archive');
+            is_next_archive_ready.value = false;
+            playerStore.setFinished('archive', false);
+            window.removeEventListener('message', handleMessage);
         }
     });
 
@@ -164,12 +186,58 @@
             });
     }
 
+    const switchToNextOrPreviousShow = async () => {
+        const currentShow = necessary_data.value;
+        if (!currentShow) return;
+
+        const currentReleaseTitle = currentShow.publisher_metadata.release_title;
+        const currentReleaseDate = new Date(currentShow.release_date);
+
+        const showsWithSameTitle = archiveStore.archive.filter(show =>
+            show.publisher_metadata.release_title === currentReleaseTitle
+        );
+
+        showsWithSameTitle.sort((a, b) => new Date(a.release_date) - new Date(b.release_date));
+
+        const currentIndex = showsWithSameTitle.findIndex(show =>
+            new Date(show.release_date).getTime() === currentReleaseDate.getTime()
+        );
+
+        if (currentIndex === -1) return;
+
+        const nextShow = showsWithSameTitle[currentIndex + 1];
+
+        if (nextShow) {
+            await router.push(`/show/${nextShow.publisher_metadata.publisher}`);
+        } else {
+            await router.push(`/show/${showsWithSameTitle[0].publisher_metadata.publisher}`);
+        }
+
+        setTimeout(() => {
+            playerStore.setSoundcloudSecret(show.value.soundcloud_secret);
+            window.addEventListener('message', handleMessage);
+        }, 2500);
+    }
+
     const loadSharingMetadata = (data) => {
         sharingMetadata.value = {
-            title: data.publisher_metadata.release_title,
-            artist: data.publisher_metadata.artist,
             cover: data.publisher_metadata.cover,
             source: 'archive',
+            title: data.publisher_metadata.release_title,
+            artist: data.publisher_metadata.artist,
+            description: data.publisher_metadata.description,
+            date: data.release_date,
+        }
+    }
+
+
+    const handleMessage = (event) => {
+        const { action } = event.data;
+
+        switch (action) {
+            case 'is_ready':
+                is_next_archive_ready.value = true;
+                break;
         }
     }
 </script>
@@ -214,6 +282,10 @@
             position: relative;
             top: -2px;
             outline: none;
+            pointer-events: none;
+            &.ready {
+                pointer-events: auto;
+            }
             img {
                 display: block;
                 width: 8rem;

@@ -117,19 +117,18 @@
         z-index: 4;
         &-close {
             @include flex-center;
-            position: sticky;
+            position: relative;
             top: 3rem;
-            right: 3rem;
+            right: 2rem;
             margin-left: auto;
-            margin-right: 2rem;
             width: 3rem;
             aspect-ratio: 1;
             border-radius: 50%;
             border: 1.5px solid $primary;
-            background-color: transparent;
+            background-color: black;
             cursor: pointer;
             transition: all 0.2s ease-in;
-            z-index: 2;
+            z-index: 3;
             img {
                 display: block;
                 width: 1.125rem;
@@ -209,6 +208,9 @@
 
     @media screen and (max-width: 1660px) {
         .archive__tracklist {
+            &-close {
+                top: 1.5rem;
+            }
             .archive__tracks {
                 padding: 3rem 2.5rem;
                 top: -20px;
@@ -297,6 +299,7 @@
             height: auto;
             flex: auto;
             padding: 2rem;
+            top: 0 !important;
         }
         .archive__track {
             top: 0;
