@@ -98,3 +98,14 @@
         }
     }
 }
+
+/* @media screen and (pointer: coarse) and (orientation: landscape) {
+    #base-layout {
+        main > .curator {
+            overflow-x: auto;
+            .curator__info {
+                margin: 32.5vw 0 0 0;
+            }
+        }
+    }
+} */

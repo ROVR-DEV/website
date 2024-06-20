@@ -66,18 +66,27 @@
 
     const updateTotalHeight = () => {
         const screenWidth = window.innerWidth;
-        columns.value = screenWidth < 480 ? 1 : 2;
+        const screenHeight = window.innerHeight;
+
+        if (screenWidth > screenHeight && screenWidth < 767) {
+            columns.value = 2;
+        } else {
+            columns.value = screenWidth < 480 ? 1 : 2;
+        }
+
         const totalRows = Math.ceil(props.items.length / columns.value);
         totalHeight.value = totalRows * props.itemHeight + (totalRows - 1) * verticalGap.value;
     }
 
     onMounted(() => {
         container.value.addEventListener('scroll', onScroll);
+        window.addEventListener('resize', updateTotalHeight, false);
         updateTotalHeight();
     });
 
     onUnmounted(() => {
         container.value.removeEventListener('scroll', onScroll);
+        window.removeEventListener('resize', updateTotalHeight);
     });
 </script>
 

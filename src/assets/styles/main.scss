@@ -79,6 +79,10 @@ section {
     text-transform: uppercase;
 }
 
+.vc-weekday {
+    padding-bottom: 0;
+}
+
 .vc-pane-header-wrapper {
     position: relative;
 }
@@ -162,7 +166,7 @@ section {
 
 .vc-weeks {
     & > *:not(:last-child) {
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
 }
 

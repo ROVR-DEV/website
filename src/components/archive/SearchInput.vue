@@ -59,7 +59,6 @@
 <style lang="scss" scoped>
     .archive__search {
         position: relative;
-        margin-bottom: 3rem;
         flex: auto;
         &-input {
             font-family: 'Kern Standard', sans-serif;

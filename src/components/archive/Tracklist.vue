@@ -207,6 +207,16 @@
         }
     }
 
+    @media screen and (max-width: 1660px) {
+        .archive__tracklist {
+            .archive__tracks {
+                padding: 3rem 2.5rem;
+                top: -20px;
+            }
+            
+        }
+    }
+
     @media screen and (max-width: 1024px) {
         .archive__tracklist {
             flex: 0 1 100%;

@@ -174,6 +174,18 @@
         }
     }
 
+    @media screen and (max-width: 1440px) {
+        .archive-preview {
+            &__title {
+                @include font-size(28px);
+            }
+            &__button {
+                width: 2.5rem;
+            }
+        }
+    }
+
+
     @media screen and (max-width: 1200px) {
         .archive-preview {
             height: 200px;

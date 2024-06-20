@@ -30,11 +30,25 @@
     }
 }
 
-@media screen and (max-width: 1400px) {
+@media screen and (max-width: 480px) {
     html {
         font-size: 12px;
     }
 }
+
+// disable landscape mode on mobile phones
+/* @media screen and (pointer: coarse) and (orientation: landscape) {
+    html {
+        transform: rotate(-90deg);
+        transform-origin: left top;
+        width: 100vh;
+        overflow-x: hidden;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        height: 100vw;
+    }
+} */
 
 @import "./mobile/header.mobile.scss";
 @import "./mobile/show.mobile.scss";

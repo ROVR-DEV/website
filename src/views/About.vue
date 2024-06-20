@@ -42,6 +42,12 @@
                         margin-bottom: 2.25rem;
                     }
                 }
+                /* @media screen and (pointer: coarse) and (orientation: landscape) {
+                    @include font-size(36px);
+                    &:not(:last-child) {
+                        margin-bottom: 2.25rem;
+                    }
+                } */
             }
         }
         &__logo {

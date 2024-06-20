@@ -262,6 +262,7 @@
         }
         &__nav {
             display: flex;
+            margin-bottom: 3rem;
         }
         &__scroller {
             flex: 1 0 60%;

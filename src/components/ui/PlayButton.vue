@@ -110,6 +110,14 @@
         @media screen and (max-width: 1660px) {
             width: 6.25rem;
         }
+
+        @media screen and (max-width: 1440px) {
+            width: 5rem;
+        }
+
+        @media screen and (max-width: 480px) {
+            width: 6rem;
+        }
     }
 
     @keyframes pulse {
