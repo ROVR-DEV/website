@@ -122,8 +122,6 @@
     watch(() => playerStore.isPlaying, (isPlaying) => {
         if (isPlaying && playerStore.source === 'archive') {
             playerStore.setNowPlayingArchive(show.value.id);
-        } else {
-            playerStore.setNowPlayingArchive(null);
         }
     });
 
@@ -253,11 +251,12 @@
             top: 3rem;
             right: 3rem;
             z-index: 3;
+            width: 3rem;
         }
         &__nowplaying {
             @include font-size(14px);
             position: absolute;
-            top: 3.5rem;
+            top: 4.75em;
             right: 38%;
             z-index: 3;
             color: $primary;

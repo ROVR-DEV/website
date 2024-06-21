@@ -42,10 +42,7 @@
     });
 
     watch(() => playerStore.isPlaying, (state) => {
-        if(playerStore.source === props.type) {
-            isAnimating.value = true;
-            setTimeout(() => isAnimating.value = false, 1500);
-            
+        if (playerStore.source === props.type) {
             if (state) {
                 trackArtist.value = playerStore.track.artist;
                 trackTitle.value = playerStore.track.title;
@@ -57,8 +54,22 @@
                     trackLabel.value = 'Label';
                 }, 800);
             }
+
+            if(playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
+                playerStore.updateTrack('Incoming...', 'ROVR', '');
+            } else {
+                animateTrackInfo();
+            }
         }
     });
+
+    const animateTrackInfo = () => {
+        isAnimating.value = true;
+        setTimeout(() => {
+            isAnimating.value = false;
+        }, 1500);
+    }
+
 
     watch(() => playerStore.track, () => {
         if(playerStore.isPlaying && playerStore.source === props.type) {

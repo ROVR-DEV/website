@@ -45,9 +45,8 @@
         if (props.archive && playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
             playerStore.setSoundcloudSecret(props.soundcloud_secret);
             shouldNewArchivePlay.value = true;
+            // playerStore.updateTrack('Incoming...', 'ROVR', '');
         }
-
-        console.log(playerStore.isPlaying, playerStore.source);
     }
 
     const handleMessage = (event) => {
@@ -56,7 +55,6 @@
         if (action === 'is_ready') {
             if (shouldNewArchivePlay.value) {
                 playerStore.play('archive');
-                playerStore.updateTrack('Incoming...', 'ROVR', '');
             }
             shouldNewArchivePlay.value = false;
         }
