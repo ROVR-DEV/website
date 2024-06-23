@@ -2,8 +2,13 @@
     <teleport to="#modal">
         <div class="share-popup popup" v-if="metadata">
             <div class="share-popup__content" ref="target">
-                <div class="share-popup__close" @click="emit('close')">
-                    <img src="@/assets/images/icons/close-small.svg" alt="close">
+                <div class="share-popup__header">
+                    <div class="share-popup__logo">
+                        <img src="@/assets/images/logo/logo.svg" alt="logo">
+                    </div>
+                    <div class="share-popup__close" @click="emit('close')">
+                        <img src="@/assets/images/icons/close-small.svg" alt="close">
+                    </div>
                 </div>
 
                 <div class="share-popup__preview">
@@ -20,35 +25,35 @@
                 <p class="share-popup__tip">Share on:</p>
 
                 <div class="share-popup__links">
-                    <s-facebook :share-options="facebookShareOptions" @click="console.log(facebookShareOptions.url)">
-                        <img src="@/assets/images/icons/social-media/facebook.png">
-                    </s-facebook>
+                    <s-twitter :share-options="twitterShareOptions" @click="console.log(twitterShareOptions.url)">
+                        <img src="@/assets/images/icons/social-media/x.svg">
+                    </s-twitter>
 
                     <s-telegram :share-options="telegramShareOptions" @click="console.log(telegramShareOptions.url)">
-                        <img src="@/assets/images/icons/social-media/telegram.png">
+                        <img src="@/assets/images/icons/social-media/telegram.svg">
                     </s-telegram>
 
-                    <s-twitter :share-options="twitterShareOptions" @click="console.log(twitterShareOptions.url)">
-                        <img src="@/assets/images/icons/social-media/twitter.png">
-                    </s-twitter>
+                    <s-whats-app :share-options="whatsappShareOptions" @click="console.log(whatsappShareOptions.url)">
+                        <img src="@/assets/images/icons/social-media/whatsapp.svg">
+                    </s-whats-app>
+
+                    <s-facebook :share-options="facebookShareOptions" @click="console.log(facebookShareOptions.url)">
+                        <img src="@/assets/images/icons/social-media/facebook.svg">
+                    </s-facebook>
                 </div>
 
                 <p class="share-popup__tip">Or copy the link:</p>
 
                 <div class="share-popup__copy">
-                    <transition name="fade">
-                        <p v-if="copySuccess" class="share-popup__success">Link copied to clipboard!</p>
-                    </transition>
+                    <div class="share-popup__link">
+                        <span v-if="url" v-text="url" :class="{ hide: copySuccess }" readonly @click="copy"/>
+                        
+                        <transition name="fade">
+                            <p v-if="copySuccess" class="share-popup__success">Link copied to clipboard!</p>
+                        </transition>
+                    </div>
 
-                    <input
-                        type="text"
-                        class="share-popup__input"
-                        :class="{ hide: copySuccess }"
-                        :value="url"
-                        readonly
-                        @click="copy">
-
-                    <button @click="copy" :class="{ hide: copySuccess }">
+                    <button @click="copy" class="copy-button">
                         <img src="@/assets/images/icons/copy.svg" alt="copy">
                     </button>
                 </div>
@@ -59,12 +64,11 @@
 
 <script setup>
     import { onMounted, ref, computed } from 'vue';
-    import { SFacebook, STelegram, STwitter } from 'vue-socials';
+    import { SFacebook, STelegram, STwitter, SWhatsApp } from 'vue-socials';
     import { onClickOutside } from '@vueuse/core';
     import { formatDate } from '@/utils/formatDate';
     import axios from 'axios';
 
-    const currentUrl = new URL(window.location.href);
     const url = ref(null);
     const shareLink = ref('');
     const copySuccess = ref(false);
@@ -87,9 +91,8 @@
 
     onMounted(() => {
         if (props.id) {
-            // shareLink.value = `https://share.rovr.live/showarchive.html?release_date=${props.metadata.date}&title=${props.metadata.title}&description=${props.metadata.description}&image=${props.metadata.cover}`;
-            // createShortLink(shareLink.value);
-            url.value = `${currentUrl.origin}/#/show/${props.id}`;
+            shareLink.value = `https://share.rovr.live/showarchive.html?release_date=${props.metadata.date}&title=${props.metadata.title}&curator=${props.metadata.artist}&description=${props.metadata.description}&image=${props.metadata.cover}&publisher=${props.metadata.publisher}`;
+            createShortLink(shareLink.value);
         }
     });
 
@@ -101,13 +104,15 @@
 
     const telegramShareOptions = computed(() => ({
         url: url.value,
-        text: `ROVR Archive: ${props.metadata.title} by ${props.metadata.artist}`,
     }));
 
     const twitterShareOptions = computed(() => ({
         url: url.value,
-        text: `ROVR Archive: ${props.metadata.title} by ${props.metadata.artist}`,
         hashtags: ['Radio', 'Music'],
+    }));
+
+    const whatsappShareOptions = computed(() => ({
+        text: url.value,
     }));
 
     const createShortLink = async (link) => {
@@ -117,7 +122,9 @@
 
         await axios.post('https://go.rovr.live/shortlink', params)
             .then(response => {
-                console.log(response.data);
+                if(response.data && response.data.short_url) {
+                    url.value = response.data.short_url;
+                }
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -125,16 +132,18 @@
     }
 
     const copy = () => {
-        navigator.clipboard.writeText(url.value)
-            .then(() => {
-                copySuccess.value = true;
-                setTimeout(() => {
-                    copySuccess.value = false;
-                }, 2000);
-            })
-            .catch(err => {
-                console.error('Failed to copy: ', err);
-            });
+        if(url.value) {
+            navigator.clipboard.writeText(url.value)
+                .then(() => {
+                    copySuccess.value = true;
+                    setTimeout(() => {
+                        copySuccess.value = false;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy: ', err);
+                });
+        }
     }
 </script>
 
@@ -153,17 +162,20 @@
             position: relative;
             max-width: 700px;
             width: 95%;
-            padding: 3rem;
+            padding: 1.5rem;
             background-color: $black;
             height: auto;
-            border-radius: 2rem;
+            border-radius: 0.75rem;
             box-shadow: 2px 2px 10px rgba(255, 240, 87, 0.25);
             border: 1px solid $primary;
         }
+        &__header {
+            @include flex-center-sb;
+        }
+        &__logo {
+            width: 7rem;
+        }
         &__close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
             cursor: pointer;
         }
         &__preview {
@@ -171,7 +183,7 @@
             margin-bottom: 2rem;
             padding: 1.5rem;
             background-color: $primary;
-            border-radius: 1rem;
+            border-radius: 0.5rem;
             margin-top: 2rem;
         }
         &__cover {
@@ -217,59 +229,53 @@
             @include flex-center;
             margin-bottom: 2rem;
             & > * {
-                width: 4rem;
+                img {
+                    width: 4rem;
+                    aspect-ratio: 1;
+                }
                 &:not(:last-child) {
                     margin-right: 2rem;
                 }
             }
         }
         &__copy {
-            @include flex-center;
-            position: relative;
+            margin-top: -0.75rem;
+            text-align: center;
             button {
-                @include flex-center;
-                background-color: $primary;
-                padding: 0.25rem;
-                cursor: pointer;
-                width: 3.5rem;
-                aspect-ratio: 1;
-                border-radius: 50%;
+                margin: 1.25rem auto 0 auto;
+                width: 4rem;
                 img {
                     width: 1.75rem;
                 }
             }
-            & > *.hide {
-                opacity: 0;
-            } 
         }
-        &__input {
-            font-size: 16px;
-            display: block;
-            background-color: transparent;
-            color: $primary;
-            font-weight: normal;
-            -webkit-appearance: none;
-            appearance: none;
-            padding: 1rem 0;
-            border: none;
-            outline: none;
-            border-bottom: 1px solid $primary;
-            margin-right: 1.5rem;
-            width: 300px;
-            cursor: pointer;
+        &__link {
+            display: inline-block;
+            position: relative;
+            text-align: center;
+            span {
+                color: #A09F9B;
+                font-size: 14px;
+                cursor: pointer;
+                font-weight: normal;
+                &.hide {
+                    opacity: 0;
+                } 
+            }
         }
         &__success {
-            @include font-size(16px);
+            @include font-size(12px);
             @include flex-center;
-            padding: 1rem;
+            padding: 0.625rem 0 0 0;
             background-color: $primary;
             color: $black;
             position: absolute;
+            display: inline-block;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            border-radius: 1rem;
+            height: 2rem;
+            border-radius: 0.25rem;
             margin: 0;
             line-height: 1;
         }
@@ -279,11 +285,10 @@
         .share-popup {
             backdrop-filter: blur(12px);
             &__content {
-                border-radius: 1.5rem;
-                padding: 2rem;
+                border-radius: 0.75rem;
+                padding: 1.5rem;
             }
             &__close {
-                top: 1.25rem;
                 img {
                     width: 1.5rem;
                 }

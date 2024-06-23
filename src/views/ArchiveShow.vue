@@ -9,6 +9,11 @@
                         <img src="@/assets/images/ui/tracklist_button.svg" alt="tracklist">
                     </button>
                     
+                    <button class="show__copy copy-button" :class="{ active: copySuccess }" @click="copyLink">
+                        <img v-if="copySuccess" src="@/assets/images/icons/check.svg" alt="check">
+                        <img v-else src="@/assets/images/icons/copy.svg" alt="copy">
+                    </button>
+
                     <button class="show__share share-button" @click="isShareOpen = true;">
                         <img src="@/assets/images/icons/share.svg" alt="share">
                     </button>
@@ -82,6 +87,7 @@
     const isShareOpen = ref(false);
     const sharingMetadata = ref(null);
     const is_next_archive_ready = ref(false);
+    const copySuccess = ref(false);
 
     const props = defineProps({
         publisher_id: {
@@ -217,6 +223,36 @@
         }, 2500);
     }
 
+    const copyLink = () => {
+        const link = `https://share.rovr.live/showarchive.html?release_date=${necessary_data.value.release_date}&title=${necessary_data.value.publisher_metadata.release_title}&curator=${necessary_data.value.publisher_metadata.artist}&description=${necessary_data.value.publisher_metadata.description}&image=${necessary_data.value.publisher_metadata.cover}&publisher=${necessary_data.value.publisher_metadata.publisher}`;
+        createShortLink(link);
+    }
+
+    const createShortLink = async (link) => {
+        const params = {
+            url: link
+        };
+
+        await axios.post('https://go.rovr.live/shortlink', params)
+            .then(response => {
+                if(response.data && response.data.short_url) {
+                    navigator.clipboard.writeText(response.data.short_url)
+                        .then(() => {
+                            copySuccess.value = true;
+                            setTimeout(() => {
+                                copySuccess.value = false;
+                            }, 2000);
+                        })
+                        .catch(err => {
+                            console.error('Failed to copy: ', err);
+                        });
+                }
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+            });
+    }
+
     const loadSharingMetadata = (data) => {
         sharingMetadata.value = {
             cover: data.publisher_metadata.cover,
@@ -225,6 +261,7 @@
             artist: data.publisher_metadata.artist,
             description: data.publisher_metadata.description,
             date: data.release_date,
+            publisher: data.publisher_metadata.publisher
         }
     }
 
@@ -291,8 +328,17 @@
                 height: auto;
             }
         }
-        &__share {
+        &__copy {
             margin-left: auto;
+            &.active {
+                background-color: $primary;
+                img {
+                    filter: brightness(0);
+                }
+            }
+        }
+        &__share {
+            margin-left: 0.75rem;
         }
         &__player {
             @include flex-center-vert;

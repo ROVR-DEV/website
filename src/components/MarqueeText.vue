@@ -39,7 +39,7 @@ const resetAnimation = () => {
     isVisible.value = false;
     setTimeout(() => {
         isVisible.value = true;
-    }, 0);
+    }, 10);
 };
 
 const startAnimation = () => {

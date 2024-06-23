@@ -122,8 +122,11 @@
                 top: 2rem;
                 left: 2rem;
             }
-            &__row .show__share {
-                display: none;
+            &__row {
+                .show__share,
+                .show__copy {
+                    display: none;
+                }
             }
             &__nowplaying {
                 top: 3rem;

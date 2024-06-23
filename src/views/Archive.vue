@@ -67,7 +67,7 @@
     const router = useRouter();
     const queryCurator = ref(null);
 
-    const props = defineProps({
+    defineProps({
         curator: {
             type: String,
             required: false
@@ -108,7 +108,7 @@
 
         addArrowClickListeners();
 
-        const observer = new MutationObserver((mutationsList, observer) => {
+        const observer = new MutationObserver((mutationsList) => {
             for (let mutation of mutationsList) {
                 if (mutation.type === 'childList') {
                     addArrowClickListeners();
@@ -121,7 +121,6 @@
     
     onUnmounted(() => {
         window.removeEventListener('resize', updateShowHeight);
-        observer.disconnect();
     });
 
     watch(() => archiveStore.archive, (newArchive) => {
@@ -173,6 +172,7 @@
             artist: data.publisher_metadata.artist,
             description: data.publisher_metadata.description,
             date: data.release_date,
+            publisher: data.publisher_metadata.publisher
         }
     }
 
