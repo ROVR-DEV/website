@@ -15,11 +15,11 @@
 
             <date-picker v-if="!isCalendarVisible" v-model="date" @update:modelValue="searchShow(searchQuery)"
                 class="archive__calendar--desktop" borderless transparent locale="en" expanded :first-day-of-week="2"
-                :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates"/>
+                :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates" :max-date="new Date()"/>
 
             <div class="archive__calendar--mobile" :class="{ active: isCalendarVisible }">
                 <date-picker v-if="isCalendarVisible" v-model="date" borderless transparent locale="en" expanded
-                    :first-day-of-week="2" :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates"/>
+                    :first-day-of-week="2" :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates" :max-date="new Date()"/>
 
                 <div class="archive__calendar--mobile-controls">
                     <button class="archive__calendar--mobile-cancel" @click="cancelDateFilter()">cancel</button>
@@ -94,11 +94,11 @@
                     document.querySelectorAll('.vc-title span').forEach(title => {
                         if (title.textContent === 'March 2024' && item.classList.contains('vc-prev')) {
                             document.querySelectorAll('.vc-arrow.vc-prev').forEach(prevArrow => {
-                                prevArrow.classList.add('disabled');
+                                prevArrow.disabled = true;
                             });
                         } else {
                             document.querySelectorAll('.vc-arrow.vc-prev').forEach(prevArrow => {
-                                prevArrow.classList.remove('disabled');
+                                prevArrow.disabled = false;
                             });
                         }
                     });
