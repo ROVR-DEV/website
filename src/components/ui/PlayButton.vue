@@ -1,6 +1,6 @@
 <template>
     <button class="player-button player-button--radio"
-        :class="{ 'player-button--disabled': isTouchEventDisabled, 'player-button--loading': playerStore.isLoading }"
+        :class="{ 'player-button--disabled': isTouchEventDisabled || !isReady, 'player-button--loading': playerStore.isLoading }"
         v-press="{ time: 150, scale: 0.96 }" @click="play(150)">
 
         <img v-show="shouldShowPlayButton" src="@/assets/images/ui/play_button.svg" alt="play">
@@ -15,6 +15,7 @@
 
     const playerStore = usePlayerStore();
     const isTouchEventDisabled = ref(false);
+    const isReady = ref(false);
     const shouldNewArchivePlay = ref(false);
 
     const props = defineProps({
@@ -41,11 +42,11 @@
         await delay(delayTime);
         playerStore.togglePlaying(props.archive ? 'archive' : 'radio');
 
+
         await delay(1000);
         if (props.archive && playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
             playerStore.setSoundcloudSecret(props.soundcloud_secret);
             shouldNewArchivePlay.value = true;
-            // playerStore.updateTrack('Incoming...', 'ROVR', '');
         }
     }
 
@@ -53,6 +54,7 @@
         const { action } = event.data;
 
         if (action === 'is_ready') {
+            isReady.value = true;
             if (shouldNewArchivePlay.value) {
                 playerStore.play('archive');
             }

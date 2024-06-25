@@ -109,7 +109,6 @@
     }
 
     const handleLogoClick = () => {
-        router.push({ name: 'radio' });
         emit('pressed');
     }
 </script>

@@ -51,6 +51,16 @@
         window.removeEventListener('resize', checkIfMobile);
     });
 
+    
+    const mainCurator = computed(() => {
+        const curators = props.curator.split(' w/ ');
+        return curators[0].trim();
+    });
+
+    const navigateToCurator = () => {
+        router.push(`/curator/${slugify(mainCurator.value)}`);
+    }
+
     // replacing radio cover (backend bug)
     const radioCover = computed(() => {
         const replaceCover = {
@@ -92,7 +102,7 @@
         setTimeout(() => {
             photoScaleStyle.value = 'scale(1)';
             setTimeout(() => {
-                router.push(`/curator/${slugify(props.curator)}`)
+                navigateToCurator();
             }, 300);
         }, 100);
     }

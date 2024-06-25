@@ -51,8 +51,9 @@
 
     watch(() => props.show_id, (newId, oldId) => {
         if(newId !== oldId) {
-            updateRangePosition(0);
             isDragging.value = false;
+            range.value.style.left = '0px';
+            updateRangePosition(0);
         }
     });
 
@@ -199,9 +200,12 @@
             width: 5rem;
             height: 0.875rem;
             background-color: $primary;
-            top: -9px;
+            top: -8.5px;
             left: 0;
             cursor: grab;
+            @media screen and (max-width: 480px) {
+                top: -7px;
+            }
         }
 
         &__finish {

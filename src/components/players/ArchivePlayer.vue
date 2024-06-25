@@ -84,11 +84,11 @@
 
 <style lang="scss" scoped>
     iframe {
-        display: none;
+        display: block;
         position: absolute;
         top: 300px;
-        z-index: -1;
-        opacity: 0;
+        z-index: 5;
+        opacity: 1;
         width: 100%;
     }
 </style>

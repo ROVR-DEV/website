@@ -229,7 +229,6 @@
     }
 
     const clearFilter = () => {
-        searchShow('');
         searchQuery.value = '';
         date.value = '';
         isDateConfirmed.value = false;
@@ -237,6 +236,7 @@
             queryCurator.value = '';
             router.push({ name: 'archive' });
         }
+        searchShow('');
     }
 
     const confirmDateFilter = () => {
