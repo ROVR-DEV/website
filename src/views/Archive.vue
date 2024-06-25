@@ -88,35 +88,17 @@
 
         window.addEventListener('resize', updateShowHeight);
 
-        // const addArrowClickListeners = () => {
-        //   document.querySelectorAll('.vc-arrow').forEach(item => {
-        //     item.addEventListener('click', function () {
-        //       document.querySelectorAll('.vc-title span').forEach(title => {
-        //         if (title.textContent === 'March 2024' && item.classList.contains('vc-prev')) {
-        //           document.querySelectorAll('.vc-arrow.vc-prev').forEach(prevArrow => {
-        //             prevArrow.classList.add('disabled');
-        //           });
-        //         } else {
-        //           document.querySelectorAll('.vc-arrow.vc-prev').forEach(prevArrow => {
-        //             prevArrow.classList.remove('disabled');
-        //           });
-        //         }
-        //       });
-        //     });
-        //   });
-        // }
-
         const addArrowClickListeners = () => {
             document.querySelectorAll('.vc-arrow').forEach(item => {
                 item.addEventListener('click', function () {
                     document.querySelectorAll('.vc-title span').forEach(title => {
                         if (title.textContent === 'March 2024' && item.classList.contains('vc-prev')) {
                             document.querySelectorAll('.vc-arrow.vc-prev').forEach(prevArrow => {
-                                prevArrow.classList.add('disabled');
+                                prevArrow.disabled = true;
                             });
                         } else {
                             document.querySelectorAll('.vc-arrow.vc-prev').forEach(prevArrow => {
-                                prevArrow.classList.remove('disabled');
+                                prevArrow.disabled = false;
                             });
                         }
                     });
