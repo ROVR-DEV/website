@@ -37,9 +37,10 @@ const resetAnimation = () => {
     transformStyle.value = 'translateX(0)';
     transitionDuration.value = '0s';
     isVisible.value = false;
+    marqueeText.value.width = '100%';
     setTimeout(() => {
         isVisible.value = true;
-    }, 10);
+    }, 20);
 };
 
 const startAnimation = () => {
@@ -98,7 +99,6 @@ watch(() => props.text, (text) => {
         overflow: hidden;
         white-space: nowrap;
         line-height: 1;
-
         .marquee-text {
             display: inline-block;
             transition-timing-function: linear;

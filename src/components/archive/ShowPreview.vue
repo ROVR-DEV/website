@@ -107,6 +107,7 @@
             display: block;
             text-transform: uppercase;
             color: $primary;
+            text-shadow: 0 0 4px $black;
         }
         &__title {
             @include font-size(36px);

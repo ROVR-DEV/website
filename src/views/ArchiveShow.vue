@@ -296,7 +296,7 @@
             z-index: 3;
             color: $primary;
             text-transform: uppercase;
-            text-shadow: 1px 2px 1px rgba($color: $black, $alpha: 0.7);
+            text-shadow: 0 0 4px $black;
         }
         &__row {
             @include flex-center-vert;

@@ -1,6 +1,6 @@
 <template>
     <button class="player-button player-button--radio"
-        :class="{ 'player-button--disabled': isTouchEventDisabled || !isReady, 'player-button--loading': playerStore.isLoading }"
+        :class="{ 'player-button--disabled': isTouchEventDisabled || (!isReady && archive), 'player-button--loading': playerStore.isLoading }"
         v-press="{ time: 150, scale: 0.96 }" @click="play(150)">
 
         <img v-show="shouldShowPlayButton" src="@/assets/images/ui/play_button.svg" alt="play">

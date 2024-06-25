@@ -42,7 +42,7 @@
                     </s-facebook>
                 </div>
 
-                <p class="share-popup__tip">Or copy the link:</p>
+                <p class="share-popup__tip">Copy the link:</p>
 
                 <div class="share-popup__copy">
                     <div class="share-popup__link">

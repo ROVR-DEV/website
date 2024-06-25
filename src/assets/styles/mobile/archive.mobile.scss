@@ -166,7 +166,7 @@
             }
             &__search {
                 &-input {
-                    font-size: 16px;
+                    font-size: 16px !important;
                 }
                 &-clear {
                     @include font-size(16px);

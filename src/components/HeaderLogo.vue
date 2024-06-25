@@ -109,6 +109,12 @@
     }
 
     const handleLogoClick = () => {
+        if (playerStore.source === 'archive' && playerStore.isPlaying) {
+            router.push(`/show/${playerStore.now_playing_archive}`);
+        } else {
+            router.push({ name: 'radio' });
+        }
+        
         emit('pressed');
     }
 </script>
