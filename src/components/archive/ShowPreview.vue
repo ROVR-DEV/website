@@ -5,7 +5,7 @@
         <div class="archive-preview__info">
             <div class="archive-preview__top">
                 <span v-text="formatDate(show.release_date)" class="archive-preview__date" />
-                <span v-if="+show.publisher_metadata.publisher === playerStore.now_playing_archive"
+                <span v-if="playerStore.isPlaying && +show.publisher_metadata.publisher === playerStore.now_playing_archive"
                     class="archive-preview__nowplaying">now playing</span>
             </div>
             <h2 v-text="show.publisher_metadata.release_title" class="archive-preview__title" />
@@ -112,19 +112,20 @@
             @include font-size(36px);
             font-weight: bold;
             text-transform: uppercase;
-            margin: 0 0 0.5rem 0;
+            margin: 0 0 0.625rem 0;
         }
         &__author {
-            @include flex(row, flex-end, flex-start);
+            @include flex(row, flex-start, flex-start);
             @include font-size(17px);
             margin: 0;
             line-height: 1;
             em {
                 @include font-size(28px);
                 letter-spacing: 2%;
-                margin-left: 0.75rem;
+                margin-left: 0.625rem;
                 line-height: 1;
                 cursor: pointer;
+                margin-top: -8px;
             }
         }
         &__row {

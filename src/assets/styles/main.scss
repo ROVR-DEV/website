@@ -185,6 +185,7 @@ section {
 .show {
     display: flex;
     overflow: hidden;
+    position: relative;
     &__info {
         @include flex-column;
         flex: 0 1 55%;

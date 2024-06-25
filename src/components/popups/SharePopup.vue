@@ -264,14 +264,13 @@
             }
         }
         &__success {
-            @include font-size(12px);
             @include flex-center;
-            padding: 0.625rem 0 0 0;
+            padding: 0.25rem;
             background-color: $primary;
             color: $black;
+            font-size: 12px;
             position: absolute;
-            display: inline-block;
-            top: 0;
+            top: -5px;
             left: 0;
             width: 100%;
             height: 2rem;

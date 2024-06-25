@@ -1,5 +1,9 @@
 <template>
-    <button class="close-button" v-if="showBackButton" @click="if(disabled === false) $router.go(-1);">
+    <button class="close-button" v-if="!disabled && showBackButton" @click="$router.go(-1);">
+        <img src="@/assets/images/icons/arrow-left.svg" alt="back">
+    </button>
+
+    <button class="close-button" v-else-if="disabled">
         <img src="@/assets/images/icons/arrow-left.svg" alt="back">
     </button>
 </template>
@@ -20,7 +24,7 @@
 <style lang="scss" scoped>
 .close-button {
     @include flex-center;
-    width: 2.75rem;
+    width: 3rem;
     aspect-ratio: 1;
     background-color: $black;
     border-radius: 50%;

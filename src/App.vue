@@ -138,7 +138,7 @@
             radioStore.loadData(e.data.live);
             playerStore.setStreamUrl(radioStore.radio.stream_url);
             error.value = false;
-        }).catch(() => error.value = true);
+        }).catch(() => error.value = false);
     }
 
     const getSchedule = async () => {

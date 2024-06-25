@@ -160,11 +160,10 @@
         top: -3rem;
         z-index: 1;
         &-number {
-            font-family: 'Roboto', sans-serif;
             @include flex-center;
             @include font-size(23px);
-            font-weight: bold;
-            line-height: 1;
+            font-weight: normal;
+            line-height: normal;
             width: 3.75rem;
             min-width: 3.75rem;
             aspect-ratio: 1;
@@ -295,7 +294,7 @@
                 }
             }
         }
-        .archive__tracks {
+        .archive__tracklist .archive__tracks {
             height: auto;
             flex: auto;
             padding: 2rem;

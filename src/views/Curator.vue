@@ -17,14 +17,14 @@
             </div>
 
             <div class="curator__links" v-if="curator.links">
+                <router-link :to="{ name: 'archive', query: { curator: curator.name } }" class="curator__link">
+                    <img src="@/assets/images/links/archive.svg" alt="archive">
+                </router-link>
                 <a class="curator__link" v-for="(link, index) in links" :key="index" :href="link.href" target="_blank">
                     <img v-if="link.name === 'instagram'" src="@/assets/images/links/instagram.svg" alt="instagram">
                     <img v-else-if="link.name === 'twitter'" src="@/assets/images/links/twitter.svg" alt="twitter">
                     <img v-else-if="link.name === 'website'" src="@/assets/images/links/website.svg" alt="website">
                 </a>
-                <router-link :to="{ name: 'archive', query: { curator: curator.name } }" class="curator__link">
-                    <img src="@/assets/images/links/archive.svg" alt="archive">
-                </router-link>
             </div>
         </div>
     </section>

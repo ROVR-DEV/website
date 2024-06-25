@@ -57,7 +57,7 @@
 
         <close-button v-if="!isTracklistShown" disabled @click="$router.push({ name: 'archive'})" class="show__close"/>
 
-        <span v-if="playerStore.now_playing_archive === +necessary_data.publisher_metadata.publisher" class="show__nowplaying">now playing</span>
+        <span v-if="playerStore.isPlaying && playerStore.now_playing_archive === +necessary_data.publisher_metadata.publisher" class="show__nowplaying">now playing</span>
     </section>
 
     <share-popup v-if="isShareOpen" :metadata="sharingMetadata" :id="necessary_data.publisher_metadata.publisher" @close="isShareOpen = false"/>
@@ -265,7 +265,6 @@
         }
     }
 
-
     const handleMessage = (event) => {
         const { action } = event.data;
 
@@ -286,15 +285,14 @@
         &__close {
             position: absolute;
             top: 3rem;
-            right: 3rem;
+            right: 40%;
             z-index: 3;
-            width: 3rem;
         }
         &__nowplaying {
             @include font-size(14px);
             position: absolute;
             top: 4.75em;
-            right: 38%;
+            right: 3rem;
             z-index: 3;
             color: $primary;
             text-transform: uppercase;
