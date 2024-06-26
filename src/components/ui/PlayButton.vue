@@ -1,17 +1,21 @@
 <template>
     <button class="player-button player-button--radio"
-        :class="{ 'player-button--disabled': isTouchEventDisabled || newArchiveDelay || soundcloud_secret === '' || !playerStore.isReady , 'player-button--loading': playerStore.isLoading }"
+        :class="{ 'player-button--disabled': isLoadingTrack , 'player-button--loading': playerStore.isLoading }"
         v-press="{ time: 150, scale: 0.96 }" @click="play(150)">
 
-        <img v-show="shouldShowPlayButton" src="@/assets/images/ui/play_button.svg" alt="play">
-        <img v-show="shouldShowStopButton" src="@/assets/images/ui/stop_button.svg" alt="stop">
-        <img v-show="shouldShowPauseButton" src="@/assets/images/ui/pause_button.svg" alt="pause">
+
+        <Spiner v-if="isLoadingTrack" />
+
+        <img v-if="!isLoadingTrack && shouldShowPlayButton" src="@/assets/images/ui/play_button.svg" alt="play">
+        <img v-else-if="!isLoadingTrack && shouldShowStopButton" src="@/assets/images/ui/stop_button.svg" alt="stop">
+        <img v-else-if="!isLoadingTrack && shouldShowPauseButton" src="@/assets/images/ui/pause_button.svg" alt="pause">
     </button>
 </template>
 
 <script setup>
     import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
+    import Spiner from "@/views/Spiner.vue";
 
     const playerStore = usePlayerStore();
     const isTouchEventDisabled = ref(false);
@@ -39,7 +43,7 @@
             setTimeout(() => {
                 newArchiveDelay.value = false;
             }, 2000);
-        } 
+        }
     });
 
     const play = async (delayTime) => {
@@ -53,15 +57,15 @@
         }
     }
 
-    watch(() => playerStore.isReady, () => console.log(playerStore.isReady), {immediate: true})
+    // watch(() => playerStore.isReady, () => console.log(playerStore.isReady), {immediate: true})
 
     const handleMessage = (event) => {
         const { action } = event.data;
 
         if (action === 'is_ready') {
-            console.log(playerStore.isReady)
+            // console.log(playerStore.isReady)
             playerStore.isReady = true // !!
-            console.log("is_ready handleMessage")
+            // console.log("is_ready handleMessage")
             if (shouldNewArchivePlay.value) {
                 playerStore.startX = 0; /// resetX
                 playerStore.play('archive');
@@ -70,6 +74,13 @@
             shouldNewArchivePlay.value = false;
         }
     }
+
+    const isLoadingTrack = computed(() => {
+      return isTouchEventDisabled.value || newArchiveDelay.value || props.soundcloud_secret === '' || !playerStore.isReady
+    })
+
+    watch(() => playerStore.isReady, () => console.log(playerStore.isReady))
+
 
     const shouldShowPlayButton = computed(() => {
         return (!props.archive && !playerStore.isPlaying) ||

@@ -28,12 +28,6 @@
         }
     });
 
-    watch(() => playerStore.soundcloud_secret, () => {
-      console.log(playerStore.soundcloud_secret)
-    }, {
-      immediate: true
-    })
-
     watch(() => playerStore.source, (source) => {
         if (iframe.value) {
             source !== 'archive' ? pause() : play();

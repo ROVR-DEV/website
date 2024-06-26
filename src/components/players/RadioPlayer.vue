@@ -69,6 +69,7 @@
         playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
         navigator.mediaSession.playbackState = "playing";
         setWidget();
+        playerStore.isReady = true
 
         // Playing jinlge for 1 ms to prevent mobile audio security
         setTimeout(() => {
