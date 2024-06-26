@@ -1,23 +1,20 @@
 <template>
     <div class="current-track">
         <p>Track:</p>
-        <div
-            class="current-track__info"
-            :class="{
-                'current-track__info--fade-in': isAnimating && playerStore.isPlaying,
-                'current-track__info--fade-out': isAnimating && !playerStore.isPlaying
-            }"
-            :style="opacity">
-                <marquee-text marqueeClass="current-track__artist" :text="trackArtist"/>
-                <marquee-text marqueeClass="current-track__title" :text="trackTitle"/>
-                <em v-text="trackLabel" class="current-track__label"/>
+        <div class="current-track__info" :class="{
+            'current-track__info--fade-in': isAnimating && playerStore.isPlaying,
+            'current-track__info--fade-out': isAnimating && !playerStore.isPlaying
+        }" :style="opacity">
+            <marquee-text marqueeClass="current-track__artist" :text="trackArtist" />
+            <marquee-text marqueeClass="current-track__title" :text="trackTitle" />
+            <em v-text="trackLabel" class="current-track__label" />
         </div>
     </div>
 </template>
 
 <script setup>
     import { usePlayerStore } from '@/stores/player';
-    import { ref, watch, computed } from 'vue';
+    import { ref, watch, computed, onMounted, onUnmounted } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import MarqueeText from './MarqueeText.vue';
 
@@ -27,8 +24,8 @@
     const router = useRouter();
 
     const trackArtist = ref('Artist');
-    const trackTitle  = ref('Title');
-    const trackLabel  = ref('Label');
+    const trackTitle = ref('Title');
+    const trackLabel = ref('Label');
 
     const props = defineProps({
         type: {
@@ -41,9 +38,9 @@
         }
     });
 
-    watch(() => playerStore.isPlaying, (state) => {
+    watch(() => playerStore.isPlaying, (newState, oldState) => {
         if (playerStore.source === props.type) {
-            if (state) {
+            if (newState) {
                 trackArtist.value = playerStore.track.artist;
                 trackTitle.value = playerStore.track.title;
                 trackLabel.value = playerStore.track.label;
@@ -55,7 +52,7 @@
                 }, 800);
             }
 
-            if(playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
+            if (playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
                 playerStore.updateTrack('Incoming...', 'ROVR', '');
             } else {
                 animateTrackInfo();
@@ -65,9 +62,11 @@
 
     watch(() => playerStore.isPlaying, (state) => {
         if (!state) {
-            trackArtist.value = 'Artist';
-            trackTitle.value = 'Title';
-            trackLabel.value = 'Label';
+            setTimeout(() => {
+                trackArtist.value = 'Artist';
+                trackTitle.value = 'Title';
+                trackLabel.value = 'Label';
+            }, 800);
         }
     });
 
@@ -80,10 +79,12 @@
 
 
     watch(() => playerStore.track, () => {
-        if(playerStore.isPlaying && playerStore.source === props.type) {
+        if (playerStore.isPlaying && playerStore.source === props.type) {
             trackArtist.value = playerStore.track.artist;
             trackTitle.value = playerStore.track.title;
             trackLabel.value = playerStore.track.label;
+
+            console.log("TRACK UPDATED");
         } else {
             trackArtist.value = 'Artist';
             trackTitle.value = 'Title';
@@ -103,11 +104,32 @@
     });
 
     watch(route, () => {
-        if(router.currentRoute.value.name === 'show' && playerStore.isPlaying && playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
+        if (router.currentRoute.value.name === 'show' && playerStore.isPlaying && playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
             trackArtist.value = 'Artist';
             trackTitle.value = 'Title';
             trackLabel.value = 'Label';
         }
+    });
+
+    const handleMessage = (event) => {
+        const { action } = event.data;
+
+        if (action === 'reset_metadata') {
+            setTimeout(() => {
+                console.log("СЮДА СМОТРИ");
+                trackArtist.value = 'ROVR';
+                trackTitle.value = 'Incoming...';
+                trackLabel.value = '';
+            }, 375);
+        }
+    }
+
+    onMounted(() => {
+        window.addEventListener('message', handleMessage);
+    });
+
+    onUnmounted(() => {
+        window.removeEventListener('message', handleMessage);
     });
 </script>
 
@@ -117,35 +139,43 @@
         background-color: $primary;
         padding: 2rem 3.75rem;
         height: 10rem;
-        & > p {
+
+        &>p {
             @include font-size(20px);
             color: rgba($color: $black, $alpha: 0.32);
             font-weight: bold;
             line-height: normal;
             margin: 0 3rem 0 0;
         }
+
         &__info {
             opacity: 0.32;
+
             &--fade-in {
                 animation: fade-in 1.5s linear;
             }
+
             &--fade-out {
                 animation: fade-out 1.5s linear;
             }
+
             * {
                 @include font-size(20px);
                 display: block;
                 color: $black;
                 margin: 0;
                 height: 1.325rem;
+
                 &:not(:last-child) {
                     margin-bottom: 1rem;
                 }
             }
         }
+
         &__artist {
             font-weight: bold;
         }
+
         &__label {
             font-family: 'GT Alpina', sans-serif;
             font-style: italic;
@@ -156,17 +186,21 @@
         0% {
             opacity: 0;
         }
+
         100% {
             opacity: 1;
         }
     }
+
     @keyframes fade-out {
         0% {
             opacity: 1;
         }
+
         50% {
             opacity: 0;
         }
+
         100% {
             opacity: 0.32;
         }

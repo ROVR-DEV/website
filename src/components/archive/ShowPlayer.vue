@@ -1,13 +1,15 @@
 <template>
-    <play-button archive :archive_id="show_id" :soundcloud_secret="sc_secret"/>
+    <play-button archive :archive_id="show_id" :soundcloud_secret="sc_secret" />
 
     <div class="archive-player">
         <img src="@/assets/images/icons/soundcloud.svg" class="archive-player__icon" alt="soundcloud">
 
         <div class="archive-player__finish" v-if="playerStore.is_archive_finished">
-            Next Show 
+            Next Show
             <div class="ball-beat">
-                <div></div><div></div><div></div>
+                <div></div>
+                <div></div>
+                <div></div>
             </div>
         </div>
 
@@ -28,6 +30,7 @@
     const timeline = ref(null);
     const range = ref(null);
     const isDragging = ref(false);
+    const startX = ref(0);
     const startLeft = ref(0);
 
     const props = defineProps({
@@ -49,7 +52,7 @@
     const currentTrackArtist = ref('');
 
     watch(() => props.show_id, (newId, oldId) => {
-        if(newId !== oldId) {
+        if (newId !== oldId) {
             isDragging.value = false;
             range.value.style.left = '0px';
             updateRangePosition(0);
@@ -58,7 +61,7 @@
 
     const startDragging = (event) => {
         isDragging.value = true;
-        playerStore.startX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
+        startX.value = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
         startLeft.value = range.value.offsetLeft;
 
         document.addEventListener('mousemove', onDrag);
@@ -73,7 +76,7 @@
         if (!isDragging.value) return;
 
         const currentX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
-        const deltaX = currentX - playerStore.startX;
+        const deltaX = currentX - startX.value;
         const newLeft = Math.min(Math.max(startLeft.value + deltaX, 0), timeline.value.offsetWidth - range.value.offsetWidth);
 
         range.value.style.left = `${newLeft}px`;
@@ -117,7 +120,7 @@
     const updateTrackInfo = (position) => {
         if (!props.tracks || props.tracks.length === 0) return;
 
-        if(playerStore.now_playing_archive === props.show_id) {
+        if (playerStore.now_playing_archive === props.show_id) {
             const currentTrack = props.tracks.find(track => position >= track.start * 1000 && position < track.end * 1000);
 
             if (Math.round(position / 1000) < 16) {
@@ -142,7 +145,7 @@
     const handleMessage = (event) => {
         const { action, value } = event.data;
 
-        switch(action) {
+        switch (action) {
             case 'duration':
                 duration.value = value;
                 break;
@@ -154,27 +157,21 @@
     }
 
     onMounted(() => {
-      if(timeline.value){
         timeline.value.addEventListener('mousedown', startDragging);
         timeline.value.addEventListener('touchstart', startDragging);
-      }
-        window.addEventListener('message', handleMessage);
 
+        window.addEventListener('message', handleMessage);
     });
 
     onUnmounted(() => {
-        if(timeline.value){
-          timeline.value.removeEventListener('mousedown', startDragging);
-          timeline.value.removeEventListener('touchstart', startDragging);
-        }
+        timeline.value.removeEventListener('mousedown', startDragging);
+        timeline.value.removeEventListener('touchstart', startDragging);
+        document.removeEventListener('mousemove', onDrag);
+        document.removeEventListener('mouseup', stopDragging);
+        document.removeEventListener('touchmove', onDrag);
+        document.removeEventListener('touchend', stopDragging);
 
-          document.removeEventListener('mousemove', onDrag);
-          document.removeEventListener('mouseup', stopDragging);
-          document.removeEventListener('touchmove', onDrag);
-          document.removeEventListener('touchend', stopDragging);
-
-          window.removeEventListener('message', handleMessage);
-
+        window.removeEventListener('message', handleMessage);
     });
 </script>
 
@@ -208,6 +205,7 @@
             top: -8.5px;
             left: 0;
             cursor: grab;
+
             @media screen and (max-width: 480px) {
                 top: -7px;
             }
@@ -220,8 +218,10 @@
             position: absolute;
             top: -3.75rem;
             right: 5rem;
+
             .ball-beat {
                 margin-left: 1rem;
+
                 * {
                     background-color: $primary;
                     width: 0.625rem;

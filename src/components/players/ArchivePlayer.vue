@@ -1,12 +1,6 @@
 <template>
-    <iframe
-        v-if="playerStore.soundcloud_secret"
-        :src="`../../../player/player.html?url=${playerStore.soundcloud_secret}`"
-        ref="iframe"
-        width="400"
-        scrolling="no"
-        frameborder="no"
-        allow="autoplay"/>
+    <iframe v-if="playerStore.soundcloud_secret" :src="`../../../player/player.html?url=${playerStore.soundcloud_secret}`"
+        ref="iframe" width="400" scrolling="no" frameborder="no" allow="autoplay" />
 </template>
 
 <script setup>
@@ -63,7 +57,7 @@
 
     const play = () => {
         iframe.value.contentWindow.postMessage({ action: 'play' }, '*');
-        if(Math.round(position.value / 1000) < 16 && playerStore.source === 'archive') {
+        if (Math.round(position.value / 1000) < 16 && playerStore.source === 'archive') {
             playerStore.updateTrack('Incoming...', 'ROVR', '');
         }
     }

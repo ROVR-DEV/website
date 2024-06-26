@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import {ref} from "vue";
 
 export const usePlayerStore = defineStore("player", {
     state: () => ({
@@ -10,11 +9,9 @@ export const usePlayerStore = defineStore("player", {
         source: null,
         fade_out: false,
         stream_url: null,
-        startX: 0,
         soundcloud_secret: null,
         show_sticky_player: false,
         now_playing_archive: null,
-        isReady: false,
         track: {
             title: null,
             artist: null,
@@ -50,6 +47,7 @@ export const usePlayerStore = defineStore("player", {
             } else if(source === 'archive') {
                 this.is_archive_finished = status;
             }
+            
         },
         setLoading(status) {
             this.isLoading = status;

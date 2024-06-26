@@ -3,9 +3,10 @@
         <div id="base-layout">
             <Header />
 
-            <main class="main" :class="{'main--lock' : showDownloadPopup}">
+            <main class="main" :class="{ 'main--lock': showDownloadPopup }">
                 <transition name="fade">
-                    <download-popup v-if="showDownloadPopup" @close="showDownloadPopup = false; curatorsStore.popupShowing(false);"/>
+                    <download-popup v-if="showDownloadPopup"
+                        @close="showDownloadPopup = false; curatorsStore.popupShowing(false);" />
                 </transition>
 
                 <router-view v-slot="{ Component }">
@@ -47,7 +48,7 @@
     import DownloadPopup from "@/components/DownloadPopup.vue";
 
     const router = useRouter();
-    const route  = useRoute();
+    const route = useRoute();
 
     const error = ref(false);
     const isDocumentHidden = ref(false);
@@ -85,17 +86,17 @@
         window.Echo.private('playnow.' + userStore.gmt).listen('.playnow', (e) => {
             radioStore.loadData(e.playnow.live);
 
-            if(playerStore.isPlaying && playerStore.source === 'radio') {
+            if (playerStore.isPlaying && playerStore.source === 'radio') {
                 playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
             }
-            
+
             error.value = false;
         });
 
         document.addEventListener(visibilityChange, handleVisibilityChange, false);
 
         setTimeout(() => {
-            if(!route.query.webview) {
+            if (!route.query.webview) {
                 curatorsStore.setScrollPosition(document.querySelector('.main').scrollTop);
                 showDownloadPopup.value = true;
                 curatorsStore.popupShowing(true);
@@ -110,7 +111,7 @@
     });
 
     watch(() => isDocumentHidden.value, async (state) => {
-        if(!state) {
+        if (!state) {
             getRadio();
         }
     });
@@ -172,7 +173,7 @@
             const response = await axios.get('https://arh.rovr.live/get-sounds-from-db?requestAuthToken=kBPA828rg6ppypFKjkadjkajkdHJhkd739817hHJhjkbdsjkbbHHdak31');
             const archiveSortedByDate = response.data.sort((a, b) => new Date(b.release_date) - new Date(a.release_date));
             archiveStore.loadArchive(archiveSortedByDate);
-            // console.log(archiveStore.archive);
+            console.log(archiveStore.archive);
         } catch (e) {
             console.log(e);
         }
@@ -185,8 +186,8 @@
             lp: 'app'
         }
 
-        if(radioStore.radio) {
-            if(radioStore.radio.show.cover_app_radio) {
+        if (radioStore.radio) {
+            if (radioStore.radio.show.cover_app_radio) {
                 return radioStore.radio.show.cover_app_radio.replace(/localhost|lp/gi, (matched) => replaceCover[matched]);
             }
         }
@@ -227,12 +228,15 @@
     .error {
         @include flex-center-column;
         height: 100%;
+
         img {
             width: 20rem;
+
             @media screen and (max-width: 1024px) {
                 width: 17rem;
             }
         }
+
         p {
             @include font-size(20px);
             color: $primary;
@@ -240,9 +244,11 @@
             max-width: 500px;
             text-align: center;
             padding: 0 1rem;
+
             @media screen and (max-width: 1660px) {
                 max-width: 450px;
             }
+
             @media screen and (max-width: 1400px) {
                 max-width: 400px;
             }

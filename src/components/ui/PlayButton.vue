@@ -1,26 +1,26 @@
 <template>
     <button class="player-button player-button--radio"
-        :class="{ 'player-button--disabled': isLoadingTrack , 'player-button--loading': playerStore.isLoading }"
+        :class="{ 'player-button--loading': isLoadingTrack }"
         v-press="{ time: 150, scale: 0.96 }" @click="play(150)">
 
+        <spinner v-if="isLoadingTrack" />
 
-        <Spiner v-if="isLoadingTrack" />
-
-        <img v-if="!isLoadingTrack && shouldShowPlayButton" src="@/assets/images/ui/play_button.svg" alt="play">
-        <img v-else-if="!isLoadingTrack && shouldShowStopButton" src="@/assets/images/ui/stop_button.svg" alt="stop">
-        <img v-else-if="!isLoadingTrack && shouldShowPauseButton" src="@/assets/images/ui/pause_button.svg" alt="pause">
+        <img v-show="shouldShowPlayButton" src="@/assets/images/ui/play_button.svg" alt="play">
+        <img v-show="shouldShowStopButton" src="@/assets/images/ui/stop_button.svg" alt="stop">
+        <img v-show="shouldShowPauseButton" src="@/assets/images/ui/pause_button.svg" alt="pause">
     </button>
 </template>
 
 <script setup>
     import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
-    import Spiner from "@/views/Spiner.vue";
+    import Spinner from '@/components/ui/Spinner.vue';
 
     const playerStore = usePlayerStore();
     const isTouchEventDisabled = ref(false);
     const shouldNewArchivePlay = ref(false);
     const newArchiveDelay = ref(false);
+    const isArchiveReady = ref(false);
 
     const props = defineProps({
         archive: {
@@ -34,53 +34,61 @@
         soundcloud_secret: {
             type: String,
             required: false
-        }
+        },
+    });
+
+    const isLoadingTrack = computed(() => {
+        return playerStore.isLoading || newArchiveDelay.value || props.soundcloud_secret === '' || (!playerStore.isPlaying && !isArchiveReady.value && props.archive_id === playerStore.now_playing_archive);
     });
 
     watch(() => props.archive_id, (id) => {
-        if(id !== playerStore.now_playing_archive) {
+        if (id !== playerStore.now_playing_archive) {
             newArchiveDelay.value = true;
             setTimeout(() => {
+                isArchiveReady.value = false;
                 newArchiveDelay.value = false;
             }, 2000);
         }
     });
 
+    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
     const play = async (delayTime) => {
-        isTouchEventDisabled.value = false
+        isTouchEventDisabled.value = true;
+        setTimeout(() => isTouchEventDisabled.value = false, 2500);
 
-        playerStore.togglePlaying(props.archive ? 'archive' : 'radio');
+        await delay(delayTime);
 
-        if (props.archive && playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
-            playerStore.setSoundcloudSecret(props.soundcloud_secret);
-            shouldNewArchivePlay.value = true;
+        if(props.archive) {
+            if (playerStore.now_playing_archive === props.archive_id || playerStore.now_playing_archive === null) {
+                playerStore.togglePlaying('archive');
+            } else {
+                await delay(1000);
+                if (playerStore.now_playing_archive !== props.archive_id && playerStore.source === 'archive' && playerStore.isPlaying) {
+                    playerStore.togglePlaying('archive');
+                }
+                playerStore.setSoundcloudSecret(props.soundcloud_secret);
+                shouldNewArchivePlay.value = true;
+            }
+        } else {
+            playerStore.togglePlaying('radio');
         }
     }
-
-    // watch(() => playerStore.isReady, () => console.log(playerStore.isReady), {immediate: true})
 
     const handleMessage = (event) => {
         const { action } = event.data;
 
         if (action === 'is_ready') {
-            // console.log(playerStore.isReady)
-            playerStore.isReady = true // !!
-            // console.log("is_ready handleMessage")
+            isArchiveReady.value = true;
+
             if (shouldNewArchivePlay.value) {
-                playerStore.startX = 0; /// resetX
                 playerStore.play('archive');
+                window.parent.postMessage({ action: 'reset_metadata' }, '*');
             }
 
             shouldNewArchivePlay.value = false;
         }
     }
-
-    const isLoadingTrack = computed(() => {
-      return isTouchEventDisabled.value || newArchiveDelay.value || props.soundcloud_secret === '' || !playerStore.isReady
-    })
-
-    watch(() => playerStore.isReady, () => console.log(playerStore.isReady))
-
 
     const shouldShowPlayButton = computed(() => {
         return (!props.archive && !playerStore.isPlaying) ||
@@ -103,13 +111,12 @@
     });
 
     onUnmounted(() => {
-        playerStore.isReady = false //!
         window.removeEventListener('message', handleMessage);
     });
 </script>
 
 
-<style lang="scss" scoped>
+    <style lang="scss" scoped>
     .player-button {
         @include flex-center;
         border: none;
@@ -121,14 +128,12 @@
         aspect-ratio: 1;
         padding: 0;
         cursor: pointer;
-
-        &--disabled {
-          opacity: 0.5;
-          pointer-events: none;
-        }
-
         &--loading {
-            animation: pulse 1s infinite ease-in-out alternate;
+            opacity: 0.5;
+            pointer-events: none;
+            img {
+                display: none;
+            }
         }
 
         @media screen and (max-width: 1660px) {
@@ -141,16 +146,6 @@
 
         @media screen and (max-width: 480px) {
             width: 6rem;
-        }
-    }
-
-    @keyframes pulse {
-        from {
-            transform: scale(1);
-        }
-
-        to {
-            transform: scale(1.05);
         }
     }
 </style>

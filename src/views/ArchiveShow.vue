@@ -5,10 +5,11 @@
                 <div class="show__row">
                     <h2 class="show__date">streamed on {{ formatDate(necessary_data.release_date) }}</h2>
 
-                    <button class="show-tracklist-button" @click="isTracklistShown = !isTracklistShown" :class="{ ready: show && publisher_id && show.id === +publisher_id }">
+                    <button class="show-tracklist-button" @click="isTracklistShown = !isTracklistShown"
+                        :class="{ ready: show && publisher_id && show.id === +publisher_id }">
                         <img src="@/assets/images/ui/tracklist_button.svg" alt="tracklist">
                     </button>
-                    
+
                     <button class="show__copy copy-button" :class="{ active: copySuccess }" @click="copyLink">
                         <img v-if="copySuccess" src="@/assets/images/icons/check.svg" alt="check">
                         <img v-else src="@/assets/images/icons/copy.svg" alt="copy">
@@ -23,50 +24,44 @@
 
                 <h3 class="show__author">
                     BY
-                    <curator-link :artist="necessary_data.publisher_metadata.artist"/>
+                    <curator-link :artist="necessary_data.publisher_metadata.artist" />
                 </h3>
 
                 <p class="show__description" v-text="necessary_data.publisher_metadata.description" />
 
                 <div class="show__player">
-                    <show-player 
-                        :tracks="show ? show.tracks : []"
-                        :show_id="+necessary_data.publisher_metadata.publisher"
-                        :sc_secret="show ? show.soundcloud_secret : ''"/>
+                    <show-player :tracks="show ? show.tracks : []" :show_id="+necessary_data.publisher_metadata.publisher"
+                        :sc_secret="show ? show.soundcloud_secret : ''" />
                 </div>
             </div>
 
-            <current-track type="archive" :archive_id="+necessary_data.publisher_metadata.publisher"/>
+            <current-track type="archive" :archive_id="+necessary_data.publisher_metadata.publisher" />
         </div>
 
-        <show-image
-            v-show="!isTracklistShown"
-            :path="necessary_data.publisher_metadata.cover"
-            :curator="necessary_data.publisher_metadata.artist"/>
+        <show-image v-show="!isTracklistShown" :path="necessary_data.publisher_metadata.cover"
+            :curator="necessary_data.publisher_metadata.artist" />
 
-        <tracklist
-            v-if="show"
-            v-show="isTracklistShown"
-            :tracks="show.tracks"
-            :title="necessary_data.publisher_metadata.release_title"
-            :date="necessary_data.release_date"
-            :author="necessary_data.publisher_metadata.artist"
-            @share="isShareOpen = true"
-            @close="isTracklistShown = false"/>
+        <tracklist v-if="show" v-show="isTracklistShown" :tracks="show.tracks"
+            :title="necessary_data.publisher_metadata.release_title" :date="necessary_data.release_date"
+            :author="necessary_data.publisher_metadata.artist" @share="isShareOpen = true"
+            @close="isTracklistShown = false" />
 
-        <close-button v-if="!isTracklistShown" disabled @click="$router.push({ name: 'archive'})" class="show__close"/>
+        <close-button v-if="!isTracklistShown" disabled @click="$router.push({ name: 'archive' })" class="show__close" />
 
-        <span v-if="playerStore.isPlaying && playerStore.now_playing_archive === +necessary_data.publisher_metadata.publisher" class="show__nowplaying">now playing</span>
+        <span
+            v-if="playerStore.isPlaying && playerStore.now_playing_archive === +necessary_data.publisher_metadata.publisher"
+            class="show__nowplaying">now playing</span>
     </section>
 
-    <share-popup v-if="isShareOpen" :metadata="sharingMetadata" :id="necessary_data.publisher_metadata.publisher" @close="isShareOpen = false"/>
+    <share-popup v-if="isShareOpen" :metadata="sharingMetadata" :id="necessary_data.publisher_metadata.publisher"
+        @close="isShareOpen = false" />
 </template>
 
 <script setup>
-import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
+    import { ref, onMounted, watch, nextTick, onUnmounted } from "vue";
     import { useArchiveStore } from "@/stores/archive";
     import { usePlayerStore } from "@/stores/player";
-    import {useRoute, useRouter} from "vue-router";
+    import { useRouter } from "vue-router";
     import { formatDate } from "@/utils/formatDate";
     import axios from "axios";
     import ShowPlayer from "@/components/archive/ShowPlayer.vue";
@@ -88,51 +83,39 @@ import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
     const is_next_archive_ready = ref(false);
     const copySuccess = ref(false);
 
+    const props = defineProps({
+        publisher_id: {
+            type: String,
+            required: true
+        }
+    });
 
-    const route = useRoute()
-    
-    const publisher_id = computed(() => route.params.publisher_id)
+    onMounted(() => {
+        getShow();
 
-    const getShow = async () => {
-      await axios.get(`https://app.rovr.live/site/playlist/${publisher_id.value}`)
-          .then(response => {
-            if(response.status === 200){
-              show.value = response.data;
-              playerStore.soundcloud_secret = show.value.soundcloud_secret;
-              playerStore.setFinished('archive', true);
-            }
-          })
-          .catch(error => {
-            console.log(error);
-          });
-    }
+        if (archiveStore.archive) {
+            necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
+            loadSharingMetadata(necessary_data.value);
+        }
+    });
 
     onUnmounted(() => {
         window.removeEventListener('message', handleMessage);
     });
 
-    watch(() => necessary_data, () => {
-      loadSharingMetadata(necessary_data.value);
-    })
-
-    watch(() => publisher_id.value, (newId, oldId) => {
-      console.log("watch params.publisher_id")
-
-      getShow();
-
-        if(archiveStore.archive) necessary_data.value = archiveStore.archive.find(show => publisher_id.value === show.publisher_metadata.publisher);
-        // if(newId !== oldId) {
-
+    watch(() => props.publisher_id, (newId, oldId) => {
+        if (archiveStore.archive) necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
+        if (newId !== oldId) {
+            getShow();
+            loadSharingMetadata(necessary_data.value);
             isTracklistShown.value = false;
-
-        // }
-    },{
-      immediate: true
+        }
     });
 
     watch(() => archiveStore.archive, (archive) => {
-        if(archive) {
-            necessary_data.value = archiveStore.archive.find(show => publisher_id.value === show.publisher_metadata.publisher);
+        if (archive) {
+            necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
+            loadSharingMetadata(necessary_data.value);
         }
     });
 
@@ -143,7 +126,7 @@ import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
     });
 
     watch(() => playerStore.source, (source) => {
-        if(source !== 'archive') {
+        if (source !== 'archive') {
             playerStore.setNowPlayingArchive(null);
         } else {
             playerStore.setNowPlayingArchive(show.value.id);
@@ -166,8 +149,8 @@ import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
     });
 
     watch(show, (newShow) => {
-        if(newShow) {
-            if(playerStore.source !== 'archive' && playerStore.now_playing_archive !== show.value.id) {
+        if (newShow) {
+            if (playerStore.source !== 'archive' && playerStore.now_playing_archive !== show.value.id) {
                 playerStore.setSoundcloudSecret(show.value.soundcloud_secret);
             }
         }
@@ -189,6 +172,17 @@ import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
             });
         }
     });
+
+    const getShow = async () => {
+        await axios.get(`https://app.rovr.live/site/playlist/${props.publisher_id}`)
+            .then(response => {
+                show.value = response.data;
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
 
     const switchToNextOrPreviousShow = async () => {
         const currentShow = necessary_data.value;
@@ -235,7 +229,7 @@ import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
 
         await axios.post('https://go.rovr.live/shortlink', params)
             .then(response => {
-                if(response.data && response.data.short_url) {
+                if (response.data && response.data.short_url) {
                     navigator.clipboard.writeText(response.data.short_url)
                         .then(() => {
                             copySuccess.value = true;
@@ -279,15 +273,18 @@ import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
 <style lang="scss" scoped>
     .show {
         border-top: 2px solid $primary;
+
         &__info {
             border-right: 2px solid $primary;
         }
+
         &__close {
             position: absolute;
             top: 3rem;
             right: 40%;
             z-index: 3;
         }
+
         &__nowplaying {
             @include font-size(14px);
             position: absolute;
@@ -298,10 +295,12 @@ import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
             text-transform: uppercase;
             text-shadow: 0 0 4px $black;
         }
+
         &__row {
             @include flex-center-vert;
             margin-bottom: 1rem;
         }
+
         &__date {
             @include font-size(32px);
             color: $primary;
@@ -310,6 +309,7 @@ import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
             line-height: 1;
             margin: 0;
         }
+
         &-tracklist-button {
             margin-left: 2rem;
             cursor: pointer;
@@ -317,29 +317,37 @@ import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
             top: -2px;
             outline: none;
             pointer-events: none;
+
             &.ready {
                 pointer-events: auto;
             }
+
             img {
                 display: block;
                 width: 8rem;
                 height: auto;
             }
         }
+
         &__copy {
             margin-left: auto;
+
             &.active {
                 background-color: $primary;
+
                 img {
                     filter: brightness(0);
                 }
             }
         }
+
         &__share {
             margin-left: 0.75rem;
         }
+
         &__player {
             @include flex-center-vert;
+
             button {
                 pointer-events: none;
             }
