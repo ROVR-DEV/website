@@ -28,7 +28,6 @@
     const timeline = ref(null);
     const range = ref(null);
     const isDragging = ref(false);
-    const startX = ref(0);
     const startLeft = ref(0);
 
     const props = defineProps({
@@ -59,7 +58,7 @@
 
     const startDragging = (event) => {
         isDragging.value = true;
-        startX.value = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
+        playerStore.startX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
         startLeft.value = range.value.offsetLeft;
 
         document.addEventListener('mousemove', onDrag);
@@ -74,7 +73,7 @@
         if (!isDragging.value) return;
 
         const currentX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
-        const deltaX = currentX - startX.value;
+        const deltaX = currentX - playerStore.startX;
         const newLeft = Math.min(Math.max(startLeft.value + deltaX, 0), timeline.value.offsetWidth - range.value.offsetWidth);
 
         range.value.style.left = `${newLeft}px`;
@@ -155,21 +154,27 @@
     }
 
     onMounted(() => {
+      if(timeline.value){
         timeline.value.addEventListener('mousedown', startDragging);
         timeline.value.addEventListener('touchstart', startDragging);
-
+      }
         window.addEventListener('message', handleMessage);
+
     });
 
     onUnmounted(() => {
-        timeline.value.removeEventListener('mousedown', startDragging);
-        timeline.value.removeEventListener('touchstart', startDragging);
-        document.removeEventListener('mousemove', onDrag);
-        document.removeEventListener('mouseup', stopDragging);
-        document.removeEventListener('touchmove', onDrag);
-        document.removeEventListener('touchend', stopDragging);
+        if(timeline.value){
+          timeline.value.removeEventListener('mousedown', startDragging);
+          timeline.value.removeEventListener('touchstart', startDragging);
+        }
 
-        window.removeEventListener('message', handleMessage);
+          document.removeEventListener('mousemove', onDrag);
+          document.removeEventListener('mouseup', stopDragging);
+          document.removeEventListener('touchmove', onDrag);
+          document.removeEventListener('touchend', stopDragging);
+
+          window.removeEventListener('message', handleMessage);
+
     });
 </script>
 

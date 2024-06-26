@@ -1,6 +1,6 @@
 <template>
     <button class="player-button player-button--radio"
-        :class="{ 'player-button--disabled': isTouchEventDisabled || newArchiveDelay || soundcloud_secret === '' , 'player-button--loading': playerStore.isLoading }"
+        :class="{ 'player-button--disabled': isTouchEventDisabled || newArchiveDelay || soundcloud_secret === '' || !playerStore.isReady , 'player-button--loading': playerStore.isLoading }"
         v-press="{ time: 150, scale: 0.96 }" @click="play(150)">
 
         <img v-show="shouldShowPlayButton" src="@/assets/images/ui/play_button.svg" alt="play">
@@ -42,30 +42,31 @@
         } 
     });
 
-    const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
     const play = async (delayTime) => {
-        isTouchEventDisabled.value = true;
-        setTimeout(() => isTouchEventDisabled.value = false, 2500);
+        isTouchEventDisabled.value = false
 
-        await delay(delayTime);
         playerStore.togglePlaying(props.archive ? 'archive' : 'radio');
 
-
-        await delay(1000);
         if (props.archive && playerStore.source === 'archive' && playerStore.now_playing_archive !== props.archive_id) {
             playerStore.setSoundcloudSecret(props.soundcloud_secret);
             shouldNewArchivePlay.value = true;
         }
     }
 
+    watch(() => playerStore.isReady, () => console.log(playerStore.isReady), {immediate: true})
+
     const handleMessage = (event) => {
         const { action } = event.data;
 
         if (action === 'is_ready') {
+            console.log(playerStore.isReady)
+            playerStore.isReady = true // !!
+            console.log("is_ready handleMessage")
             if (shouldNewArchivePlay.value) {
+                playerStore.startX = 0; /// resetX
                 playerStore.play('archive');
             }
+
             shouldNewArchivePlay.value = false;
         }
     }
@@ -91,6 +92,7 @@
     });
 
     onUnmounted(() => {
+        playerStore.isReady = false //!
         window.removeEventListener('message', handleMessage);
     });
 </script>
@@ -108,9 +110,12 @@
         aspect-ratio: 1;
         padding: 0;
         cursor: pointer;
+
         &--disabled {
-            pointer-events: none;
+          opacity: 0.5;
+          pointer-events: none;
         }
+
         &--loading {
             animation: pulse 1s infinite ease-in-out alternate;
         }

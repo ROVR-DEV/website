@@ -63,10 +63,10 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch, nextTick, onUnmounted } from "vue";
+import {ref, onMounted, watch, nextTick, onUnmounted, computed} from "vue";
     import { useArchiveStore } from "@/stores/archive";
     import { usePlayerStore } from "@/stores/player";
-    import { useRouter } from "vue-router";
+    import {useRoute, useRouter} from "vue-router";
     import { formatDate } from "@/utils/formatDate";
     import axios from "axios";
     import ShowPlayer from "@/components/archive/ShowPlayer.vue";
@@ -88,39 +88,51 @@
     const is_next_archive_ready = ref(false);
     const copySuccess = ref(false);
 
-    const props = defineProps({
-        publisher_id: {
-            type: String,
-            required: true
-        }
-    });
 
-    onMounted(() => {
-        getShow();
+    const route = useRoute()
+    
+    const publisher_id = computed(() => route.params.publisher_id)
 
-        if(archiveStore.archive) {
-            necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
-            loadSharingMetadata(necessary_data.value);
-        }
-    });
+    const getShow = async () => {
+      await axios.get(`https://app.rovr.live/site/playlist/${publisher_id.value}`)
+          .then(response => {
+            if(response.status === 200){
+              show.value = response.data;
+              playerStore.soundcloud_secret = show.value.soundcloud_secret;
+              playerStore.setFinished('archive', true);
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+    }
 
     onUnmounted(() => {
         window.removeEventListener('message', handleMessage);
     });
 
-    watch(() => props.publisher_id, (newId, oldId) => {
-        if(archiveStore.archive) necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
-        if(newId !== oldId) {
-            getShow();
-            loadSharingMetadata(necessary_data.value);
+    watch(() => necessary_data, () => {
+      loadSharingMetadata(necessary_data.value);
+    })
+
+    watch(() => publisher_id.value, (newId, oldId) => {
+      console.log("watch params.publisher_id")
+
+      getShow();
+
+        if(archiveStore.archive) necessary_data.value = archiveStore.archive.find(show => publisher_id.value === show.publisher_metadata.publisher);
+        // if(newId !== oldId) {
+
             isTracklistShown.value = false;
-        }
+
+        // }
+    },{
+      immediate: true
     });
 
     watch(() => archiveStore.archive, (archive) => {
         if(archive) {
-            necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
-            loadSharingMetadata(necessary_data.value);
+            necessary_data.value = archiveStore.archive.find(show => publisher_id.value === show.publisher_metadata.publisher);
         }
     });
 
@@ -177,17 +189,6 @@
             });
         }
     });
-
-    const getShow = async () => {
-        await axios.get(`https://app.rovr.live/site/playlist/${props.publisher_id}`)
-            .then(response => {
-                show.value = response.data;
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
 
     const switchToNextOrPreviousShow = async () => {
         const currentShow = necessary_data.value;
