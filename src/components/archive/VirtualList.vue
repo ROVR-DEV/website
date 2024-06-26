@@ -8,7 +8,8 @@
 </template>
 
 <script setup>
-    import { ref, computed, onMounted, onUnmounted } from 'vue';
+    import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+    import { useRoute, useRouter } from 'vue-router';
 
     const props = defineProps({
         items: {
@@ -25,6 +26,8 @@
         }
     });
 
+    const route = useRoute();
+    const router = useRouter();
     const container = ref(null);
     const scrollTop = ref(0);
     const totalHeight = ref(0);
@@ -61,6 +64,7 @@
     const onScroll = () => {
         if (container.value) {
             scrollTop.value = container.value.scrollTop;
+            localStorage.setItem('scrollPosition', scrollTop.value);
         }
     };
 
@@ -78,6 +82,14 @@
         totalHeight.value = totalRows * props.itemHeight + (totalRows - 1) * verticalGap.value;
     }
 
+    const restoreScrollPosition = () => {
+        const savedScrollPosition = localStorage.getItem('scrollPosition');
+        if (savedScrollPosition && container.value) {
+            container.value.scrollTop = Number(savedScrollPosition);
+            scrollTop.value = Number(savedScrollPosition);
+        }
+    }
+
     onMounted(() => {
         container.value.addEventListener('scroll', onScroll);
         window.addEventListener('resize', updateTotalHeight, false);
@@ -87,6 +99,12 @@
     onUnmounted(() => {
         container.value.removeEventListener('scroll', onScroll);
         window.removeEventListener('resize', updateTotalHeight);
+    });
+
+    watch(route, () => {
+        if(router.currentRoute.value.name === 'archive') {
+            restoreScrollPosition();
+        }
     });
 </script>
 

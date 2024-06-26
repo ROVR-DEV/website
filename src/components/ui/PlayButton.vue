@@ -1,6 +1,6 @@
 <template>
     <button class="player-button player-button--radio"
-        :class="{ 'player-button--disabled': isTouchEventDisabled || (!isReady && archive), 'player-button--loading': playerStore.isLoading }"
+        :class="{ 'player-button--disabled': isTouchEventDisabled || newArchiveDelay || soundcloud_secret === '' , 'player-button--loading': playerStore.isLoading }"
         v-press="{ time: 150, scale: 0.96 }" @click="play(150)">
 
         <img v-show="shouldShowPlayButton" src="@/assets/images/ui/play_button.svg" alt="play">
@@ -10,13 +10,13 @@
 </template>
 
 <script setup>
-    import { ref, computed, onMounted, onUnmounted } from 'vue';
+    import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
 
     const playerStore = usePlayerStore();
     const isTouchEventDisabled = ref(false);
-    const isReady = ref(false);
     const shouldNewArchivePlay = ref(false);
+    const newArchiveDelay = ref(false);
 
     const props = defineProps({
         archive: {
@@ -31,6 +31,15 @@
             type: String,
             required: false
         }
+    });
+
+    watch(() => props.archive_id, (id) => {
+        if(id !== playerStore.now_playing_archive) {
+            newArchiveDelay.value = true;
+            setTimeout(() => {
+                newArchiveDelay.value = false;
+            }, 2000);
+        } 
     });
 
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
@@ -54,7 +63,6 @@
         const { action } = event.data;
 
         if (action === 'is_ready') {
-            isReady.value = true;
             if (shouldNewArchivePlay.value) {
                 playerStore.play('archive');
             }

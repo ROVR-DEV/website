@@ -63,6 +63,14 @@
         }
     });
 
+    watch(() => playerStore.isPlaying, (state) => {
+        if (!state) {
+            trackArtist.value = 'Artist';
+            trackTitle.value = 'Title';
+            trackLabel.value = 'Label';
+        }
+    });
+
     const animateTrackInfo = () => {
         isAnimating.value = true;
         setTimeout(() => {

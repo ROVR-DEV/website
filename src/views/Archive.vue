@@ -43,7 +43,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch, onUnmounted } from 'vue';
+    import { ref, onMounted, watch, onUnmounted, nextTick } from 'vue';
     import { DatePicker } from 'v-calendar';
     import { useArchiveStore } from '@/stores/archive';
     import { useRoute, useRouter } from 'vue-router';

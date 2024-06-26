@@ -29,11 +29,10 @@
                 <p class="show__description" v-text="necessary_data.publisher_metadata.description" />
 
                 <div class="show__player">
-                    <show-player
-                        v-if="show"
-                        :tracks="show.tracks"
+                    <show-player 
+                        :tracks="show ? show.tracks : []"
                         :show_id="+necessary_data.publisher_metadata.publisher"
-                        :sc_secret="show.soundcloud_secret"/>
+                        :sc_secret="show ? show.soundcloud_secret : ''"/>
                 </div>
             </div>
 
