@@ -20,7 +20,6 @@
     watch(() => curatorsStore.isPopupShown, (status) => {
         if (!status) {
             document.querySelector('.main').scrollTop = curatorsStore.scrollPosition;
-            console.log(curatorsStore.scrollPosition);
         }
     });
 

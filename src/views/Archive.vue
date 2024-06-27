@@ -237,6 +237,9 @@
             router.push({ name: 'archive' });
         }
         searchShow('');
+        setTimeout(() => {
+            document.querySelector('.virtual-grid-container').scrollTop = 0;
+        }, 100);
     }
 
     const confirmDateFilter = () => {

@@ -5,9 +5,12 @@
 
         <spinner v-if="isLoadingTrack" />
 
-        <img v-show="shouldShowPlayButton" src="@/assets/images/ui/play_button.svg" alt="play">
-        <img v-show="shouldShowStopButton" src="@/assets/images/ui/stop_button.svg" alt="stop">
-        <img v-show="shouldShowPauseButton" src="@/assets/images/ui/pause_button.svg" alt="pause">
+        <img v-show="shouldShowPlayButton && !shouldShowTapButton" src="@/assets/images/ui/play_button.svg" alt="play">
+        <img v-show="shouldShowStopButton && !shouldShowTapButton" src="@/assets/images/ui/stop_button.svg" alt="stop">
+        <img v-show="shouldShowPauseButton && !shouldShowTapButton" src="@/assets/images/ui/pause_button.svg" alt="pause">
+        <!-- FOR iOS AUTO-PLAY -->
+        <img v-show="shouldShowTapButton" class="tap-icon" src="@/assets/images/icons/tap.gif" alt="tap">
+        <!-- FOR iOS AUTO-PLAY -->
     </button>
 </template>
 
@@ -21,6 +24,7 @@
     const shouldNewArchivePlay = ref(false);
     const newArchiveDelay = ref(false);
     const isArchiveReady = ref(false);
+    const shouldShowTapButton = ref(false);
 
     const props = defineProps({
         archive: {
@@ -38,8 +42,13 @@
     });
 
     const isLoadingTrack = computed(() => {
-        return playerStore.isLoading || newArchiveDelay.value || props.soundcloud_secret === '' || (!playerStore.isPlaying && !isArchiveReady.value && props.archive_id === playerStore.now_playing_archive);
+        return playerStore.isLoading || (!playerStore.isPlaying && !isArchiveReady.value && props.archive_id === playerStore.now_playing_archive) || newArchiveDelay.value || props.soundcloud_secret === '';
     });
+
+    const isIOSDevice = () => {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        return /iphone|ipad|ipod/.test(userAgent);
+    }
 
     watch(() => props.archive_id, (id) => {
         if (id !== playerStore.now_playing_archive) {
@@ -58,6 +67,11 @@
         setTimeout(() => isTouchEventDisabled.value = false, 2500);
 
         await delay(delayTime);
+
+        if(shouldShowTapButton.value) {
+            playerStore.play('archive');
+            shouldShowTapButton.value = false;
+        }
 
         if(props.archive) {
             if (playerStore.now_playing_archive === props.archive_id || playerStore.now_playing_archive === null) {
@@ -82,8 +96,12 @@
             isArchiveReady.value = true;
 
             if (shouldNewArchivePlay.value) {
-                playerStore.play('archive');
-                window.parent.postMessage({ action: 'reset_metadata' }, '*');
+                if( isIOSDevice() ) {
+                    shouldShowTapButton.value = true;
+                } else {
+                    playerStore.play('archive');
+                    window.parent.postMessage({ action: 'reset_metadata' }, '*');
+                }
             }
 
             shouldNewArchivePlay.value = false;
@@ -128,6 +146,9 @@
         aspect-ratio: 1;
         padding: 0;
         cursor: pointer;
+        .tap-icon {
+            width: 3rem;
+        }
         &--loading {
             opacity: 0.5;
             pointer-events: none;

@@ -83,8 +83,6 @@
             trackArtist.value = playerStore.track.artist;
             trackTitle.value = playerStore.track.title;
             trackLabel.value = playerStore.track.label;
-
-            console.log("TRACK UPDATED");
         } else {
             trackArtist.value = 'Artist';
             trackTitle.value = 'Title';
@@ -116,7 +114,6 @@
 
         if (action === 'reset_metadata') {
             setTimeout(() => {
-                console.log("СЮДА СМОТРИ");
                 trackArtist.value = 'ROVR';
                 trackTitle.value = 'Incoming...';
                 trackLabel.value = '';

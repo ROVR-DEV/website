@@ -25,19 +25,19 @@
                 <p class="share-popup__tip">Share on:</p>
 
                 <div class="share-popup__links">
-                    <s-twitter :share-options="twitterShareOptions" @click="console.log(twitterShareOptions.url)">
+                    <s-twitter :share-options="twitterShareOptions">
                         <img src="@/assets/images/icons/social-media/x.svg">
                     </s-twitter>
 
-                    <s-telegram :share-options="telegramShareOptions" @click="console.log(telegramShareOptions.url)">
+                    <s-telegram :share-options="telegramShareOptions">
                         <img src="@/assets/images/icons/social-media/telegram.svg">
                     </s-telegram>
 
-                    <s-whats-app :share-options="whatsappShareOptions" @click="console.log(whatsappShareOptions.url)">
+                    <s-whats-app :share-options="whatsappShareOptions">
                         <img src="@/assets/images/icons/social-media/whatsapp.svg">
                     </s-whats-app>
 
-                    <s-facebook :share-options="facebookShareOptions" @click="console.log(facebookShareOptions.url)">
+                    <s-facebook :share-options="facebookShareOptions">
                         <img src="@/assets/images/icons/social-media/facebook.svg">
                     </s-facebook>
                 </div>

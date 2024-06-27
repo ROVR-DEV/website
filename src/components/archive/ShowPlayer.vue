@@ -131,7 +131,6 @@
                 if (currentTrack.title !== currentTrackTitle.value || currentTrack.artist !== currentTrackArtist.value) {
                     currentTrackTitle.value = currentTrack.title;
                     currentTrackArtist.value = currentTrack.artist;
-                    console.log(currentTrack);
                     playerStore.updateTrack(currentTrack.title, currentTrack.artist, currentTrack.label, currentTrack.cover);
                 }
             }

@@ -177,7 +177,6 @@
         await axios.get(`https://app.rovr.live/site/playlist/${props.publisher_id}`)
             .then(response => {
                 show.value = response.data;
-                console.log(response.data);
             })
             .catch(error => {
                 console.log(error);
