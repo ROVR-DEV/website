@@ -17,6 +17,7 @@
 <script setup>
     import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
+    import { isIOSDevice } from '@/utils/isIOSDevice';
     import Spinner from '@/components/ui/Spinner.vue';
 
     const playerStore = usePlayerStore();
@@ -45,11 +46,6 @@
         return playerStore.isLoading || (!playerStore.isPlaying && !isArchiveReady.value && props.archive_id === playerStore.now_playing_archive) || newArchiveDelay.value || props.soundcloud_secret === '';
     });
 
-    const isIOSDevice = () => {
-        const userAgent = window.navigator.userAgent.toLowerCase();
-        return /iphone|ipad|ipod/.test(userAgent);
-    }
-
     watch(() => props.archive_id, (id) => {
         if (id !== playerStore.now_playing_archive) {
             newArchiveDelay.value = true;
@@ -57,6 +53,12 @@
                 isArchiveReady.value = false;
                 newArchiveDelay.value = false;
             }, 2000);
+        }
+    });
+
+    watch(() => playerStore.is_archive_finished, (is_archive_finished) => {
+        if(is_archive_finished && isIOSDevice()) {
+            shouldShowTapButton.value = true;
         }
     });
 
@@ -92,19 +94,23 @@
     const handleMessage = (event) => {
         const { action } = event.data;
 
-        if (action === 'is_ready') {
-            isArchiveReady.value = true;
-
-            if (shouldNewArchivePlay.value) {
-                if( isIOSDevice() ) {
-                    shouldShowTapButton.value = true;
-                } else {
-                    playerStore.play('archive');
-                    window.parent.postMessage({ action: 'reset_metadata' }, '*');
+        switch (action) {
+            case 'is_ready':
+                isArchiveReady.value = true;
+                if (shouldNewArchivePlay.value) {
+                    if (isIOSDevice()) {
+                        shouldShowTapButton.value = true;
+                    } else {
+                        playerStore.play('archive');
+                        window.parent.postMessage({ action: 'reset_metadata' }, '*');
+                    }
                 }
-            }
-
-            shouldNewArchivePlay.value = false;
+                shouldNewArchivePlay.value = false;
+                break;
+            case 'show_tap_button_ios':
+                shouldShowTapButton.value = true;
+            default:
+                break;
         }
     }
 

@@ -61,8 +61,9 @@
     import { ref, onMounted, watch, nextTick, onUnmounted } from "vue";
     import { useArchiveStore } from "@/stores/archive";
     import { usePlayerStore } from "@/stores/player";
-    import { useRouter } from "vue-router";
+    import { useRouter, useRoute } from "vue-router";
     import { formatDate } from "@/utils/formatDate";
+    import { isIOSDevice } from '@/utils/isIOSDevice';
     import axios from "axios";
     import ShowPlayer from "@/components/archive/ShowPlayer.vue";
     import CurrentTrack from '@/components/CurrentTrack.vue';
@@ -73,6 +74,7 @@
     import SharePopup from '@/components/popups/SharePopup.vue';
 
     const router = useRouter();
+    const route = useRoute();
     const archiveStore = useArchiveStore();
     const playerStore = usePlayerStore();
     const show = ref(null);
@@ -102,6 +104,7 @@
     onUnmounted(() => {
         window.removeEventListener('message', handleMessage);
     });
+
 
     watch(() => props.publisher_id, (newId, oldId) => {
         if (archiveStore.archive) necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
@@ -141,9 +144,15 @@
 
     watch(is_next_archive_ready, (status) => {
         if (status) {
-            playerStore.play('archive');
+            if( isIOSDevice() ) {
+                window.parent.postMessage({ action: 'show_tap_button_ios' }, '*');
+            } else {
+                playerStore.play('archive');
+            }
+
             is_next_archive_ready.value = false;
             playerStore.setFinished('archive', false);
+            
             window.removeEventListener('message', handleMessage);
         }
     });

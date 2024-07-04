@@ -91,7 +91,7 @@
 
     onMounted(() => {
         if (props.id) {
-            shareLink.value = `https://share.rovr.live/showarchive.html?release_date=${props.metadata.date}&title=${props.metadata.title}&curator=${props.metadata.artist}&description=${props.metadata.description}&image=${props.metadata.cover}&publisher=${props.metadata.publisher}`;
+            shareLink.value = `https://share.rovr.live/showarchive.html?release_date=${encodeURIComponent(props.metadata.date)}&title=${encodeURIComponent(props.metadata.title)}&curator=${encodeURIComponent(props.metadata.artist)}&description=${encodeURIComponent(props.metadata.description)}&image=${encodeURIComponent(props.metadata.cover)}&publisher=${encodeURIComponent(props.metadata.publisher)}`;
             createShortLink(shareLink.value);
         }
     });
