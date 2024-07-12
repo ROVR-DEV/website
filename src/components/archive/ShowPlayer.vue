@@ -13,8 +13,15 @@
             </div>
         </div>
 
-        <div class="archive-player__timeline" ref="timeline" @mousedown="startDragging" @touchstart="startDragging">
-            <span class="archive-player__range" ref="range" />
+        <div class="archive-player__timeline-wrapper">
+            <div class="archive-player__timeline--fake" ref="timelineFake" @mousedown="startDragging"
+                @touchstart="startDragging">
+                <span class="archive-player__thumb" ref="rangeFake" />
+            </div>
+
+            <div class="archive-player__timeline--visual" ref="timeline">
+                <span class="archive-player__range" ref="range" />
+            </div>
         </div>
     </div>
 </template>
@@ -28,10 +35,13 @@
     const playerStore = usePlayerStore();
     const duration = ref(0);
     const timeline = ref(null);
+    const timelineFake = ref(null);
     const range = ref(null);
+    const rangeFake = ref(null);
     const isDragging = ref(false);
     const startX = ref(0);
     const startLeft = ref(0);
+    const currentTrack = ref(null);
 
     const props = defineProps({
         tracks: {
@@ -62,7 +72,7 @@
     const startDragging = (event) => {
         isDragging.value = true;
         startX.value = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
-        startLeft.value = range.value.offsetLeft;
+        startLeft.value = rangeFake.value.offsetLeft;
 
         document.addEventListener('mousemove', onDrag);
         document.addEventListener('mouseup', stopDragging);
@@ -77,8 +87,9 @@
 
         const currentX = event.type.includes('mouse') ? event.clientX : event.touches[0].clientX;
         const deltaX = currentX - startX.value;
-        const newLeft = Math.min(Math.max(startLeft.value + deltaX, 0), timeline.value.offsetWidth - range.value.offsetWidth);
+        const newLeft = Math.min(Math.max(startLeft.value + deltaX, 0), timelineFake.value.offsetWidth - rangeFake.value.offsetWidth);
 
+        rangeFake.value.style.left = `${newLeft}px`;
         range.value.style.left = `${newLeft}px`;
     }
 
@@ -91,28 +102,27 @@
 
         document.body.classList.remove('grabbing');
 
-        // Get the current position of the range
-        const rangeLeft = range.value.offsetLeft;
-        const timelineWidth = timeline.value.offsetWidth;
+        const timelineWidth = timelineFake.value.offsetWidth;
+        const rangeWidth = rangeFake.value.offsetWidth;
+        const newLeft = Math.min(Math.max(rangeFake.value.offsetLeft, 0), timelineWidth - rangeWidth);
 
-        // Calculate the new position in milliseconds
-        const newPosition = (rangeLeft / timelineWidth) * duration.value;
+        rangeFake.value.style.left = `${newLeft}px`;
+        range.value.style.left = `${newLeft}px`;
 
-        // Seek to the new position
-        seekTo(newPosition);
+        const newPosition = (newLeft / (timelineWidth - rangeWidth)) * duration.value;
 
-        // Update the range position after seeking
-        updateRangePosition(newPosition);
-
-        // Update current track after seeking
         updateTrackInfo(newPosition);
+        seekTo(newPosition);
     }
+
 
     const updateRangePosition = (position) => {
         if (!isDragging.value && playerStore.now_playing_archive === props.show_id) {
-            const timelineWidth = timeline.value.offsetWidth;
-            const rangeWidth = range.value.offsetWidth;
-            const newLeft = Math.min((position / duration.value) * timelineWidth, timelineWidth - rangeWidth);
+            const timelineWidth = timelineFake.value.offsetWidth;
+            const rangeWidth = rangeFake.value.offsetWidth;
+
+            const newLeft = (position / duration.value) * (timelineWidth - rangeWidth);
+            rangeFake.value.style.left = `${newLeft}px`;
             range.value.style.left = `${newLeft}px`;
         }
     }
@@ -121,17 +131,18 @@
         if (!props.tracks || props.tracks.length === 0) return;
 
         if (playerStore.now_playing_archive === props.show_id) {
-            const currentTrack = props.tracks.find(track => position >= track.start * 1000 && position < track.end * 1000);
+            currentTrack.value = props.tracks.find(track => position >= track.start * 1000 && position < track.end * 1000);
 
             if (Math.round(position / 1000) < 16) {
                 currentTrackTitle.value = 'Incoming...';
                 currentTrackArtist.value = 'ROVR';
                 playerStore.updateTrack(currentTrackTitle.value, currentTrackArtist.value, '');
             } else if (Math.round(position / 1000) > 16 && currentTrack) {
-                if (currentTrack.title !== currentTrackTitle.value || currentTrack.artist !== currentTrackArtist.value) {
-                    currentTrackTitle.value = currentTrack.title;
-                    currentTrackArtist.value = currentTrack.artist;
-                    playerStore.updateTrack(currentTrack.title, currentTrack.artist, currentTrack.label, currentTrack.cover);
+                if (currentTrack.value.title !== currentTrackTitle.value || currentTrack.value.artist !== currentTrackArtist.value) {
+                    currentTrackTitle.value = currentTrack.value.title;
+                    currentTrackArtist.value = currentTrack.value.artist;
+                    console.log(currentTrack.value);
+                    playerStore.updateTrack(currentTrack.value.title, currentTrack.value.artist, currentTrack.value.label, currentTrack.value.cover);
                 }
             }
         }
@@ -156,15 +167,20 @@
     }
 
     onMounted(() => {
-        timeline.value.addEventListener('mousedown', startDragging);
-        timeline.value.addEventListener('touchstart', startDragging);
+        timelineFake.value.addEventListener('mousedown', startDragging);
+        timelineFake.value.addEventListener('touchstart', startDragging);
 
         window.addEventListener('message', handleMessage);
+
+        // Синхронизировать позиции при монтировании
+        if (playerStore.now_playing_archive === props.show_id) {
+            updateRangePosition(0);
+        }
     });
 
     onUnmounted(() => {
-        timeline.value.removeEventListener('mousedown', startDragging);
-        timeline.value.removeEventListener('touchstart', startDragging);
+        timelineFake.value.removeEventListener('mousedown', startDragging);
+        timelineFake.value.removeEventListener('touchstart', startDragging);
         document.removeEventListener('mousemove', onDrag);
         document.removeEventListener('mouseup', stopDragging);
         document.removeEventListener('touchmove', onDrag);
@@ -188,22 +204,62 @@
         }
 
         &__timeline {
-            position: relative;
-            width: 100%;
-            height: 4px;
-            border-top: 4px dotted $primary;
-            cursor: pointer;
+            &-wrapper {
+                width: 100%;
+                position: relative;
+            }
+
+            &--visual {
+                opacity: 1;
+                position: relative;
+                height: 4px;
+                border-top: 4px dotted $primary;
+                cursor: pointer;
+                width: 97%;
+                margin: 0 auto;
+                z-index: 1;
+                @media screen and (max-width: 1024px) {
+                    width: calc(96% - 3px);
+                }
+            }
+
+            &--fake {
+                opacity: 0;
+                position: relative;
+                top: 8px;
+                height: 8px;
+                border-top: 4px dotted red;
+                width: calc(100% - 70px);
+                margin: 0 auto;
+                z-index: 2;
+            }
         }
 
         &__range {
             display: block;
             position: absolute;
-            width: 5rem;
+            width: 70px;
             height: 0.875rem;
             background-color: $primary;
             top: -8.5px;
             left: 0;
+            opacity: 1;
             cursor: grab;
+
+            @media screen and (max-width: 480px) {
+                top: -7px;
+            }
+        }
+
+        &__thumb {
+            position: absolute;
+            opacity: 1;
+            width: 14px;
+            height: 20px;
+            cursor: grab;
+            top: -8.5px;
+            left: 0;
+            background-color: red;
 
             @media screen and (max-width: 480px) {
                 top: -7px;

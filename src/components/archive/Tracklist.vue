@@ -79,8 +79,8 @@
     const playTrack = (track) => {
         const startTime = track.start * 1000;
         window.parent.postMessage({ action: 'seekTo', value: startTime }, '*');
-        playerStore.play('archive');
-        playerStore.updateTrack(track.title, track.artist, track.label, track.cover);
+        // playerStore.play('archive');
+        // playerStore.updateTrack(track.title, track.artist, track.label, track.cover);
         setActiveTrack(track.id);
     }
 
