@@ -13,6 +13,7 @@
 html,
 body {
     font-size: $fontSizeRoot;
+    overscroll-behavior-x: none;
 }
 
 html,

@@ -1,30 +1,42 @@
 <template>
     <section class="archive">
-        <div class="archive__filters">
-            <div class="archive__nav">
-                <search-input :date="date ? formatDate('full', date) : ''" :isConfirmed="isDateConfirmed"
-                    @search="query => searchShow(query)" :query="queryCurator" @clear="clearFilter()" />
+        <div class="archive__header">
+            <search-input :date="date ? formatDate('full', date) : ''" :isConfirmed="isDateConfirmed"
+                @search="query => searchShow(query)" :query="queryCurator" @clear="clearFilter()" />
 
-                <div class="archive__calendar-open">
-                    <button @click="isCalendarVisible = !isCalendarVisible">
-                        <img src="@/assets/images/icons/calendar.svg" alt="calendar">
-                    </button>
-                    <span v-if="date && isDateConfirmed" v-text="formatDate('short', date)" />
-                </div>
+            <div class="archive__calendar-open archive__calendar-open--desktop" :class="{ active: isCalendarOpen }">
+                <button @click="openCalendar('desktop')">
+                    <img src="@/assets/images/icons/calendar.svg" alt="calendar">
+                </button>
+                <span v-if="date" v-text="formatDate('short', date)" />
             </div>
 
-            <date-picker v-if="!isCalendarVisible" v-model="date" @update:modelValue="searchShow(searchQuery)"
-                class="archive__calendar--desktop" borderless transparent locale="en" expanded :first-day-of-week="2"
+            <div class="archive__calendar-open archive__calendar-open--mobile" :class="{ active: isCalendarOpen }">
+                <button @click="openCalendar('mobile')">
+                    <img src="@/assets/images/icons/calendar.svg" alt="calendar">
+                </button>
+                <span v-if="date && isDateConfirmed" v-text="formatDate('short', date)" />
+            </div>
+        </div>
+
+        <div v-if="!isCalendarVisible && isCalendarOpen" class="archive__calendar--desktop">
+            <date-picker v-model="date" @update:modelValue="searchShow(searchQuery)"
+                 borderless transparent locale="en" expanded :first-day-of-week="2"
                 :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates" :max-date="new Date()"/>
 
-            <div class="archive__calendar--mobile" :class="{ active: isCalendarVisible }">
-                <date-picker v-if="isCalendarVisible" v-model="date" borderless transparent locale="en" expanded
-                    :first-day-of-week="2" :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates" :max-date="new Date()"/>
+            <button class="archive__calendar-close" @click="isCalendarOpen = false">
+                close 
+                <img src="@/assets/images/icons/calendar-close.svg" alt="close">
+            </button>
+        </div>
 
-                <div class="archive__calendar--mobile-controls">
-                    <button class="archive__calendar--mobile-cancel" @click="cancelDateFilter()">cancel</button>
-                    <button class="archive__calendar--mobile-confirm" @click="confirmDateFilter()">confirm</button>
-                </div>
+        <div v-if="isCalendarVisible && isCalendarOpen" class="archive__calendar--mobile" :class="{ active: isCalendarVisible || isCalendarOpen }">
+            <date-picker v-model="date" borderless transparent locale="en" expanded
+                :first-day-of-week="2" :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates" :max-date="new Date()"/>
+
+            <div class="archive__calendar--mobile-controls">
+                <button class="archive__calendar--mobile-cancel" @click="cancelDateFilter()">cancel</button>
+                <button class="archive__calendar--mobile-confirm" @click="confirmDateFilter()">confirm</button>
             </div>
         </div>
 
@@ -43,7 +55,7 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch, onUnmounted, nextTick } from 'vue';
+    import { ref, onMounted, watch, onUnmounted } from 'vue';
     import { DatePicker } from 'v-calendar';
     import { useArchiveStore } from '@/stores/archive';
     import { useRoute, useRouter } from 'vue-router';
@@ -57,6 +69,7 @@
     const filteredArchive = ref([]);
     const date = ref('');
     const searchQuery = ref('');
+    const isCalendarOpen = ref(false);
     const isCalendarVisible = ref(false);
     const isDateConfirmed = ref(false);
     const isShareOpen = ref(false);
@@ -91,17 +104,17 @@
         const addArrowClickListeners = () => {
             document.querySelectorAll('.vc-arrow').forEach(item => {
                 item.addEventListener('click', function () {
-                    document.querySelectorAll('.vc-title span').forEach(title => {
-                        if (title.textContent === 'March 2024' && item.classList.contains('vc-prev')) {
-                            document.querySelectorAll('.vc-arrow.vc-prev').forEach(prevArrow => {
-                                prevArrow.disabled = true;
-                            });
+                    const prevArrow = document.querySelector('.vc-prev');
+                    prevArrow.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        prevArrow.style.pointerEvents = 'auto';
+                        const month = document.querySelector('.vc-title span').textContent;
+                        if(month === 'March 2024') {
+                            prevArrow.disabled = true;
                         } else {
-                            document.querySelectorAll('.vc-arrow.vc-prev').forEach(prevArrow => {
-                                prevArrow.disabled = false;
-                            });
+                            prevArrow.disabled = false;
                         }
-                    });
+                    }, 200);
                 });
             });
         }
@@ -121,6 +134,7 @@
     
     onUnmounted(() => {
         window.removeEventListener('resize', updateShowHeight);
+        
     });
 
     watch(() => archiveStore.archive, (newArchive) => {
@@ -230,8 +244,9 @@
 
     const clearFilter = () => {
         searchQuery.value = '';
-        date.value = '';
         isDateConfirmed.value = false;
+        isCalendarOpen.value = false;
+        date.value = '';
         if(route.query.curator) {
             queryCurator.value = '';
             router.push({ name: 'archive' });
@@ -242,14 +257,26 @@
         }, 100);
     }
 
+    const openCalendar = (type) => {
+        if(type === 'desktop') {
+            isCalendarOpen.value = true;
+        } else {
+            isCalendarOpen.value = true;
+            isCalendarVisible.value = true;
+        }
+    }
+
     const confirmDateFilter = () => {
         searchShow(searchQuery.value);
         isCalendarVisible.value = false;
+        isCalendarOpen.value = false;
         isDateConfirmed.value = true;
     }
 
     const cancelDateFilter = () => {
         date.value = '';
+        searchShow(searchQuery.value);
+        isCalendarOpen.value = false;
         isCalendarVisible.value = false;
         isDateConfirmed.value = false;
     }
@@ -257,25 +284,66 @@
 
 <style lang="scss" scoped>
     .archive {
-        display: flex;
-        overflow: hidden;
         border-top: 2px solid $primary;
-        &__filters {
-            flex: 1 0 40%;
-            padding: 3rem;
-            border-right: 2px solid $primary;
-        }
-        &__nav {
-            display: flex;
-            margin-bottom: 3rem;
+        padding: 3rem;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        &__header {
+            @include flex-center-sb;
+            position: sticky;
+            top: 0;
+            left: 0;
+            margin-bottom: 2.25rem;
         }
         &__scroller {
-            flex: 1 0 60%;
-            padding: 3rem;
+            flex: auto;
+            overflow-y: auto;
         }
-        &__calendar--mobile,
-        &__calendar-open {
-            display: none;        
+        &__calendar {
+            &--mobile {
+                display: none;        
+            }
+            &-open {
+                display: block;
+                text-align: center;
+                margin-left: 1rem;
+                &--mobile {
+                    display: none;
+                }
+                button {
+                    @include flex-center;
+                    width: 2.5rem;
+                    aspect-ratio: 1;
+                    border-radius: 50%;
+                    border: 1px solid $primary;
+                    cursor: pointer;
+                    margin: 0 auto;
+                    transition: $transition;
+                    img {
+                        display: block;
+                        width: 1.125rem;
+                        transition: $transition;
+                        position: relative;
+                        top: -1px;
+                    }
+                    @media(hover: hover) {
+                        &:hover {
+                            background-color: $primary;
+                            img {
+                                filter: brightness(0);
+                            }
+                        }
+                    }
+                }
+                span {
+                    display: block;
+                    color: $primary;
+                    font-size: 0.75rem;
+                    font-weight: normal;
+                    margin-top: 5px;
+                }
+            }
         }
         &__empty {
             color: rgba($color: $primary, $alpha: 0.25);

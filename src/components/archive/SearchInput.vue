@@ -8,6 +8,10 @@
             placeholder="Search by Curator or by Show">
 
         <transition name="fade">
+            <img src="@/assets/images/icons/search.svg" class="archive__search-icon" v-if="input === '' && date === ''" alt="search">
+        </transition>
+
+        <transition name="fade">
             <div class="archive__search-clear archive__search-clear--desktop" v-if="input !== '' || date !== ''" @click="clear()">
                 Clear
                 <img src="@/assets/images/icons/close-small.svg" alt="close">
@@ -59,7 +63,7 @@
 <style lang="scss" scoped>
     .archive__search {
         position: relative;
-        flex: auto;
+        width: 24rem;
         &-input {
             font-family: 'Kern Standard', sans-serif;
             display: block;
@@ -67,10 +71,10 @@
             background-color: $black;
             color: $primary;
             font-weight: bold;
-            @include font-size(20px);
+            @include font-size(15px);
             border: none;
             border-bottom: 1.75px solid $primary;
-            padding: 0 0 1.125rem 0;
+            padding: 0 0 1rem 0;
             outline: none;
             position: relative;
             line-height: 1;
@@ -80,11 +84,19 @@
             &::placeholder {
                 color: $primary;
                 font-weight: normal;
+                color: rgba($color: $primary, $alpha: 0.4);
             }
+        }
+        &-icon {
+            position: absolute;
+            top: 0;
+            right: 5px;
+            z-index: 2;
+            width: 1rem;
         }
         &-clear {
             @include flex-center;
-            @include font-size(20px);
+            @include font-size(16px);
             color: $primary;
             font-weight: normal;
             cursor: pointer;
@@ -94,8 +106,9 @@
             z-index: 2;
             img {
                 display: block;
-                margin-left: 0.75rem;
-                width: 1rem;
+                margin-left: 0.5rem;
+                width: 0.825rem;
+                aspect-ratio: 1;
             }
             &--mobile {
                 display: none;

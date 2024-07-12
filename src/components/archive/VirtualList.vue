@@ -1,6 +1,6 @@
 <template>
     <div ref="container" class="virtual-grid-container" @scroll="onScroll">
-        <div :style="{ height: totalHeight + 'px' }"></div>
+        <div :style="{ height: `${totalHeight}px` }"></div>
         <div v-for="item in visibleItems" :key="item.index" :style="item.style" class="virtual-grid-item">
             <slot :item="item.data"></slot>
         </div>
@@ -31,8 +31,8 @@
     const container = ref(null);
     const scrollTop = ref(0);
     const totalHeight = ref(0);
-    const columns = ref(2);
-    const horizontalGap = ref(5);
+    const columns = ref(3); // Default to 3 columns
+    const horizontalGap = ref(2);
     const verticalGap = ref(40);
 
     const visibleStartIndex = computed(() => Math.max(0, Math.floor(scrollTop.value / (props.itemHeight + verticalGap.value)) * columns.value - columns.value * props.buffer));
@@ -51,7 +51,7 @@
             width: `${itemWidthPercentage}%`,
             height: `${props.itemHeight}px`,
         };
-    }
+    };
 
     const visibleItems = computed(() =>
         props.items.slice(visibleStartIndex.value, visibleEndIndex.value).map((data, index) => ({
@@ -70,17 +70,17 @@
 
     const updateTotalHeight = () => {
         const screenWidth = window.innerWidth;
-        const screenHeight = window.innerHeight;
-
-        if (screenWidth > screenHeight && screenWidth < 767) {
+        if (screenWidth < 480) {
+            columns.value = 1;
+        } else if (screenWidth < 1200) {
             columns.value = 2;
         } else {
-            columns.value = screenWidth < 480 ? 1 : 2;
+            columns.value = 3;
         }
 
         const totalRows = Math.ceil(props.items.length / columns.value);
         totalHeight.value = totalRows * props.itemHeight + (totalRows - 1) * verticalGap.value;
-    }
+    };
 
     const restoreScrollPosition = () => {
         const savedScrollPosition = localStorage.getItem('scrollPosition');
@@ -88,21 +88,27 @@
             container.value.scrollTop = Number(savedScrollPosition);
             scrollTop.value = Number(savedScrollPosition);
         }
-    }
+    };
 
     onMounted(() => {
-        container.value.addEventListener('scroll', onScroll);
-        window.addEventListener('resize', updateTotalHeight, false);
-        updateTotalHeight();
+        if (container.value) {
+            container.value.addEventListener('scroll', onScroll);
+            window.addEventListener('resize', updateTotalHeight);
+            updateTotalHeight();
+            container.value.scrollTop = 50;
+        }
+        restoreScrollPosition();
     });
 
     onUnmounted(() => {
-        container.value.removeEventListener('scroll', onScroll);
-        window.removeEventListener('resize', updateTotalHeight);
+        if (container.value) {
+            container.value.removeEventListener('scroll', onScroll);
+            window.removeEventListener('resize', updateTotalHeight);
+        }
     });
 
     watch(route, () => {
-        if(router.currentRoute.value.name === 'archive') {
+        if (router.currentRoute.value.name === 'archive') {
             restoreScrollPosition();
         }
     });

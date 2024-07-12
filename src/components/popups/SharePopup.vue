@@ -37,9 +37,9 @@
                         <img src="@/assets/images/icons/social-media/whatsapp.svg">
                     </s-whats-app>
 
-                    <s-facebook :share-options="facebookShareOptions">
+                    <div @click="openFacebook">
                         <img src="@/assets/images/icons/social-media/facebook.svg">
-                    </s-facebook>
+                    </div>
                 </div>
 
                 <p class="share-popup__tip">Copy the link:</p>
@@ -53,7 +53,7 @@
                         </transition>
                     </div>
 
-                    <button @click="copy" class="copy-button">
+                    <button @click="copy(true)" class="copy-button">
                         <img src="@/assets/images/icons/copy.svg" alt="copy">
                     </button>
                 </div>
@@ -64,7 +64,7 @@
 
 <script setup>
     import { onMounted, ref, computed } from 'vue';
-    import { SFacebook, STelegram, STwitter, SWhatsApp } from 'vue-socials';
+    import { STelegram, STwitter, SWhatsApp } from 'vue-socials';
     import { onClickOutside } from '@vueuse/core';
     import { formatDate } from '@/utils/formatDate';
     import axios from 'axios';
@@ -96,12 +96,6 @@
         }
     });
 
-    const facebookShareOptions = computed(() => ({
-        url: url.value,
-        quote: `ROVR Archive: ${props.metadata.title} by ${props.metadata.artist}`,
-        hashtag: '#Radio',
-    }));
-
     const telegramShareOptions = computed(() => ({
         url: url.value,
     }));
@@ -114,6 +108,25 @@
     const whatsappShareOptions = computed(() => ({
         text: url.value,
     }));
+
+    const openFacebook = () => {
+        const fbAppUrl = `facebook-stories://share?source_application=807220477971378`;
+        const fbWebUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url.value)}`;
+
+        const start = Date.now();
+        const checkDelay = 1000;
+
+        copy(false);
+
+        window.location.href = fbAppUrl;
+
+        setTimeout(() => {
+            const end = Date.now();
+            if (end - start < checkDelay + 200) {
+                window.location.href = fbWebUrl;
+            }
+        }, checkDelay);
+    }
 
     const createShortLink = async (link) => {
         const params = {
@@ -131,14 +144,16 @@
             });
     }
 
-    const copy = () => {
+    const copy = (show_message) => {
         if(url.value) {
             navigator.clipboard.writeText(url.value)
                 .then(() => {
-                    copySuccess.value = true;
-                    setTimeout(() => {
-                        copySuccess.value = false;
-                    }, 2000);
+                    if(show_message) {
+                        copySuccess.value = true;
+                        setTimeout(() => {
+                            copySuccess.value = false;
+                        }, 2000);
+                    }
                 })
                 .catch(err => {
                     console.error('Failed to copy: ', err);
@@ -229,6 +244,7 @@
             @include flex-center;
             margin-bottom: 2rem;
             & > * {
+                cursor: pointer;
                 img {
                     width: 4rem;
                     aspect-ratio: 1;

@@ -1,15 +1,7 @@
 @media screen and (max-width: 1660px) {
     .main {
         .archive {
-            &__filters {
-                padding: 2rem;
-            }
-            &__nav {
-                margin-bottom: 2rem;
-            }
-            &__search input {
-                @include font-size(18px);
-            }
+            padding: 2rem;
         }
     }
     .vc-container {
@@ -43,11 +35,7 @@
     .main {
         .archive {
             flex-direction: column;
-            &__filters {
-                flex: 0 1 auto;
-                padding: 3rem 2rem;
-                margin-bottom: 0;
-                border: none;
+            &__header {
                 .vc-container {
                     .vc-weeks {
                         padding: 0 2rem;
@@ -85,6 +73,30 @@
                     }
                 }
             }
+        }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main {
+        .archive {
+            &__header {
+                align-items: flex-start;
+            }
+            &__calendar-open.active button {
+                background-color: $primary;
+                img {
+                    filter: brightness(0);
+                }
+            }
+            &__calendar-open {
+                &--desktop {
+                    display: none;
+                }
+                &--mobile {
+                    display: block;
+                }
+            }
             &__calendar--desktop {
                 display: none;
             }
@@ -97,13 +109,13 @@
                 width: 100%;
                 height: calc(100% - 6.7rem);
                 z-index: 4;
+                padding: 1.25rem;
                 &.active {
                     @include flex-column;
                 }
                 &-controls {
                     @include grid(2, 1rem);
                     margin-top: auto;
-                    padding: 0 2rem 2rem 2rem;
                     button {
                         @include flex-center;
                         @include font-size(18px);
@@ -125,48 +137,13 @@
                     }
                 }
             }
-            &__calendar-open {
-                display: block;
-                text-align: center;
-                margin-left: 1rem;
-                button {
-                    @include flex-center;
-                    width: 2.5rem;
-                    aspect-ratio: 1;
-                    border-radius: 50%;
-                    border: 1px solid $primary;
-                    cursor: pointer;
-                    margin: 0 auto;
-                    img {
-                        display: block;
-                        width: 1rem;
-                    }
-                }
-                span {
-                    display: block;
-                    color: $primary;
-                    font-size: 0.75rem;
-                    font-weight: normal;
-                    margin-top: 5px;
-                }
-            }
-            &__scroller {
-                flex: auto;
-                padding: 0 2rem 1rem 2rem;
-            }
-        }
-    }
-}
-
-@media screen and (max-width: 480px) {
-    .main {
-        .archive {
-            &__filters {
-                padding: 2rem 2rem 0 2rem;
-            }
             &__search {
+                width: 98%;
                 &-input {
                     font-size: 16px !important;
+                }
+                &-icon {
+                    display: none;
                 }
                 &-clear {
                     @include font-size(16px);
