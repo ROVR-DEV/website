@@ -50,10 +50,22 @@ section {
         position: relative;
         transition: filter 0.2s ease-in;
     }
-    &:hover {
-        background-color: $primary;
-        img {
-            filter: brightness(0);
+    @media (hover: hover) {
+        &:hover {
+            background-color: $primary;
+    
+            img {
+                filter: brightness(0);
+            }
+        }
+    }
+    @media (hover: none) {
+        &:active {
+            background-color: $primary;
+    
+            img {
+                filter: brightness(0);
+            }
         }
     }
 }

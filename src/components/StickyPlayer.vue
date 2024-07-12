@@ -1,6 +1,6 @@
 <template>
     <div class="sticky-player">
-        <div class="sticky-player__info">
+        <div class="sticky-player__info" @click="handleClick">
             <span class="sticky-player__source" v-text="playerStore.source"/>
             <marquee-text marqueeClass="sticky-player__track">
                 {{ playerStore.track.title }} <strong>by {{ playerStore.track.artist }}</strong>
@@ -13,10 +13,20 @@
 </template>
 
 <script setup>
+    import { useRouter } from 'vue-router';
     import { usePlayerStore } from '@/stores/player';
     import MarqueeText from './MarqueeText.vue';
 
+    const router = useRouter();
     const playerStore = usePlayerStore();
+
+    const handleClick = () => {
+        if (playerStore.source === 'archive' && playerStore.isPlaying) {
+            router.push(`/show/${playerStore.now_playing_archive}`);
+        } else {
+            router.push({ name: 'radio' });
+        }
+    }
 </script>
 
 <style lang="scss">
@@ -37,6 +47,7 @@
             width: 100%;
             margin-right: 1rem;
             max-width: 23rem;
+            cursor: pointer;
         }
         .marquee-container {
             line-height: 0;

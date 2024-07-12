@@ -110,22 +110,8 @@
     }));
 
     const openFacebook = () => {
-        const fbAppUrl = `facebook-stories://share?source_application=807220477971378`;
         const fbWebUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url.value)}`;
-
-        const start = Date.now();
-        const checkDelay = 1000;
-
-        copy(false);
-
-        window.location.href = fbAppUrl;
-
-        setTimeout(() => {
-            const end = Date.now();
-            if (end - start < checkDelay + 200) {
-                window.location.href = fbWebUrl;
-            }
-        }, checkDelay);
+        window.open(fbWebUrl, '_blank');
     }
 
     const createShortLink = async (link) => {

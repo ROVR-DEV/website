@@ -59,6 +59,8 @@
     import { DatePicker } from 'v-calendar';
     import { useArchiveStore } from '@/stores/archive';
     import { useRoute, useRouter } from 'vue-router';
+    import { isMobile } from '@/utils/isMobile';
+    import axios from 'axios';
     import VirtualList from '@/components/archive/VirtualList.vue';
     import SearchInput from '@/components/archive/SearchInput.vue';
     import ShowPreview from '@/components/archive/ShowPreview.vue';
@@ -175,18 +177,44 @@
         }
     }
 
-    const shareArchive = (data) => {
-        isShareOpen.value = true;
-        sharingId.value = data.publisher_metadata.publisher;
+    const shareArchive = async (data) => {
+        const show_data = data;
+        if(isMobile() && navigator.share) {
+            let share_url;
+            const sharingLink = `https://share.rovr.live/showarchive.html?release_date=${encodeURIComponent(show_data.release_date)}&title=${encodeURIComponent(show_data.publisher_metadata.release_title)}&curator=${encodeURIComponent(show_data.publisher_metadata.artist)}&description=${encodeURIComponent(show_data.publisher_metadata.description)}&image=${encodeURIComponent(show_data.publisher_metadata.cover)}&publisher=${encodeURIComponent(show_data.publisher_metadata.publisher)}`;
+            const params = {
+                url: sharingLink
+            };
 
-        sharingMetadata.value = {
-            cover: data.publisher_metadata.cover,
-            source: 'archive',
-            title: data.publisher_metadata.release_title,
-            artist: data.publisher_metadata.artist,
-            description: data.publisher_metadata.description,
-            date: data.release_date,
-            publisher: data.publisher_metadata.publisher
+            await axios.post('https://go.rovr.live/shortlink', params)
+                .then(response => {
+                    if (response.data && response.data.short_url) {
+                        share_url = response.data.short_url;
+                    }
+                })
+                .catch(error => {
+                    console.error('There was an error!', error);
+                });
+
+            const data = {
+                title: 'Radio Reinvented',
+                url: share_url,
+            }
+
+            window.navigator.share(data);
+        } else {
+            isShareOpen.value = true;
+            sharingId.value = data.publisher_metadata.publisher;
+
+            sharingMetadata.value = {
+                cover: data.publisher_metadata.cover,
+                source: 'archive',
+                title: data.publisher_metadata.release_title,
+                artist: data.publisher_metadata.artist,
+                description: data.publisher_metadata.description,
+                date: data.release_date,
+                publisher: data.publisher_metadata.publisher
+            }
         }
     }
 

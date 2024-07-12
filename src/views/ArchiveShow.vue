@@ -43,7 +43,7 @@
 
         <tracklist v-if="show" v-show="isTracklistShown" :tracks="show.tracks"
             :title="necessary_data.publisher_metadata.release_title" :date="necessary_data.release_date"
-            :author="necessary_data.publisher_metadata.artist" @share="isShareOpen = true"
+            :author="necessary_data.publisher_metadata.artist" @share="shareArchive(necessary_data)"
             @close="isTracklistShown = false" />
 
         <close-button v-if="!isTracklistShown" disabled @click="$router.push({ name: 'archive' })" class="show__close" />
@@ -64,6 +64,7 @@
     import { useRouter, useRoute } from "vue-router";
     import { formatDate } from "@/utils/formatDate";
     import { isIOSDevice } from '@/utils/isIOSDevice';
+    import { isMobile } from '@/utils/isMobile';
     import axios from "axios";
     import ShowPlayer from "@/components/archive/ShowPlayer.vue";
     import CurrentTrack from '@/components/CurrentTrack.vue';
@@ -274,6 +275,46 @@
             case 'is_ready':
                 is_next_archive_ready.value = true;
                 break;
+        }
+    }
+
+    const shareArchive = async (data) => {
+        const show_data = data;
+        if (isMobile() && navigator.share) {
+            let share_url;
+            const sharingLink = `https://share.rovr.live/showarchive.html?release_date=${encodeURIComponent(show_data.release_date)}&title=${encodeURIComponent(show_data.publisher_metadata.release_title)}&curator=${encodeURIComponent(show_data.publisher_metadata.artist)}&description=${encodeURIComponent(show_data.publisher_metadata.description)}&image=${encodeURIComponent(show_data.publisher_metadata.cover)}&publisher=${encodeURIComponent(show_data.publisher_metadata.publisher)}`;
+            const params = {
+                url: sharingLink
+            };
+
+            await axios.post('https://go.rovr.live/shortlink', params)
+                .then(response => {
+                    if (response.data && response.data.short_url) {
+                        share_url = response.data.short_url;
+                    }
+                })
+                .catch(error => {
+                    console.error('There was an error!', error);
+                });
+
+            const data = {
+                title: 'Radio Reinvented',
+                url: share_url,
+            }
+
+            window.navigator.share(data);
+        } else {
+            isShareOpen.value = true;
+
+            sharingMetadata.value = {
+                cover: show_data.publisher_metadata.cover,
+                source: 'archive',
+                title: show_data.publisher_metadata.release_title,
+                artist: show_data.publisher_metadata.artist,
+                description: show_data.publisher_metadata.description,
+                date: show_data.release_date,
+                publisher: show_data.publisher_metadata.publisher
+            }
         }
     }
 </script>
