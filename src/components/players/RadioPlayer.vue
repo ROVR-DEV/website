@@ -15,6 +15,7 @@
     import { useRoute, useRouter } from 'vue-router';
     import { usePlayerStore } from '@/stores/player';
     import { useRadioStore } from '@/stores/radio';
+    import { useScheduleStore } from '@/stores/schedule';
     import PreloaderLogo from '@/components/animated_svg/PreloaderLogo.vue';
     import jingleTrack from '@/assets/media/jingle.mp3';
 
@@ -25,6 +26,7 @@
     const player = ref(null);
     const playerStore = usePlayerStore();
     const radioStore = useRadioStore();
+    const scheduleStore = useScheduleStore();
     const jingle = new Audio(jingleTrack);
 
     watch(() => playerStore.stream_url, (state) => {
@@ -88,6 +90,8 @@
     }
 
     const finish = () => {
+        scheduleStore.schedule.shift();
+        
         if (!player.value.paused) {
             startFadeOut();
 

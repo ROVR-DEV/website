@@ -41,10 +41,12 @@
         <show-image v-show="!isTracklistShown" :path="necessary_data.publisher_metadata.cover"
             :curator="necessary_data.publisher_metadata.artist" />
 
-        <tracklist v-if="show" v-show="isTracklistShown" :tracks="show.tracks"
-            :title="necessary_data.publisher_metadata.release_title" :date="necessary_data.release_date"
-            :author="necessary_data.publisher_metadata.artist" @share="shareArchive(necessary_data)"
-            @close="isTracklistShown = false" />
+        <transition name="slide-down">
+            <tracklist v-if="show && isTracklistShown" :tracks="show.tracks"
+                :title="necessary_data.publisher_metadata.release_title" :date="necessary_data.release_date"
+                :author="necessary_data.publisher_metadata.artist" @share="shareArchive(necessary_data)"
+                @close="isTracklistShown = false" />
+        </transition>
 
         <close-button v-if="!isTracklistShown" disabled @click="$router.push({ name: 'archive' })" class="show__close" />
 
@@ -400,6 +402,22 @@
             button {
                 pointer-events: none;
             }
+        }
+    }
+
+    @media screen and (min-width: 1024px) {
+        .slide-down-enter-active, .slide-down-leave-active {
+            transition: all 0.3s ease;
+        }
+
+        .slide-down-enter-from, .slide-down-leave-to {
+            transform: translateY(-100%);
+            opacity: 0;
+        }
+
+        .slide-down-enter-to, .slide-down-leave-from {
+            transform: translateY(0);
+            opacity: 1;
         }
     }
 </style>

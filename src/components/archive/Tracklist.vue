@@ -115,12 +115,17 @@
 
 <style lang="scss" scoped>
     .archive__tracklist {
-        position: relative;
-        z-index: 4;
-        flex: 1 0 45%;
+        @media screen and (min-width: 1024px) {
+            position: absolute;
+            top: 0;
+            right: 0;
+            z-index: 10;
+            width: 45%;
+            height: 100%;
+        }
         &-close {
             @include flex-center;
-            position: relative;
+            position: sticky;
             top: 3rem;
             right: 2rem;
             margin-left: auto;
