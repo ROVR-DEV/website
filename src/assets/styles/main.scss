@@ -86,33 +86,36 @@ section {
 }
 /* --------------------------------------------- */
 
-
 /* -------------- VUE DATE-PICKER STYLES --------------- */
 .archive__calendar--desktop {
     position: absolute;
-    top: 2rem;
+    top: 1.75rem;
     right: 1.5rem;
     z-index: 7;
     background-color: $primary;
     width: 28rem;
     min-width: unset;
-    padding: 2.5rem 1.5rem 1rem 1.5rem;
+    padding: 2.5rem 2.25rem 1rem 2.25rem;
     .archive__calendar-close {
         @include flex-center;
-        @include font-size(14px);
+        @include font-size(12px);
         cursor: pointer;
         text-transform: uppercase;
         color: #80782C;
         font-weight: bold;
         line-height: 1;
         position: absolute;
-        bottom: 1.75rem;
-        right: 2rem;
+        bottom: 2.5rem;
+        right: 4rem;
         z-index: 2;
         img {
             margin-left: 0.325rem;
             position: relative;
             top: -1.5px;
+        }
+        @media screen and (max-width: 1660px) {
+            bottom: 1.25rem;
+            right: 3rem;
         }
     }
     .vc-container,
@@ -120,8 +123,18 @@ section {
     .vc-title-wrapper span {
         color: $black;
         text-transform: uppercase;
+        font-weight: bold;
     }
+
+    .vc-title-wrapper span {
+        @media screen and (max-width: 1660px) {
+            position: relative;
+            bottom: 0.625rem;
+        }
+    }
+
     .vc-header {
+        padding: 0;
         .vc-arrow {
             background: $black;
             color: $primary;
@@ -131,11 +144,8 @@ section {
                 background: transparent;
                 color: $black;
             }
-
             &:disabled {
-                background-color: rgba($color: $black, $alpha: 0.75);
-                border-color: rgba($color: $black, $alpha: 0.75);
-                color: $primary;
+                opacity: 1;
                 pointer-events: none;
             }
         }
@@ -155,11 +165,17 @@ section {
         }
     }
     .vc-day {
+        width: 2.5rem;
+        height: 2.5rem;
         .vc-day-content {
+            @include font-size(20px);
             border: 2px solid $black;
             background-color: transparent;
             color: $black;
             font-weight: bold;
+            -webkit-text-stroke: 0.5px $black;
+            width: 100% !important;
+            height: 100% !important;
             &.vc-highlight-content-solid {
                 background-color: $black;
                 color: $primary;
@@ -223,8 +239,7 @@ section {
             color: $primary;
         }
         &.disabled {
-            background-color: rgba($color: $primary, $alpha: 0.25);
-            color: $primary;
+            opacity: 1;
             pointer-events: none;
         }
     }

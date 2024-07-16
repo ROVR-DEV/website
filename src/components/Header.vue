@@ -80,13 +80,13 @@
         },
         {
             id: 4,
-            name: "contact",
-            title: "contact",
+            name: "archive",
+            title: "archive",
         },
         {
             id: 5,
-            name: "archive",
-            title: "archive",
+            name: "contact",
+            title: "contact",
         },
         {
             id: 6,
@@ -116,23 +116,9 @@
                 font-weight: normal;
                 font-style: italic;
                 text-transform: uppercase;
-                transition: all 0.2s ease-in-out;
-                @media screen and (min-width: 1025px) {
-                    background-image: linear-gradient(
-                        to right,
-                        $primary,
-                        $primary 50%,
-                        rgba($color: $primary, $alpha: 0.35) 50%
-                    );
-                    background-size: calc(200% + 5px) 100%;
-                    background-position: calc(100% + 0.5px);
-                    background-clip: text;
-                    -webkit-background-clip: text;
-                    -webkit-text-fill-color: transparent;
-                    &.router-link-exact-active,
-                    &:hover {
-                        background-position: 0;
-                    }
+                &:hover,
+                &.router-link-active {
+                    color: $primary;
                 }
             }
             &-contact,

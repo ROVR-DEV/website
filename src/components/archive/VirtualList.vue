@@ -32,8 +32,8 @@
     const scrollTop = ref(0);
     const totalHeight = ref(0);
     const columns = ref(3); // Default to 3 columns
-    const horizontalGap = ref(2);
-    const verticalGap = ref(40);
+    const horizontalGap = ref(1.75);
+    const verticalGap = ref(35);
 
     const visibleStartIndex = computed(() => Math.max(0, Math.floor(scrollTop.value / (props.itemHeight + verticalGap.value)) * columns.value - columns.value * props.buffer));
 

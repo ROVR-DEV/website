@@ -71,10 +71,10 @@
             background-color: $black;
             color: $primary;
             font-weight: bold;
-            @include font-size(15px);
+            @include font-size(17px);
             border: none;
             border-bottom: 1.75px solid $primary;
-            padding: 0 0 1rem 0;
+            padding: 0 0 1.125rem 0;
             outline: none;
             position: relative;
             line-height: 1;

@@ -8,18 +8,18 @@
                 <button @click="openCalendar('desktop')">
                     <img src="@/assets/images/icons/calendar.svg" alt="calendar">
                 </button>
-                <span v-if="date" v-text="formatDate('short', date)" />
+                <span :class="{ 'visible': date }" v-text="formatDate('short', date)" />
             </div>
 
             <div class="archive__calendar-open archive__calendar-open--mobile" :class="{ active: isCalendarOpen }">
                 <button @click="openCalendar('mobile')">
                     <img src="@/assets/images/icons/calendar.svg" alt="calendar">
                 </button>
-                <span v-if="date && isDateConfirmed" v-text="formatDate('short', date)" />
+                <span :class="{ 'visible': date && isDateConfirmed }" v-text="formatDate('short', date)" />
             </div>
         </div>
 
-        <div v-if="!isCalendarVisible && isCalendarOpen" class="archive__calendar--desktop">
+        <div v-if="!isCalendarVisible && isCalendarOpen" class="archive__calendar--desktop" ref="calendar">
             <date-picker v-model="date" @update:modelValue="searchShow(searchQuery)"
                  borderless transparent locale="en" expanded :first-day-of-week="2"
                 :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates" :max-date="new Date()"/>
@@ -60,6 +60,7 @@
     import { useArchiveStore } from '@/stores/archive';
     import { useRoute, useRouter } from 'vue-router';
     import { isMobile } from '@/utils/isMobile';
+    import { onClickOutside } from '@vueuse/core';
     import axios from 'axios';
     import VirtualList from '@/components/archive/VirtualList.vue';
     import SearchInput from '@/components/archive/SearchInput.vue';
@@ -81,6 +82,7 @@
     const route = useRoute();
     const router = useRouter();
     const queryCurator = ref(null);
+    const calendar = ref(null);
 
     defineProps({
         curator: {
@@ -88,6 +90,8 @@
             required: false
         }
     });
+
+    onClickOutside(calendar, () => { isCalendarOpen.value = false; isCalendarVisible.value = false });
 
     onMounted(() => {
         if (archiveStore.archive) {
@@ -313,20 +317,26 @@
 <style lang="scss" scoped>
     .archive {
         border-top: 2px solid $primary;
-        padding: 3rem;
+        padding: 2rem 3rem 0 3rem;
         display: flex;
         flex-direction: column;
         overflow: hidden;
         &__header {
-            @include flex-center-sb;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             position: sticky;
             top: 0;
             left: 0;
-            margin-bottom: 2.25rem;
+            margin-bottom: 0.25rem;
         }
         &__scroller {
             flex: auto;
             overflow-y: auto;
+            ::-webkit-scrollbar {
+                width: 0.1px;
+                opacity: 0;
+            }
         }
         &__calendar {
             &--mobile {
@@ -336,6 +346,8 @@
                 display: block;
                 text-align: center;
                 margin-left: 1rem;
+                position: relative;
+                top: -4px;
                 &--mobile {
                     display: none;
                 }
@@ -346,7 +358,7 @@
                     border-radius: 50%;
                     border: 1px solid $primary;
                     cursor: pointer;
-                    margin: 0 auto;
+                    margin-left: auto;
                     transition: $transition;
                     img {
                         display: block;
@@ -370,6 +382,10 @@
                     font-size: 0.75rem;
                     font-weight: normal;
                     margin-top: 5px;
+                    opacity: 0;
+                    &.visible {
+                        opacity: 1;
+                    }
                 }
             }
         }

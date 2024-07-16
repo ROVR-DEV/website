@@ -87,7 +87,6 @@
             height: 100%;
             z-index: 1;
             object-fit: cover;
-            object-position: right top;
         }
         & > *:not(img) {
             position: relative;

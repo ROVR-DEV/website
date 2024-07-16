@@ -322,7 +322,7 @@
 <style lang="scss" scoped>
     .show {
         border-top: 2px solid $primary;
-
+        position: relative;
         &__info {
             border-right: 2px solid $primary;
         }

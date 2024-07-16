@@ -1,7 +1,7 @@
 @media screen and (max-width: 1660px) {
     .main {
         .archive {
-            padding: 2rem;
+            padding: 2rem 2rem 0 2rem;
         }
     }
     .vc-container {
@@ -82,6 +82,7 @@
         .archive {
             &__header {
                 align-items: flex-start;
+                margin-bottom: 1rem;
             }
             &__calendar-open.active button {
                 background-color: $primary;
@@ -90,11 +91,18 @@
                 }
             }
             &__calendar-open {
+                top: 0;
                 &--desktop {
                     display: none;
                 }
                 &--mobile {
                     display: block;
+                }
+                button {
+                    margin: 0 auto;
+                }
+                span {
+                    width: 35px;
                 }
             }
             &__calendar--desktop {
@@ -103,11 +111,11 @@
             &__calendar--mobile {
                 display: none;
                 position: absolute;
-                top: 6.7rem;
+                top: 6rem;
                 left: 0;
                 background-color: $black;
                 width: 100%;
-                height: calc(100% - 6.7rem);
+                height: calc(100% - 6rem);
                 z-index: 4;
                 padding: 1.25rem;
                 &.active {
