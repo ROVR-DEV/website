@@ -102,7 +102,7 @@
                 curatorsStore.popupShowing(true);
                 document.querySelector('.main').scrollTop = 0;
             }
-        }, 15000);
+        }, 1500000);
     });
 
     onUnmounted(() => {
@@ -116,16 +116,27 @@
         }
     });
 
+    watch(() => archiveStore.archive, (newArchive) => {
+        if (newArchive && route.query.title && route.query.release_date) {
+            const archive_title = route.query.title;
+            const archive_date = route.query.release_date;
+
+            const foundArchive = archiveStore.archive.find(archive => archive.publisher_metadata.release_title === archive_title && archive.release_date === archive_date);
+
+            if(foundArchive) {
+                router.push(`/show/${foundArchive.publisher_metadata.publisher}`);
+            } else {
+                router.push('/');
+            }
+        }
+    });
+
     // updating schedule 
     watch(() => playerStore.is_radio_finished, (state) => {
         if (state) {
             radioStore.loadData(scheduleStore.schedule[1]);
             radioStore.radio.show.since = 0;
             radioStore.radio.show.until = 7200;
-            setTimeout(() => {
-                scheduleStore.loadSchedule(null);
-                getSchedule();
-            }, 2000);
         }
     });
 

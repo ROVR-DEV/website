@@ -46,7 +46,7 @@
 
     const filteredSchedule = computed(() => {
         if (schedule.value && selectedDate.value) {
-            return schedule.value.filter(program => program.start_time.includes(selectedDate.value.fullDate) && !program.now_playing);
+            return schedule.value.filter((program, index) => program.start_time.includes(selectedDate.value.fullDate) && index !== 0);
         } else {
             return [];
         }

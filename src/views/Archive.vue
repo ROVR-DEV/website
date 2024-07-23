@@ -61,6 +61,7 @@
     import { useRoute, useRouter } from 'vue-router';
     import { isMobile } from '@/utils/isMobile';
     import { onClickOutside } from '@vueuse/core';
+    import { slugify } from '@/utils/slugify';
     import axios from 'axios';
     import VirtualList from '@/components/archive/VirtualList.vue';
     import SearchInput from '@/components/archive/SearchInput.vue';
@@ -104,7 +105,6 @@
         }
 
         updateShowHeight();
-
         window.addEventListener('resize', updateShowHeight);
 
         const addArrowClickListeners = () => {
@@ -140,7 +140,6 @@
     
     onUnmounted(() => {
         window.removeEventListener('resize', updateShowHeight);
-        
     });
 
     watch(() => archiveStore.archive, (newArchive) => {
@@ -233,8 +232,8 @@
         filteredArchive.value = filteredShows.filter(show => {
             const showDate = formatDate('full', new Date(show.release_date));
             const matchesDate = formattedDate ? showDate === formattedDate : true;
-            const matchesSearch = (show.publisher_metadata.artist && show.publisher_metadata.artist.toLowerCase().includes(searchQuery.value)) ||
-                (show.publisher_metadata.release_title && show.publisher_metadata.release_title.toLowerCase().includes(searchQuery.value));
+            const matchesSearch = (show.publisher_metadata.artist && slugify(show.publisher_metadata.artist.toLowerCase()).includes(searchQuery.value)) ||
+                (show.publisher_metadata.release_title && slugify(show.publisher_metadata.release_title.toLowerCase()).includes(searchQuery.value));
             return matchesDate && matchesSearch;
         });
     }
@@ -296,6 +295,10 @@
             isCalendarOpen.value = true;
             isCalendarVisible.value = true;
         }
+
+        setTimeout(() => {
+            formatCalendarDates();
+        }, 10);
     }
 
     const confirmDateFilter = () => {
@@ -311,6 +314,17 @@
         isCalendarOpen.value = false;
         isCalendarVisible.value = false;
         isDateConfirmed.value = false;
+    }
+
+    const formatCalendarDates = () => {
+        const dayElements = document.querySelectorAll('.vc-day-content');
+
+        dayElements.forEach(element => {
+            const day = element.textContent.trim();
+            if (day.length === 1) {
+                element.textContent = `0${day}`;
+            }
+        });
     }
 </script>
 

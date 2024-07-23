@@ -81,6 +81,7 @@
             -webkit-appearance: none;
             appearance: none;
             border-radius: 0;
+            user-select: auto !important;
             &::placeholder {
                 color: $primary;
                 font-weight: normal;

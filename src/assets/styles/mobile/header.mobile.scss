@@ -46,7 +46,8 @@
                     color: $primary;
                     background-color: $black;
                     height: 100%;
-                    &.router-link-exact-active {
+                    &.router-link-exact-active,
+                    &.router-link-active {
                         background-color: $primary;
                         color: $black;
                     }

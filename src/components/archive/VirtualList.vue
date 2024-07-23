@@ -33,7 +33,7 @@
     const totalHeight = ref(0);
     const columns = ref(3); // Default to 3 columns
     const horizontalGap = ref(1.75);
-    const verticalGap = ref(35);
+    const verticalGap = ref(30);
 
     const visibleStartIndex = computed(() => Math.max(0, Math.floor(scrollTop.value / (props.itemHeight + verticalGap.value)) * columns.value - columns.value * props.buffer));
 
@@ -80,7 +80,7 @@
 
         const totalRows = Math.ceil(props.items.length / columns.value);
         totalHeight.value = totalRows * props.itemHeight + (totalRows - 1) * verticalGap.value;
-    };
+    }
 
     const restoreScrollPosition = () => {
         const savedScrollPosition = localStorage.getItem('scrollPosition');

@@ -67,7 +67,7 @@
         color: $primary;
         padding: 1.75rem;
         width: 100%;
-        height: 285px;
+        height: 100%;
         &::before {
             content: '';
             position: absolute;
@@ -112,11 +112,11 @@
             @include font-size(36px);
             font-weight: bold;
             text-transform: uppercase;
-            margin: 0 0 0.625rem 0;
+            margin: 0 0 1rem 0;
         }
         &__author {
             @include flex(row, flex-start, flex-start);
-            @include font-size(17px);
+            @include font-size(16px);
             margin: 0;
             line-height: 1;
             em {
@@ -140,7 +140,7 @@
         }
         &__button {
             @include flex-center;
-            width: 3rem;
+            width: 2.75rem;
             aspect-ratio: 1;
             border-radius: 50%;
             border: 1px solid $primary;
@@ -167,7 +167,6 @@
 
     @media screen and (max-width: 1660px) {
         .archive-preview {
-            height: 220px;
             padding: 1.5rem;
             &__title {
                 @include font-size(33px);
@@ -183,19 +182,6 @@
             &__button {
                 width: 2.5rem;
             }
-        }
-    }
-
-
-    @media screen and (max-width: 1200px) {
-        .archive-preview {
-            height: 200px;
-        }
-    }
-
-    @media screen and (max-width: 480px) {
-        .archive-preview {
-            height: 230px;
         }
     }
 </style>

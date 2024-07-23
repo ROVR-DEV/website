@@ -7,11 +7,19 @@
             <sticky-player v-if="playerStore.show_sticky_player"/>
         </transition>
 
-        <nav class="header__nav" :class="{'header__nav--active' : isBurgerActive}">
+        <nav class="header__nav" :class="{ 'header__nav--active': isBurgerActive }">
             <ul class="header__links">
                 <li v-for="link in links" :key="link.id" class="header__link" :class="`header__link-${link.name}`">
                     <template v-if="link.name === 'contact'">
                         <a href="mailto:info@rovr.live" v-text="link.name"/>
+                    </template>
+                    <template v-else-if="link.name === 'archive'">
+                        <router-link
+                            :to="{ name: link.name }"
+                            :class="{ 'router-link-active' : router.currentRoute.value.name === 'show' || router.currentRoute.value.name === 'archive' }"
+                            v-text="link.title" 
+                            @click="handleArchiveLink"
+                        />
                     </template>
                     <template v-else>
                         <router-link :to="{ name: link.name }" v-text="link.title" @click="isBurgerActive = false"/>
@@ -46,7 +54,7 @@
 
     const playerStore = usePlayerStore();
     const isBurgerActive = ref(false);
-    
+    const archiveRouteHistory = ref(null);
     const headerPrivacy = ref(null);
 
     watch(route, () => {
@@ -55,7 +63,18 @@
         } else {
             headerPrivacy.value.classList.remove('active');
         }
+
+        if (router.currentRoute.value.name === 'show' || router.currentRoute.value.name === 'archive') {
+            archiveRouteHistory.value = router.currentRoute.value.path;
+        }
     });
+
+    const handleArchiveLink = () => {
+        if (archiveRouteHistory.value) router.push(archiveRouteHistory.value);
+        else router.push('/archive');
+
+        isBurgerActive.value = false;
+    }
 
     const links = [
         {

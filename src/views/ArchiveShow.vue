@@ -122,6 +122,10 @@
         if (archive) {
             necessary_data.value = archiveStore.archive.find(show => props.publisher_id === show.publisher_metadata.publisher);
             loadSharingMetadata(necessary_data.value);
+
+            if (route.query.sharing && isMobile()) {
+                window.location.href = `rovr://go.rovr.live/showarchive.html?release_date=${necessary_data.value.release_date}&title=${necessary_data.value.publisher_metadata.release_title}&curator=${necessary_data.value.publisher_metadata.artist}&description=${necessary_data.value.publisher_metadata.description}&image=${necessary_data.value.publisher_metadata.cover}&publisher=${necessary_data.value.publisher_metadata.publisher}`;
+            }
         }
     });
 
@@ -407,17 +411,15 @@
 
     @media screen and (min-width: 1024px) {
         .slide-down-enter-active, .slide-down-leave-active {
-            transition: all 0.3s ease;
+            transition: all 0.3s linear;
         }
 
         .slide-down-enter-from, .slide-down-leave-to {
             transform: translateY(-100%);
-            opacity: 0;
         }
 
         .slide-down-enter-to, .slide-down-leave-from {
             transform: translateY(0);
-            opacity: 1;
         }
     }
 </style>
