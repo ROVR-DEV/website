@@ -34,9 +34,20 @@
     import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
     import { useCuratorsStore } from '@/stores/curators';
     import CloseButton from '@/components/ui/CloseButton.vue';
+    import { useHead } from '@vueuse/head';
 
     const curator = ref(null);
     const curatorsStore = useCuratorsStore();
+
+    const currentCurator = computed(() => curator.value ?? {});
+
+    useHead({
+      meta: [
+        {property: 'og:title', content: () => `ROVR - Radio Reinvented by ${currentCurator.value.name}`, key: 'og:title'},
+        {property: 'og:description', content: () => currentCurator.value.about, key: 'og:description'},
+        {property: 'og:image', content: () => currentCurator.value.photo, key: 'og:image'},
+      ]
+    })
 
     const props = defineProps({
         name: {
