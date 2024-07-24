@@ -39,7 +39,7 @@ const routes = [
     name: "curators",
     component: CuratorsView,
     meta: {
-      title: "ROVR - Curators"
+      title: "ROVR - Curators",
     }
   },
   {
