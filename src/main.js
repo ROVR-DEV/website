@@ -1,17 +1,12 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { createHead } from "@vueuse/head"
 import App from '@/App.vue'
 import router from '@/router'
-import { defaultMetaTags } from '@/defaultMeta.js';
 
 
 import '@/assets/styles/main.scss'
 
 const app = createApp(App)
-const head = createHead()
-
-defaultMetaTags.forEach(tag => head.addHeadObjs({ meta: [tag] }));
 
 /*** <press effect> ***/
 app.directive('press', {
@@ -31,7 +26,6 @@ app.directive('press', {
 });
 /*** </press effect> ***/
 
-app.use(head)
 app.use(createPinia())
 app.use(router)
 app.mount('#app')
