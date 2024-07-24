@@ -61,7 +61,7 @@
     import { useRoute, useRouter } from 'vue-router';
     import { isMobile } from '@/utils/isMobile';
     import { onClickOutside } from '@vueuse/core';
-    import { slugify } from '@/utils/slugify';
+    import { slugifyIgnoreSpecialChars } from '@/utils/slugify';
     import axios from 'axios';
     import VirtualList from '@/components/archive/VirtualList.vue';
     import SearchInput from '@/components/archive/SearchInput.vue';
@@ -232,8 +232,19 @@
         filteredArchive.value = filteredShows.filter(show => {
             const showDate = formatDate('full', new Date(show.release_date));
             const matchesDate = formattedDate ? showDate === formattedDate : true;
-            const matchesSearch = (show.publisher_metadata.artist && slugify(show.publisher_metadata.artist.toLowerCase()).includes(searchQuery.value)) ||
-                (show.publisher_metadata.release_title && slugify(show.publisher_metadata.release_title.toLowerCase()).includes(searchQuery.value));
+
+            const searchQuerySlugified = slugifyIgnoreSpecialChars(searchQuery.value.toLowerCase());
+            const searchQueryOriginal = searchQuery.value.toLowerCase();
+
+            const artistSlugified = show.publisher_metadata.artist ? slugifyIgnoreSpecialChars(show.publisher_metadata.artist.toLowerCase()) : '';
+            const titleSlugified = show.publisher_metadata.release_title ? slugifyIgnoreSpecialChars(show.publisher_metadata.release_title.toLowerCase()) : '';
+
+            const matchesSearch =
+                (show.publisher_metadata.artist &&
+                    (artistSlugified.includes(searchQuerySlugified) || artistSlugified.includes(searchQueryOriginal))) ||
+                (show.publisher_metadata.release_title &&
+                    (titleSlugified.includes(searchQuerySlugified) || titleSlugified.includes(searchQueryOriginal)));
+
             return matchesDate && matchesSearch;
         });
     }

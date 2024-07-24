@@ -141,6 +141,7 @@
         &__button {
             @include flex-center;
             width: 2.75rem;
+            height: 2.75rem;
             aspect-ratio: 1;
             border-radius: 50%;
             border: 1px solid $primary;
@@ -181,6 +182,7 @@
             }
             &__button {
                 width: 2.5rem;
+                height: 2.5rem;
             }
         }
     }

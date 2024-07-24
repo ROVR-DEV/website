@@ -41,6 +41,7 @@
     import { useScheduleStore } from '@/stores/schedule';
     import { useArchiveStore } from '@/stores/archive';
     import { usePlayerStore } from "@/stores/player";
+    import { slugify } from "@/utils/slugify";
     import RadioPlayer from "@/components/players/RadioPlayer.vue";
     import ArchivePlayer from "@/components/players/ArchivePlayer.vue";
     import Header from "@/components/Header.vue";
@@ -116,6 +117,7 @@
         }
     });
 
+    // redirecting to archive when user came from sharing link
     watch(() => archiveStore.archive, (newArchive) => {
         if (newArchive && route.query.title && route.query.release_date) {
             const archive_title = route.query.title;
@@ -126,10 +128,25 @@
             if(foundArchive) {
                 router.push(`/show/${foundArchive.publisher_metadata.publisher}`);
             } else {
-                router.push('/');
+                router.push('/archive');
             }
         }
-    });
+    }, { immediate: true });
+
+    // redirecting to curator page when user came from sharing link
+    watch(() => curatorsStore.curators, (newCurators) => {
+        if (newCurators && route.query.sharing_curator_id) {
+            const curator_id = route.query.sharing_curator_id;
+
+            const foundCurator = curatorsStore.curators.find(curator => curator.id === +curator_id);
+
+            if (foundCurator) {
+                router.push(`/curator/${slugify(foundCurator.name)}`);
+            } else {
+                router.push('/curators');
+            }
+        }
+    }, { immediate: true });
 
     // updating schedule 
     watch(() => playerStore.is_radio_finished, (state) => {
