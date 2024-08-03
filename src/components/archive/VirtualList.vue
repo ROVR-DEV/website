@@ -10,6 +10,7 @@
 <script setup>
     import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
+    import { isMobile } from '@/utils/isMobile';
 
     const props = defineProps({
         items: {
@@ -98,6 +99,11 @@
             container.value.scrollTop = 50;
         }
         restoreScrollPosition();
+
+        if( !isMobile() ) {
+            const y = window.innerHeight / 1080;
+            verticalGap.value = 35*y;
+        }
     });
 
     onUnmounted(() => {

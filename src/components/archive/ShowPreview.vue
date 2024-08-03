@@ -35,11 +35,14 @@
     import { useRouter } from 'vue-router';
     import { formatDate } from '@/utils/formatDate';
     import { usePlayerStore } from '@/stores/player';
+    import { onMounted } from 'vue';
+    import { isMobile } from '@/utils/isMobile';
     import CuratorLink from '@/components/CuratorLink.vue';
 
     const router = useRouter();
     const playerStore = usePlayerStore();
     const emit = defineEmits(['share']);
+    const y = window.innerHeight / 1080;
 
     const props = defineProps({
         show: {
@@ -48,16 +51,41 @@
         }
     });
 
-    //const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     const gotoArchive = async (delayTime) => {
-        //await delay(delayTime);
         setTimeout(() => {
             router.push(`/show/${props.show.publisher_metadata.publisher}`);
         }, delayTime);
     }
 
+    onMounted(() => {
+        if( !isMobile() ) {
+            const y = window.innerHeight / 1080;
 
+            document.querySelectorAll('.archive-preview').forEach(el => {
+                el.style.padding = `${28 * y}px`;
+            });
+            document.querySelectorAll('.archive-preview__date').forEach(el => {
+                el.style.fontSize = `${14 * y}px`;
+            });
+            document.querySelectorAll('.archive-preview__title').forEach(el => {
+                el.style.fontSize = `${36 * y}px`;
+            });
+            document.querySelectorAll('.archive-preview__author').forEach(el => {
+                el.style.fontSize = `${17 * y}px`;
+            });
+            document.querySelectorAll('.archive-preview__author em').forEach(el => {
+                el.style.fontSize = `${28 * y}px`;
+            });
+            document.querySelectorAll('.archive-preview__description').forEach(el => {
+                el.style.fontSize = `${14 * y}px`;
+            });
+            document.querySelectorAll('.archive-preview__button').forEach(el => {
+                el.style.width = `${52 * y}px`;
+                el.style.height = `${52 * y}px`;
+            });
+        }
+    });
 </script>
 
 <style lang="scss" scoped>
@@ -154,9 +182,12 @@
                 overflow: hidden;
                 img {
                     display: block;
-                    width: 1.75rem;
-                    height: 1.25rem;
+                    width: 1.625rem;
+                    height: 1.125rem;
                 }
+            }
+            &.share-button img {
+                width: 1.25rem;
             }
         }
         &__description {
@@ -164,26 +195,9 @@
             font-weight: normal;
             margin: 0 0 0 1.5rem;
         }
-    }
 
-    @media screen and (max-width: 1660px) {
-        .archive-preview {
+        @media screen and (max-width: 480px) {
             padding: 1.5rem;
-            &__title {
-                @include font-size(33px);
-            }
-        }
-    }
-
-    @media screen and (max-width: 1440px) {
-        .archive-preview {
-            &__title {
-                @include font-size(28px);
-            }
-            &__button {
-                width: 2.5rem;
-                height: 2.5rem;
-            }
         }
     }
 </style>

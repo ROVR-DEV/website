@@ -19,12 +19,12 @@
             </div>
         </div>
 
-        <div v-if="!isCalendarVisible && isCalendarOpen" class="archive__calendar--desktop" ref="calendar">
+        <div v-if="!isCalendarVisible && isCalendarOpen" :class="{ active: desktopCalendarActive }" class="archive__calendar--desktop" ref="calendar">
             <date-picker v-model="date" @update:modelValue="searchShow(searchQuery)"
-                 borderless transparent locale="en" expanded :first-day-of-week="2"
+                    borderless transparent locale="en" expanded :first-day-of-week="2"
                 :masks="{ weekdays: 'WWW' }" :disabled-dates="disableFutureDates" :max-date="new Date()"/>
 
-            <button class="archive__calendar-close" @click="isCalendarOpen = false">
+            <button class="archive__calendar-close" @click="isCalendarOpen = false; desktopCalendarActive = false;">
                 close 
                 <img src="@/assets/images/icons/calendar-close.svg" alt="close">
             </button>
@@ -84,6 +84,9 @@
     const router = useRouter();
     const queryCurator = ref(null);
     const calendar = ref(null);
+    const desktopCalendarActive = ref(false);
+    const y = window.innerHeight / 1080;
+    const x = window.innerWidth / 1920;
 
     defineProps({
         curator: {
@@ -273,14 +276,11 @@
 
     const updateShowHeight = () => {
         const screenWidth = window.innerWidth;
-        if (screenWidth >= 1660) {
-            showHeight.value = 285;
-        } else if (screenWidth < 1660 && screenWidth >= 1200) {
-            showHeight.value = 220;
-        } else if (screenWidth < 1200 && screenWidth >= 480) {
-            showHeight.value = 200;
-        } else if (screenWidth < 480) {
+
+        if (screenWidth <= 480) {
             showHeight.value = 230;
+        } else {
+            showHeight.value = 290 * y;
         }
     }
 
@@ -302,6 +302,40 @@
     const openCalendar = (type) => {
         if(type === 'desktop') {
             isCalendarOpen.value = true;
+            setTimeout(() => {
+                desktopCalendarActive.value = true;
+            }, 20);
+
+            if (!isMobile()) {
+                setTimeout(() => {
+                    document.querySelector('.archive__calendar--desktop').style.width = `${450 * x}px`;
+                    document.querySelector('.archive__calendar--desktop').style.height = `${500 * x}px`;
+                    document.querySelector('.archive__calendar--desktop').style.padding = `${46 * y}px ${35 * x}px`;
+                    document.querySelectorAll('.archive__calendar--desktop .vc-header .vc-arrow').forEach(el => {
+                        el.style.width = `${34 * x}px`;
+                        el.style.height = `${34 * x}px`;
+                    });
+                    document.querySelectorAll('.archive__calendar--desktop .vc-header .vc-arrow svg').forEach(el => {
+                        el.style.height = `${26 * y}px`;
+                        el.style.width = `${30 * x}px`;
+                    });
+                    document.querySelectorAll('.archive__calendar--desktop .vc-weeks .vc-weekdays .vc-weekday').forEach(el => {
+                        el.style.fontSize = `${11.7 * x}px`;
+                    });
+                    document.querySelectorAll('.archive__calendar--desktop .vc-day').forEach(el => {
+                        el.style.height = `${40 * x}px`;
+                        el.style.width = `${40 * x}px`;
+                    });
+                    document.querySelectorAll('.archive__calendar--desktop .vc-day .vc-day-content').forEach(el => {
+                        el.style.fontSize = `${20 * x}px`;
+                    });
+                    document.querySelector('.archive__calendar--desktop .vc-title-wrapper span').style.fontSize = `${15.4 * x}px`;
+                    document.querySelector('.archive__calendar-close').style.fontSize = `${10 * x}px`;
+                    document.querySelector('.archive__calendar-close').style.right = `${53 * x}px`;
+                    document.querySelector('.archive__calendar-close').style.bottom = `${47 * x}px`;
+                    document.querySelector('.archive__calendar-close img').style.width = `${15 * x}px`;
+                }, 10);
+            }
         } else {
             isCalendarOpen.value = true;
             isCalendarVisible.value = true;

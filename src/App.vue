@@ -135,8 +135,8 @@
 
     // redirecting to curator page when user came from sharing link
     watch(() => curatorsStore.curators, (newCurators) => {
-        if (newCurators && route.query.sharing_curator_id) {
-            const curator_id = route.query.sharing_curator_id;
+        if (newCurators && route.query.curator_id) {
+            const curator_id = route.query.curator_id;
 
             const foundCurator = curatorsStore.curators.find(curator => curator.id === +curator_id);
 

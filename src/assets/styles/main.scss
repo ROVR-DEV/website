@@ -88,6 +88,7 @@ section {
 
 /* -------------- VUE DATE-PICKER STYLES --------------- */
 .archive__calendar--desktop {
+    display: none;
     position: absolute;
     top: 1.75rem;
     right: 1.5rem;
@@ -96,6 +97,9 @@ section {
     width: 28rem;
     min-width: unset;
     padding: 2.5rem 1.5rem 0rem 1.5rem;
+    &.active {
+        display: block;
+    }
     .archive__calendar-close {
         @include flex-center;
         @include font-size(12px);
@@ -110,8 +114,6 @@ section {
         z-index: 2;
         img {
             margin-left: 0.325rem;
-            position: relative;
-            top: -1.5px;
         }
         @media screen and (max-width: 1660px) {
             bottom: 1.25rem;
@@ -128,14 +130,17 @@ section {
 
     .vc-title-wrapper span {
         font-size: 15px;
+        position: relative;
+        bottom: -0.125rem;
         @media screen and (max-width: 1660px) {
-            position: relative;
             bottom: 0.625rem;
         }
     }
-
+    .vc-pane-layout {
+        margin: 0 -1rem;
+    }
     .vc-header {
-        padding: 0 1rem;
+        padding: 0;
         .vc-arrow {
             background: $black;
             color: $primary;
@@ -146,11 +151,11 @@ section {
             &.vc-prev {
                 svg {
                     position: relative;
-                    left: -2px;
+                    left: -1px;
                 }
             }
             svg {
-                width: 24px !important;
+                width: 24px;
             }
             &:hover {
                 background: transparent;
@@ -183,6 +188,7 @@ section {
     .vc-day {
         width: 2.5rem;
         height: 2.5rem;
+        min-height: unset;
         margin: 0 auto;
         .vc-day-content {
             @include font-size(19px);
