@@ -112,7 +112,7 @@
             }
             &__player {
                 margin-top: 1rem;
-                margin: 0 -2rem;
+                margin: 0 -2.5rem;
                 background-color: $black;
                 padding: 2rem;
                 justify-content: space-between;
@@ -127,6 +127,7 @@
                 left: 2rem;
             }
             &__row {
+                margin-bottom: 0;
                 .show__share,
                 .show__copy {
                     display: none;
@@ -164,6 +165,8 @@
             .current-track {
                 &__info {
                     max-width: 230px;
+                    position: relative;
+                    top: -3px;
                 }    
             }
         }

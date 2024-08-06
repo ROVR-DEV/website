@@ -119,7 +119,7 @@
                     }
                     &__nowplaying {
                         @include font-size(16px);
-                        margin-bottom: 0.325rem;
+                        margin-bottom: 0;
                     }
                     &__time {
                         @include font-size(18px);
@@ -187,5 +187,11 @@
     #base-layout .schedule__current .schedule-program__title,
     #base-layout .schedule__current .schedule-program__description {
         align-self: flex-end;
+    }
+}
+
+@media screen and (max-width: 375px) {
+    #base-layout .schedule__plan {
+        grid-template-rows: 0 auto auto;
     }
 }

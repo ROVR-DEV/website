@@ -174,7 +174,7 @@
             border-radius: 50%;
             border: 1px solid $primary;
             cursor: pointer;
-            transition: all 0.2s ease-in;
+            transition: background-color 0.2s ease-in;
             &--visit {
                 background-color: $primary;
                 margin-right: 1rem;

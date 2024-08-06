@@ -1,5 +1,5 @@
 <template>
-    <section class="schedule" v-if="schedule" :class="{ 'nowplaying--hidden': (selectedDate && currentDate !== selectedDate.fullDate) }">
+    <section class="schedule" v-if="schedule && !preloader" :class="{ 'nowplaying--hidden': (selectedDate && currentDate !== selectedDate.fullDate) }">
         <div class="schedule__plan" ref="scrollParent">
             <week-days @day-picked="date => loadDaySchedule(date)" :loading="preloader"/>
 
@@ -20,14 +20,23 @@
             </div>
         </div>
     </section>
+
+    <div class="schedule-preloader" v-else>
+        <div class="ball-beat">
+            <div></div><div></div><div></div>
+        </div>
+    </div>
 </template>
 
 <script setup>
-    import { ref, computed, watch } from 'vue';
+    import { ref, computed, watch, nextTick } from 'vue';
     import { useScheduleStore } from '@/stores/schedule';
+    import { isMobile } from '@/utils/isMobile';
+    import { setComputedSizes } from '@/helpers/setComputedSizes';
     import WeekDays from '@/components/schedule/WeekDays.vue';
     import ScheduleProgram from '@/components/schedule/ScheduleProgram.vue';
     import NowPlaying from '@/components/schedule/NowPlaying.vue';
+    import 'loaders.css';
 
     const scheduleStore = useScheduleStore();
     const schedule = ref(scheduleStore.schedule);
@@ -42,7 +51,7 @@
         } else {
             preloader.value = true;
         }
-    });
+    }, { immediate: true });
 
     const filteredSchedule = computed(() => {
         if (schedule.value && selectedDate.value) {
@@ -52,7 +61,16 @@
         }
     });
 
-    const loadDaySchedule = (date) => {
+    watch(() => selectedDate.value, async (state) => {
+        if (state) {
+            if ( isMobile() ) {
+                await nextTick();
+                setComputedSizes();
+            }
+        }
+    }, { immediate: true });
+
+    const loadDaySchedule = async (date) => {
         selectedDate.value = date;
         scrollParent.value.scrollTop = 0;
     }
@@ -100,6 +118,14 @@
             display: flex;
             grid-column: 2/3;
             grid-row: 1/3;
+        }
+    }
+
+    .schedule-preloader {
+        @include flex-center-column;
+        height: 100%;
+        .ball-beat > div {
+            background-color: $primary;
         }
     }
 </style>

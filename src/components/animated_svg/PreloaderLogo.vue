@@ -287,6 +287,9 @@
         @media screen and (max-width: 480px) {
             width: 18rem;
         }
+        @media screen and (max-width: 375px) {
+            width: 16rem;
+        }
     }
     #reinvented{
         height: 150px;

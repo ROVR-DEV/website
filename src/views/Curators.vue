@@ -5,17 +5,26 @@
 </template>
 
 <script setup>
-    import { ref, computed, watch } from 'vue';
+    import { ref, computed, watch, nextTick } from 'vue';
     import { useCuratorsStore } from '@/stores/curators';
     import { slugify } from '@/utils/slugify';
+    import { isMobile } from '@/utils/isMobile';
+    import { setComputedSizes } from '@/helpers/setComputedSizes';
     import Curator from '@/components/Curator.vue';
 
     const curatorsStore = useCuratorsStore();
     const curators = ref(curatorsStore.curators);
 
-    watch(() => curatorsStore.curators, (state) => {
-        if (state) curators.value = state;
-    });
+    watch(() => curatorsStore.curators, async (state) => {
+        if (state) {
+            curators.value = state;
+
+            if ( isMobile() ) {
+                await nextTick();
+                setComputedSizes();
+            }
+        }
+    }, { immediate: true });
 
     watch(() => curatorsStore.isPopupShown, (status) => {
         if (!status) {

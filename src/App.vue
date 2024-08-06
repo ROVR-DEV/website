@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-    import { onMounted, onUnmounted, ref, computed, watch } from "vue";
+    import { onMounted, onUnmounted, ref, computed, watch, nextTick } from "vue";
     import { useRoute, useRouter } from 'vue-router';
     import io from 'socket.io-client';
     import Echo from 'laravel-echo';
@@ -42,6 +42,8 @@
     import { useArchiveStore } from '@/stores/archive';
     import { usePlayerStore } from "@/stores/player";
     import { slugify } from "@/utils/slugify";
+    import { isMobile } from "@/utils/isMobile";
+    import { setComputedSizes } from "@/helpers/setComputedSizes";
     import RadioPlayer from "@/components/players/RadioPlayer.vue";
     import ArchivePlayer from "@/components/players/ArchivePlayer.vue";
     import Header from "@/components/Header.vue";
@@ -94,22 +96,43 @@
             error.value = false;
         });
 
+        if ( isMobile() ) {
+            await nextTick();
+            setComputedSizes();
+        }
+
         document.addEventListener(visibilityChange, handleVisibilityChange, false);
 
-        setTimeout(() => {
+        setTimeout( async () => {
             if (!route.query.webview) {
                 curatorsStore.setScrollPosition(document.querySelector('.main').scrollTop);
                 showDownloadPopup.value = true;
                 curatorsStore.popupShowing(true);
                 document.querySelector('.main').scrollTop = 0;
+                await nextTick();
+                setComputedSizes();
             }
-        }, 1500000);
+        }, 15000);
     });
 
     onUnmounted(() => {
         clearInterval(intervalId.value);
         document.removeEventListener(visibilityChange);
     });
+
+    watch(() => radioStore.radio, async (newRadio) => {
+        if (newRadio && isMobile()) {
+            await nextTick();
+            setComputedSizes();
+        }
+    }, { immediate: true });
+
+    watch(route, async () => {
+        if ( isMobile() ) {
+            await nextTick();
+            setComputedSizes();
+        }
+    }, { immediate: true });
 
     watch(() => isDocumentHidden.value, async (state) => {
         if (!state) {

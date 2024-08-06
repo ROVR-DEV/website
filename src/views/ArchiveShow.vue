@@ -5,7 +5,7 @@
                 <div class="show__row">
                     <h2 class="show__date">streamed on {{ formatDate(necessary_data.release_date) }}</h2>
 
-                    <button class="show-tracklist-button" @click="isTracklistShown = !isTracklistShown"
+                    <button class="show-tracklist-button" @click="openTracklist"
                         :class="{ ready: show && publisher_id && show.id === +publisher_id }">
                         <img src="@/assets/images/ui/tracklist_button.svg" alt="tracklist">
                     </button>
@@ -42,10 +42,13 @@
             :curator="necessary_data.publisher_metadata.artist" />
 
         <transition name="slide-down">
-            <tracklist v-if="show && isTracklistShown" :tracks="show.tracks"
+            <tracklist
+                v-if="show && isTracklistShown"
+                :tracks="show.tracks"
                 :title="necessary_data.publisher_metadata.release_title" :date="necessary_data.release_date"
                 :author="necessary_data.publisher_metadata.artist" @share="shareArchive(necessary_data)"
-                @close="isTracklistShown = false" />
+                :class="{ active: isTracklistVisible }"
+                @close="isTracklistShown = false; isTracklistVisible = false;" />
         </transition>
 
         <close-button v-if="!isTracklistShown" disabled @click="$router.push({ name: 'archive' })" class="show__close" />
@@ -67,6 +70,7 @@
     import { formatDate } from "@/utils/formatDate";
     import { isIOSDevice } from '@/utils/isIOSDevice';
     import { isMobile } from '@/utils/isMobile';
+    import { setComputedSizes } from "@/helpers/setComputedSizes";
     import axios from "axios";
     import ShowPlayer from "@/components/archive/ShowPlayer.vue";
     import CurrentTrack from '@/components/CurrentTrack.vue';
@@ -83,6 +87,7 @@
     const show = ref(null);
     const necessary_data = ref(null);
     const isTracklistShown = ref(false);
+    const isTracklistVisible = ref(false);
     const isShareOpen = ref(false);
     const sharingMetadata = ref(null);
     const is_next_archive_ready = ref(false);
@@ -322,6 +327,20 @@
                 publisher: show_data.publisher_metadata.publisher
             }
         }
+    }
+
+    const openTracklist = () => {
+        isTracklistShown.value = !isTracklistShown.value;
+
+        setTimeout(() => {
+            isTracklistVisible.value = true;
+        }, 20);
+
+        setTimeout(() => {
+            if (isMobile()) {
+                setComputedSizes();
+            }
+        }, 10);
     }
 </script>
 

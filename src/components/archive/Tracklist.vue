@@ -112,13 +112,17 @@
 
 <style lang="scss" scoped>
     .archive__tracklist {
+        visibility: hidden;
         @media screen and (min-width: 1024px) {
             position: absolute;
             top: 0;
             right: 0;
-            z-index: 10;
+            z-index: 5;
             width: 45%;
             height: 100%;
+        }
+        &.active {
+            visibility: visible;
         }
         &-close {
             @include flex-center;

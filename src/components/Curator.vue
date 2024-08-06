@@ -56,6 +56,9 @@
             @media screen and (max-width: 1024px) {
                 width: calc(100% - 7.5rem - 1rem);
             }
+            @media screen and (max-width: 480px) {
+                top: 0;
+            }
         }
         &__name {
             @include font-size(48px);

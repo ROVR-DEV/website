@@ -8,9 +8,10 @@
 </template>
 
 <script setup>
-    import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+    import { ref, computed, onMounted, onUnmounted, watch, nextTick } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { isMobile } from '@/utils/isMobile';
+    import { setComputedSizes } from "@/helpers/setComputedSizes";
 
     const props = defineProps({
         items: {
@@ -62,10 +63,15 @@
         }))
     );
 
-    const onScroll = () => {
+    const onScroll = async () => {
         if (container.value) {
             scrollTop.value = container.value.scrollTop;
             localStorage.setItem('scrollPosition', scrollTop.value);
+
+            if ( isMobile() ) {
+                await nextTick();
+                setComputedSizes();
+            }
         }
     };
 

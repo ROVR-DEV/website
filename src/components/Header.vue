@@ -107,11 +107,11 @@
             name: "contact",
             title: "contact",
         },
-        {
+        /* {
             id: 6,
             name: "shop",
             title: "shop",
-        },
+        }, */
     ]
 </script>
 

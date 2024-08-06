@@ -47,7 +47,12 @@
                 </template>
             </VirtualList>
 
-            <p v-show="!filteredArchive.length" class="archive__empty">Could not find any shows with this data</p>
+            <!-- <p v-show="!filteredArchive.length" class="archive__empty">Could not find any shows with this data</p> -->
+            <div v-if="!filteredArchive.length" class="archive__preloader">
+                <div class="ball-beat">
+                    <div></div><div></div><div></div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -55,13 +60,14 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, watch, onUnmounted } from 'vue';
+    import { ref, onMounted, watch, onUnmounted, nextTick } from 'vue';
     import { DatePicker } from 'v-calendar';
     import { useArchiveStore } from '@/stores/archive';
     import { useRoute, useRouter } from 'vue-router';
     import { isMobile } from '@/utils/isMobile';
     import { onClickOutside } from '@vueuse/core';
     import { slugifyIgnoreSpecialChars } from '@/utils/slugify';
+    import { setComputedSizes } from "@/helpers/setComputedSizes";
     import axios from 'axios';
     import VirtualList from '@/components/archive/VirtualList.vue';
     import SearchInput from '@/components/archive/SearchInput.vue';
@@ -113,6 +119,8 @@
         const addArrowClickListeners = () => {
             document.querySelectorAll('.vc-arrow').forEach(item => {
                 item.addEventListener('click', function () {
+                    if( isMobile() ) setComputedSizes();
+
                     const prevArrow = document.querySelector('.vc-prev');
                     prevArrow.style.pointerEvents = 'none';
                     setTimeout(() => {
@@ -145,7 +153,7 @@
         window.removeEventListener('resize', updateShowHeight);
     });
 
-    watch(() => archiveStore.archive, (newArchive) => {
+    watch(() => archiveStore.archive, async (newArchive) => {
         if (newArchive) {
             filteredArchive.value = newArchive;
 
@@ -153,15 +161,13 @@
                 queryCurator.value = route.query.curator;
                 filterArchive(route.query.curator);
             }
-        }
-    });
 
-    watch(() => route.query.curator, (newQuery) => {
-        if(newQuery) {
-            queryCurator.value = newQuery;
-            filterArchive(route.query.curator);
+            if( isMobile() ) {
+                await nextTick();
+                setComputedSizes();
+            }
         }
-    });
+    }, { immediate: true });
 
     const searchShow = (query) => {
         searchQuery.value = query.toLowerCase();
@@ -252,6 +258,14 @@
         });
     }
 
+    watch(() => route.query.curator, (newQuery) => {
+        if (newQuery) {
+            queryCurator.value = newQuery;
+            filterArchive(route.query.curator);
+            setComputedSizes();
+        }
+    }, { immediate: true });
+
 
     const today = new Date();
     const tomorrow = new Date(today);
@@ -278,7 +292,7 @@
         const screenWidth = window.innerWidth;
 
         if (screenWidth <= 480) {
-            showHeight.value = 230;
+            showHeight.value = 350 * y;
         } else {
             showHeight.value = 290 * y;
         }
@@ -299,51 +313,56 @@
         }, 100);
     }
 
-    const openCalendar = (type) => {
-        if(type === 'desktop') {
-            isCalendarOpen.value = true;
-            setTimeout(() => {
-                desktopCalendarActive.value = true;
-            }, 20);
-
-            if (!isMobile()) {
+    const openCalendar = async (type) => {
+        if(filteredArchive.value.length) {
+            if (type === 'desktop') {
+                isCalendarOpen.value = true;
                 setTimeout(() => {
-                    document.querySelector('.archive__calendar--desktop').style.width = `${450 * x}px`;
-                    document.querySelector('.archive__calendar--desktop').style.height = `${500 * x}px`;
-                    document.querySelector('.archive__calendar--desktop').style.padding = `${46 * y}px ${35 * x}px`;
-                    document.querySelectorAll('.archive__calendar--desktop .vc-header .vc-arrow').forEach(el => {
-                        el.style.width = `${34 * x}px`;
-                        el.style.height = `${34 * x}px`;
-                    });
-                    document.querySelectorAll('.archive__calendar--desktop .vc-header .vc-arrow svg').forEach(el => {
-                        el.style.height = `${26 * y}px`;
-                        el.style.width = `${30 * x}px`;
-                    });
-                    document.querySelectorAll('.archive__calendar--desktop .vc-weeks .vc-weekdays .vc-weekday').forEach(el => {
-                        el.style.fontSize = `${11.7 * x}px`;
-                    });
-                    document.querySelectorAll('.archive__calendar--desktop .vc-day').forEach(el => {
-                        el.style.height = `${40 * x}px`;
-                        el.style.width = `${40 * x}px`;
-                    });
-                    document.querySelectorAll('.archive__calendar--desktop .vc-day .vc-day-content').forEach(el => {
-                        el.style.fontSize = `${20 * x}px`;
-                    });
-                    document.querySelector('.archive__calendar--desktop .vc-title-wrapper span').style.fontSize = `${15.4 * x}px`;
-                    document.querySelector('.archive__calendar-close').style.fontSize = `${10 * x}px`;
-                    document.querySelector('.archive__calendar-close').style.right = `${53 * x}px`;
-                    document.querySelector('.archive__calendar-close').style.bottom = `${47 * x}px`;
-                    document.querySelector('.archive__calendar-close img').style.width = `${15 * x}px`;
-                }, 10);
-            }
-        } else {
-            isCalendarOpen.value = true;
-            isCalendarVisible.value = true;
-        }
+                    desktopCalendarActive.value = true;
+                }, 20);
 
-        setTimeout(() => {
-            formatCalendarDates();
-        }, 10);
+                if (!isMobile()) {
+                    setTimeout(() => {
+                        document.querySelector('.archive__calendar--desktop').style.width = `${450 * x}px`;
+                        document.querySelector('.archive__calendar--desktop').style.height = `${500 * x}px`;
+                        document.querySelector('.archive__calendar--desktop').style.padding = `${46 * y}px ${35 * x}px`;
+                        document.querySelectorAll('.archive__calendar--desktop .vc-header .vc-arrow').forEach(el => {
+                            el.style.width = `${34 * x}px`;
+                            el.style.height = `${34 * x}px`;
+                        });
+                        document.querySelectorAll('.archive__calendar--desktop .vc-header .vc-arrow svg').forEach(el => {
+                            el.style.height = `${26 * y}px`;
+                            el.style.width = `${30 * x}px`;
+                        });
+                        document.querySelectorAll('.archive__calendar--desktop .vc-weeks .vc-weekdays .vc-weekday').forEach(el => {
+                            el.style.fontSize = `${11.7 * x}px`;
+                        });
+                        document.querySelectorAll('.archive__calendar--desktop .vc-day').forEach(el => {
+                            el.style.height = `${40 * x}px`;
+                            el.style.width = `${40 * x}px`;
+                        });
+                        document.querySelectorAll('.archive__calendar--desktop .vc-day .vc-day-content').forEach(el => {
+                            el.style.fontSize = `${20 * x}px`;
+                        });
+                        document.querySelector('.archive__calendar--desktop .vc-title-wrapper span').style.fontSize = `${15.4 * x}px`;
+                        document.querySelector('.archive__calendar-close').style.fontSize = `${10 * x}px`;
+                        document.querySelector('.archive__calendar-close').style.right = `${53 * x}px`;
+                        document.querySelector('.archive__calendar-close').style.bottom = `${47 * x}px`;
+                        document.querySelector('.archive__calendar-close img').style.width = `${15 * x}px`;
+                    }, 10);
+                }
+            } else {
+                isCalendarOpen.value = true;
+                isCalendarVisible.value = true;
+
+                await nextTick();
+                setComputedSizes();
+            }
+
+            setTimeout(() => {
+                formatCalendarDates();
+            }, 10);
+        }
     }
 
     const confirmDateFilter = () => {
@@ -452,6 +471,13 @@
             color: rgba($color: $primary, $alpha: 0.25);
             margin: 0;
             line-height: 1;
+        }
+        &__preloader {
+            @include flex-center-column;
+            height: 100%;
+            .ball-beat > div {
+                background-color: $primary;
+            }
         }
     }
 </style>

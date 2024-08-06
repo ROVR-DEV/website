@@ -204,7 +204,7 @@
             border: 1px solid $primary;
             width: 2.5rem;
             aspect-ratio: 1;
-            transition: $transition;
+            transition: background-color 0.3s ease;
             img {
                 width: 1.25rem;
                 transition: $transition;

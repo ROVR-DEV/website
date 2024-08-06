@@ -212,6 +212,9 @@
         }
 
         @media screen and (max-width: 480px) {
+            &__content {
+                height: 80%;
+            }
             &__info {
                 h1 {
                     font-size: 30px;
@@ -233,6 +236,23 @@
                 }
                 img {
                     width: 1.5rem;
+                }
+            }
+        }
+
+        @media screen and (max-width: 375px) {
+            &__content {
+                height: auto;
+            }
+            &__info {
+                h1 {
+                    margin: 0;
+                }
+                p {
+                    margin: 0;
+                }
+                h2 {
+                    margin: 0;
                 }
             }
         }

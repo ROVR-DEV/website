@@ -292,7 +292,7 @@ section {
         border: 2px solid $primary;
         background-color: $black;
         border-radius: 50%;
-        transition: all 0.2s ease-in;
+        transition: background-color 0.2s ease-in, color 0.2s ease-in;
         box-shadow: none;
         outline: none;
         &.vc-highlight-content-solid {
