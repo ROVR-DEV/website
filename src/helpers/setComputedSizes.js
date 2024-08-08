@@ -197,7 +197,7 @@ export function setComputedSizes() {
 
         // .archive
         document.querySelectorAll('.archive').forEach(el => {
-            el.style.padding = `${24 * y}px ${24 * x}px`;
+            el.style.padding = `${24 * y}px ${24 * x}px 0 ${24 * x}px`;
         });
 
         document.querySelectorAll('.archive-preview').forEach(el => {
@@ -365,7 +365,7 @@ export function setComputedSizes() {
 
         // archive__calendar
         document.querySelectorAll('.archive__calendar--mobile').forEach(el => {
-            el.style.padding = `0 ${24 * x}px`;
+            el.style.padding = `0 ${24 * x}px ${16 * y}px ${24 * x}px`;
         });
 
         document.querySelectorAll('.archive__calendar--mobile .vc-header .vc-arrow').forEach(el => {
@@ -396,7 +396,6 @@ export function setComputedSizes() {
         });
 
         document.querySelectorAll('.archive__calendar--mobile-controls').forEach(el => {
-            el.style.marginTop = `${16 * y}px`;
             el.querySelector('button').style.padding = `${12 * y}px`;
             el.querySelector('button').style.fontSize = `${14 * y}px`;
         });

@@ -119,6 +119,10 @@
         }
     });
 
+    watch(() => props.items, () => {
+        updateTotalHeight();
+    });
+
     watch(route, () => {
         if (router.currentRoute.value.name === 'archive') {
             restoreScrollPosition();
@@ -132,6 +136,7 @@
         overflow-y: auto;
         width: 100%;
         height: 100%;
+        padding-bottom: 2rem;
     }
 
     .virtual-grid-item {
