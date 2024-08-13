@@ -19,7 +19,7 @@
 <script setup>
     import { ref, computed, onMounted, onUnmounted } from 'vue';
     import PlayButton from '@/components/ui/PlayButton.vue';
-    import CuratorLink from '@/components/CuratorLink.vue';
+    import CuratorLink from '@/components/curators/CuratorLink.vue';
 
     const props = defineProps({
         program: {

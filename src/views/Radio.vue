@@ -30,7 +30,7 @@
     import RadioTimer   from '@/components/RadioTimer.vue';
     import CurrentTrack from '@/components/CurrentTrack.vue';
     import ShowImage    from '@/components/ShowImage.vue';
-    import CuratorLink  from "@/components/CuratorLink.vue";
+    import CuratorLink  from "@/components/curators/CuratorLink.vue";
 
     const radioStore = useRadioStore();
 </script>

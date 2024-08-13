@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-    import CuratorLink from '@/components/CuratorLink.vue';
+    import CuratorLink from '@/components/curators/CuratorLink.vue';
 
     defineProps({
         program: {

@@ -76,7 +76,7 @@
     import CurrentTrack from '@/components/CurrentTrack.vue';
     import CloseButton from '@/components/ui/CloseButton.vue';
     import ShowImage from '@/components/ShowImage.vue';
-    import CuratorLink from "@/components/CuratorLink.vue";
+    import CuratorLink from "@/components/curators/CuratorLink.vue";
     import Tracklist from "@/components/archive/Tracklist.vue";
     import SharePopup from '@/components/popups/SharePopup.vue';
 

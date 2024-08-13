@@ -37,7 +37,7 @@
     import { usePlayerStore } from '@/stores/player';
     import { onMounted } from 'vue';
     import { isMobile } from '@/utils/isMobile';
-    import CuratorLink from '@/components/CuratorLink.vue';
+    import CuratorLink from '@/components/curators/CuratorLink.vue';
 
     const router = useRouter();
     const playerStore = usePlayerStore();

@@ -15,7 +15,7 @@
 <script setup>
     import { useRouter } from 'vue-router';
     import { usePlayerStore } from '@/stores/player';
-    import MarqueeText from './MarqueeText.vue';
+    import MarqueeText from '@/components/MarqueeText.vue';
 
     const router = useRouter();
     const playerStore = usePlayerStore();

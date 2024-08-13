@@ -48,7 +48,7 @@
     import ArchivePlayer from "@/components/players/ArchivePlayer.vue";
     import Header from "@/components/Header.vue";
     import Footer from "@/components/Footer.vue";
-    import DownloadPopup from "@/components/DownloadPopup.vue";
+    import DownloadPopup from "@/components/popups/DownloadPopup.vue";
 
     const router = useRouter();
     const route = useRoute();
@@ -112,7 +112,7 @@
                 await nextTick();
                 setComputedSizes();
             }
-        }, 15000);
+        }, 1500000000000);
     });
 
     onUnmounted(() => {

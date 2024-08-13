@@ -29,13 +29,14 @@
         cursor: pointer;
         transition: $transition;
         overflow: hidden;
+        height: 100%;
         &__photo {
             @include flex-center;
             background-color: $primary;
             min-width: 10.75rem;
             max-width: 10.75rem;
-            aspect-ratio: 1;
             margin-right: 1.5rem;
+            height: 100%;
             @media screen and (max-width: 1024px) {
                 min-width: 7.5rem;
                 max-width: 7.5rem;
@@ -46,6 +47,8 @@
             }
             img {
                 transform: scale(1.0325);
+                object-fit: cover;
+                object-position: center;
             }
         }
         &__info {

@@ -62,6 +62,8 @@
         }
     });
 
+    watch(() => playerStore.track, () => setWidget(), { deep: true });
+
     const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
     const play = async (delayTime) => {
@@ -89,6 +91,13 @@
         } else {
             playerStore.togglePlaying('radio');
         }
+
+        if(playerStore.isPlaying) {
+            setWidget();
+            navigator.mediaSession.playbackState = "playing";
+        } else {
+            navigator.mediaSession.playbackState = "paused";
+        }
     }
 
     const handleMessage = (event) => {
@@ -98,7 +107,7 @@
             case 'is_ready':
                 isArchiveReady.value = true;
                 if (shouldNewArchivePlay.value) {
-                    if (isIOSDevice()) {
+                    if ( isIOSDevice() ) {
                         shouldShowTapButton.value = true;
                     } else {
                         playerStore.play('archive');
@@ -137,10 +146,51 @@
     onUnmounted(() => {
         window.removeEventListener('message', handleMessage);
     });
+
+    const setWidget = () => {
+        if ("mediaSession" in navigator) {
+            navigator.mediaSession.metadata = new MediaMetadata({
+                title: playerStore.track.title,
+                artist: playerStore.track.artist,
+                artwork: [
+                    {
+                        src: playerStore.track.cover,
+                        sizes: "96x96",
+                        type: "image/png",
+                    },
+                    {
+                        src: playerStore.track.cover,
+                        sizes: "128x128",
+                        type: "image/png",
+                    },
+                    {
+                        src: playerStore.track.cover,
+                        sizes: "192x192",
+                        type: "image/png",
+                    },
+                    {
+                        src: playerStore.track.cover,
+                        sizes: "256x256",
+                        type: "image/png",
+                    },
+                    {
+                        src: playerStore.track.cover,
+                        sizes: "384x384",
+                        type: "image/png",
+                    },
+                    {
+                        src: playerStore.track.cover,
+                        sizes: "512x512",
+                        type: "image/png",
+                    },
+                ],
+            });
+        }
+    }
 </script>
 
 
-    <style lang="scss" scoped>
+<style lang="scss" scoped>
     .player-button {
         @include flex-center;
         border: none;

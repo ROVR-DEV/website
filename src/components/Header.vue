@@ -46,8 +46,8 @@
     import { ref, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
     import { useRouter, useRoute } from 'vue-router';
-    import HeaderLogo from './HeaderLogo.vue';
-    import StickyPlayer from './StickyPlayer.vue';
+    import HeaderLogo from '@/components/HeaderLogo.vue';
+    import StickyPlayer from '@/components/players/StickyPlayer.vue';
 
     const router = useRouter();
     const route  = useRoute();

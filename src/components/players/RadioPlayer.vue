@@ -56,8 +56,6 @@
         if (state) finish();
     });
 
-    watch(() => playerStore.track, () => setWidget(), { deep: true });
-
     onMounted(async () => {
         await router.isReady();
 
@@ -69,8 +67,6 @@
         player.value.play();
         playerStore.setLoading(true);
         playerStore.updateTrack(radioStore.radio.title, radioStore.radio.artist, radioStore.radio.label, metadataCover);
-        navigator.mediaSession.playbackState = "playing";
-        setWidget();
         playerStore.isReady = true
 
         // Playing jinlge for 1 ms to prevent mobile audio security
@@ -86,7 +82,6 @@
     const pause = () => {
         player.value.pause();
         jingle.pause();
-        navigator.mediaSession.playbackState = "paused";
     }
 
     const finish = () => {
@@ -127,47 +122,6 @@
                 clearInterval(fadeOutInterval.value);
             }
         }, 50);
-    }
-
-    const setWidget = () => {
-        if ("mediaSession" in navigator) {
-            navigator.mediaSession.metadata = new MediaMetadata({
-                title: playerStore.track.title,
-                artist: playerStore.track.artist,
-                artwork: [
-                    {
-                        src: playerStore.track.cover,
-                        sizes: "96x96",
-                        type: "image/png",
-                    },
-                    {
-                        src: playerStore.track.cover,
-                        sizes: "128x128",
-                        type: "image/png",
-                    },
-                    {
-                        src: playerStore.track.cover,
-                        sizes: "192x192",
-                        type: "image/png",
-                    },
-                    {
-                        src: playerStore.track.cover,
-                        sizes: "256x256",
-                        type: "image/png",
-                    },
-                    {
-                        src: playerStore.track.cover,
-                        sizes: "384x384",
-                        type: "image/png",
-                    },
-                    {
-                        src: playerStore.track.cover,
-                        sizes: "512x512",
-                        type: "image/png",
-                    },
-                ],
-            });
-        }
     }
 
     // replacing radio cover (backend bug)

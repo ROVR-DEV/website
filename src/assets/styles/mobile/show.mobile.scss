@@ -98,6 +98,11 @@
                 margin-bottom: 0.625rem;
                 letter-spacing: 0.5px;
             }
+            &--archive {
+                .show__title {
+                    margin: 0.875rem 0 0.625rem 0;
+                }
+            }
             &__author {
                 @include font-size(22px);
                 margin-bottom: 1.325rem;
