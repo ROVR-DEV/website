@@ -112,7 +112,7 @@
                 await nextTick();
                 setComputedSizes();
             }
-        }, 1500000000000);
+        }, 15000);
     });
 
     onUnmounted(() => {
@@ -171,10 +171,9 @@
         }
     }, { immediate: true });
 
-    // updating schedule 
     watch(() => playerStore.is_radio_finished, (state) => {
         if (state) {
-            radioStore.loadData(scheduleStore.schedule[1]);
+            radioStore.loadData(scheduleStore.schedule[0]);
             radioStore.radio.show.since = 0;
             radioStore.radio.show.until = 7200;
         }
