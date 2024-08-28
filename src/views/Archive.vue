@@ -104,15 +104,6 @@
     onClickOutside(calendar, () => { isCalendarOpen.value = false; isCalendarVisible.value = false });
 
     onMounted(() => {
-        if (archiveStore.archive) {
-            filteredArchive.value = archiveStore.archive;
-
-            if (route.query.curator) {
-                queryCurator.value = route.query.curator;
-                filterArchive(route.query.curator);
-            }
-        }
-
         updateShowHeight();
         window.addEventListener('resize', updateShowHeight);
 
@@ -153,24 +144,9 @@
         window.removeEventListener('resize', updateShowHeight);
     });
 
-    watch(() => archiveStore.archive, async (newArchive) => {
-        if (newArchive) {
-            filteredArchive.value = newArchive;
-
-            if (route.query.curator) {
-                queryCurator.value = route.query.curator;
-                filterArchive(route.query.curator);
-            }
-
-            if( isMobile() ) {
-                await nextTick();
-                setComputedSizes();
-            }
-        }
-    }, { immediate: true });
-
     const searchShow = (query) => {
         searchQuery.value = query.toLowerCase();
+        if( queryCurator.value !== null && queryCurator.value !== searchQuery.value ) queryCurator.value = null;
         queryCurator.value ? filterArchive(queryCurator.value) : filterArchive();
     }
 
@@ -258,10 +234,28 @@
         });
     }
 
+    watch(() => archiveStore.archive, async (newArchive) => {
+        if (newArchive) {
+            filteredArchive.value = newArchive;
+
+            if (route.query.curator) {
+                queryCurator.value = route.query.curator;
+                filterArchive(route.query.curator);
+                router.push('archive');
+            }
+
+            if ( isMobile() ) {
+                await nextTick();
+                setComputedSizes();
+            }
+        }
+    }, { immediate: true });
+
     watch(() => route.query.curator, (newQuery) => {
         if (newQuery) {
             queryCurator.value = newQuery;
             filterArchive(route.query.curator);
+            router.push('archive');
             setComputedSizes();
         }
     }, { immediate: true });

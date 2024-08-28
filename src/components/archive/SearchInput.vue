@@ -44,7 +44,7 @@
         },
         query: {
             type: String,
-            required: false
+            required: false,
         }
     });
 
@@ -52,7 +52,7 @@
         if(newQuery) {
             input.value = newQuery;
         }
-    });
+    }, { immediate: true });
 
     const clear = () => {
         input.value = '';
