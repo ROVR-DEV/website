@@ -251,6 +251,10 @@
         }
     }, { immediate: true });
 
+    watch(() => queryCurator.value, (newQuery) => {
+        if(newQuery) searchQuery.value = newQuery;
+    }, { immediate: true });
+
     watch(() => route.query.curator, (newQuery) => {
         if (newQuery) {
             queryCurator.value = newQuery;
