@@ -29,40 +29,45 @@
         cursor: pointer;
         transition: $transition;
         overflow: hidden;
-        height: 100%;
+
         &__photo {
             @include flex-center;
             background-color: $primary;
             min-width: 10.75rem;
             max-width: 10.75rem;
+            aspect-ratio: 1;
             margin-right: 1.5rem;
-            height: 100%;
+
             @media screen and (max-width: 1024px) {
                 min-width: 7.5rem;
                 max-width: 7.5rem;
                 margin-right: 1rem;
+
                 &--empty {
                     width: 3rem;
                 }
             }
+
             img {
                 transform: scale(1.0325);
-                object-fit: cover;
-                object-position: center;
             }
         }
+
         &__info {
             width: calc(100% - 10.75rem - 1.5rem);
             position: relative;
             top: -0.825rem;
             left: 4px;
+
             @media screen and (max-width: 1024px) {
                 width: calc(100% - 7.5rem - 1rem);
             }
+
             @media screen and (max-width: 480px) {
                 top: 0;
             }
         }
+
         &__name {
             @include font-size(48px);
             margin: 0;
@@ -73,25 +78,30 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             line-height: 1.5;
+
             @media screen and (max-width: 1024px) {
                 @include font-size(32px);
             }
         }
+
         &__country {
             @include font-size(22px);
             font-weight: bold;
             display: block;
             text-transform: uppercase;
+
             @media screen and (max-width: 1024px) {
                 @include font-size(14px);
             }
         }
+
         @media (hover: hover) {
             &:hover {
                 background-color: $primary;
                 color: $black;
             }
         }
+
         @media (hover: none) {
             &:active {
                 background-color: $primary;

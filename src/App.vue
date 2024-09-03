@@ -3,10 +3,9 @@
         <div id="base-layout">
             <Header />
 
-            <main class="main" :class="{ 'main--lock': showDownloadPopup }">
+            <main class="main">
                 <transition name="fade">
-                    <download-popup v-if="showDownloadPopup"
-                        @close="showDownloadPopup = false; curatorsStore.popupShowing(false);" />
+                    <download-popup v-if="showDownloadPopup" @close="closeDownloadPopup" />
                 </transition>
 
                 <router-view v-slot="{ Component }">
@@ -96,19 +95,20 @@
             error.value = false;
         });
 
-        if ( isMobile() ) {
+        if (isMobile()) {
             await nextTick();
             setComputedSizes();
         }
 
         document.addEventListener(visibilityChange, handleVisibilityChange, false);
 
-        setTimeout( async () => {
+        setTimeout(async () => {
             if (!route.query.webview) {
                 curatorsStore.setScrollPosition(document.querySelector('.main').scrollTop);
+                document.querySelector('.main').classList.add('main--lock');
+                document.querySelector('.main').scrollTop = 0;
                 showDownloadPopup.value = true;
                 curatorsStore.popupShowing(true);
-                document.querySelector('.main').scrollTop = 0;
                 await nextTick();
                 setComputedSizes();
             }
@@ -128,7 +128,7 @@
     }, { immediate: true });
 
     watch(route, async () => {
-        if ( isMobile() ) {
+        if (isMobile()) {
             await nextTick();
             setComputedSizes();
         }
@@ -148,7 +148,7 @@
 
             const foundArchive = archiveStore.archive.find(archive => archive.publisher_metadata.release_title === archive_title && archive.release_date === archive_date);
 
-            if(foundArchive) {
+            if (foundArchive) {
                 router.push(`/show/${foundArchive.publisher_metadata.publisher}`);
             } else {
                 router.push('/archive');
@@ -226,6 +226,13 @@
         } catch (e) {
             console.log(e);
         }
+    }
+
+    const closeDownloadPopup = () => {
+        showDownloadPopup.value = false;
+        curatorsStore.popupShowing(false);
+        document.querySelector('.main').classList.remove('main--lock');
+        document.querySelector('.main').scrollTop = curatorsStore.scrollPosition;
     }
 
     // replacing radio cover (backend bug)
