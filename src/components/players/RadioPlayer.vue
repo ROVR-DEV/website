@@ -1,6 +1,6 @@
 <!-- eslint-disable vue/valid-template-root -->
 <template>
-    <teleport to="#modal">
+    <teleport to="body">
         <transition name="fade" v-if="!route.query.webview">
             <div class="preloader" v-if="!ready">
                 <preloader-logo/>

@@ -1,5 +1,5 @@
 <template>
-    <teleport to="#modal">
+    <teleport to="body">
         <div class="share-popup popup" v-if="metadata">
             <div class="share-popup__content" ref="target">
                 <div class="share-popup__header">
