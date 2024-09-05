@@ -97,7 +97,7 @@
         transmission and the contents thereof is expressly prohibited, under sanctions provided in the
         applicable civil and penal legislation.</p>
                 <p>7.4 If you believe we use copyrighted material you own or represent in a manner that could be
-        infringing your copyrighted work/s, please contact us at licensing@rovr.live.</p>
+        infringing your copyrighted work/s, please contact us at <a href="mailto:licensing@rovr.live">licensing@rovr.live</a>.</p>
             </div>
 
             <div class="terms__block">

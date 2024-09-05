@@ -41,7 +41,7 @@
                     <h3>1.1. Who We Are</h3>
                     <p>1.1.1.  ROVR LIVE LTD offers a platform for music streaming through our website and mobile app. Our offices are located at London, E1 6AN · United Kingdom and our registration number is 516378304.</p>
                     <p>1.1.2.  If you have questions about our company or your privacy, or want to exercise your rights, you can contact us at <a href="mailto:info@rovr.live">Info@rovr.live</a>.</p>
-                    <p>1.1.3.  We have appointed a data protection officer (DPO), who oversees our privacy practices. If you have any comments or questions about this Privacy Notice or if you wish to exercise any of your rights, please contact our DPO at Ben@rovr.live.</p>
+                    <p>1.1.3.  We have appointed a data protection officer (DPO), who oversees our privacy practices. If you have any comments or questions about this Privacy Notice or if you wish to exercise any of your rights, please contact our DPO at <a href="mailto:Ben@rovr.live">Ben@rovr.live</a>.</p>
                 </div>
                 <div class="privacy__subblock">
                     <h3>1.2. Our Role</h3>
