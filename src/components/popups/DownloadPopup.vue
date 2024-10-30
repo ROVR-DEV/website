@@ -3,7 +3,7 @@
         <div class="download-popup__content">
             <div class="download-popup__image"/>
             <div class="download-popup__info">
-                <img src="@/assets/images/icons/close.svg" class="download-popup__close" alt="close" @click="emit('close')">
+                <img src="@/assets/images/icons/close-circle.svg" class="download-popup__close" alt="close" @click="emit('close')">
 
                 <img src="@/assets/images/logo/logo.svg" class="download-popup__logo" alt="Logo">
                 <h1>DOWNLOAD <br> THE APP</h1>
@@ -205,9 +205,6 @@
                 img {
                     width: 1.75rem;
                 }
-            }
-            &__close {
-                width: 1.5rem;
             }
         }
 

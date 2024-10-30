@@ -17,15 +17,24 @@
 <script setup>
     import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
+    import { useRadioStore } from '@/stores/radio';
+    import { useArchiveStore } from '@/stores/archive';
     import { isIOSDevice } from '@/utils/isIOSDevice';
+    import { sendEvent } from '@/utils/sendEvent.js';
+    import { getDeviceDate } from '@/utils/getDeviceDate.js';
+    import { formatTimer } from '@/utils/formatTimer';
     import Spinner from '@/components/ui/Spinner.vue';
 
     const playerStore = usePlayerStore();
+    const radioStore = useRadioStore();
+    const archiveStore = useArchiveStore();
     const isTouchEventDisabled = ref(false);
     const shouldNewArchivePlay = ref(false);
     const newArchiveDelay = ref(false);
     const isArchiveReady = ref(false);
     const shouldShowTapButton = ref(false);
+    const playtime_count = ref(null);
+    const playtime_interval = ref(null);
 
     const props = defineProps({
         archive: {
@@ -95,10 +104,40 @@
         if(playerStore.isPlaying) {
             setWidget();
             navigator.mediaSession.playbackState = "playing";
+
+            playtime_interval.value = setInterval(() => {
+                playtime_count.value++;
+            }, 1000);
+
+            sendEvent("c_player_started", {
+                start_time: getDeviceDate(),
+                started_stream: playerStore.source,
+                started_show: showTitle.value
+            });
         } else {
             navigator.mediaSession.playbackState = "paused";
+
+            clearInterval(playtime_interval.value);
+
+            sendEvent("c_player_stoped", {
+                stop_time: getDeviceDate(),
+                stoped_stream: playerStore.source,
+                stoped_show: showTitle.value,
+                played_time: formatTimer(playtime_count.value)
+            });
+
+            playtime_count.value = null;
         }
     }
+
+    const showTitle = computed(() => {
+        if(playerStore.source === "radio") {
+            return radioStore.radio.show.title;
+        } else if(playerStore.source === "archive") {
+            let archive = archiveStore.archive.find(a => +a.publisher_metadata.publisher === props.archive_id)
+            return archive.publisher_metadata.release_title;
+        }
+    });
 
     const handleMessage = (event) => {
         const { action } = event.data;

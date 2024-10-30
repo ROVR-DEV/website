@@ -11,6 +11,7 @@ import ShopView     from "@/views/Shop.vue";
 import TermsView    from "@/views/Terms.vue";
 import PrivacyView  from "@/views/Privacy.vue";
 import CuratorView  from "@/views/Curator.vue";
+import Event101024View from "@/views/Event-10-10-24.vue";
 
 const routes = [
   {
@@ -78,6 +79,14 @@ const routes = [
     }
   },
   {
+    path: "/privacy",
+    name: "privacy",
+    component: PrivacyView,
+    meta: {
+      title: "ROVR - Privacy Notice"
+    }
+  },
+  {
     path: "/terms",
     name: "terms",
     component: TermsView,
@@ -86,11 +95,11 @@ const routes = [
     }
   },
   {
-    path: "/privacy",
-    name: "privacy",
-    component: PrivacyView,
+    path: "/event-10-10-24",
+    name: "event-10-10-24",
+    component: Event101024View,
     meta: {
-      title: "ROVR - Privacy Notice"
+      title: "ROVR - Terms & Conditions"
     }
   },
 ];

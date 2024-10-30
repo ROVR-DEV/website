@@ -10,6 +10,7 @@
     import { computed, onMounted, ref, watch } from 'vue';
     import { usePlayerStore } from '@/stores/player';
     import { useRadioStore }  from '@/stores/radio';
+    import { formatTimer } from '@/utils/formatTimer';
 
     const playerStore = usePlayerStore();
     const radioStore  = useRadioStore();
@@ -38,9 +39,9 @@
 
     const timer = computed(() => {
         if(mode.value === 'since') {
-            return fmtMSS(Math.round(timerSince.value));
+            return formatTimer(Math.round(timerSince.value));
         } else {
-            return `-${fmtMSS(Math.round(timerUntil.value))}`;
+            return `-${formatTimer(Math.round(timerUntil.value))}`;
         }
 
     });
@@ -56,12 +57,6 @@
 
     const switchTimerMode = () => {
         mode.value === 'until' ? mode.value = 'since' : mode.value = 'until'
-    }
-
-    const fmtMSS = (s) => {
-        const minutes = Math.floor(s / 60);
-        s %= 60;
-        return (minutes < 10 ? '0' : '') + minutes + ':' + (s < 10 ? '0' : '') + s;
     }
 </script>
 

@@ -42,6 +42,7 @@
     import { usePlayerStore } from "@/stores/player";
     import { slugify } from "@/utils/slugify";
     import { isMobile } from "@/utils/isMobile";
+    import { sendEvent } from '@/utils/sendEvent.js';
     import { setComputedSizes } from "@/helpers/setComputedSizes";
     import RadioPlayer from "@/components/players/RadioPlayer.vue";
     import ArchivePlayer from "@/components/players/ArchivePlayer.vue";
@@ -69,6 +70,8 @@
     let nextShowImg = new Image();
 
     onMounted(async () => {
+        sendEvent('c_app_start');
+        
         getRadio();
         getCurators();
         getSchedule();

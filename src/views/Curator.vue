@@ -33,8 +33,12 @@
 <script setup>
     import { onMounted, onUnmounted, ref, watch, computed } from 'vue';
     import { useCuratorsStore } from '@/stores/curators';
+    import { sendEvent } from '@/utils/sendEvent';
+    import { getDeviceDate } from '@/utils/getDeviceDate';
+    import { useRouter } from 'vue-router';
     import CloseButton from '@/components/ui/CloseButton.vue';
 
+    const router = useRouter();
     const curator = ref(null);
     const curatorsStore = useCuratorsStore();
 
@@ -65,18 +69,51 @@
     const getCurator = () => {
         const formattedName = formatName(props.name);
 
-        if (curatorsStore.curators) {
+        const findCuratorAndSendEvent = () => {
             curator.value = curatorsStore.curators.find(curator => formatName(curator.name) === formattedName);
             getCuratorLinks();
+
+            const from = determineFromSource();
+
+            sendEvent("c_curator_info_opened", {
+                curator: curator.value.name,
+                presenting_time: getDeviceDate(),
+                presented_from: from
+            });
+        };
+
+        const determineFromSource = () => {
+            const backPath = router.options.history.state.back;
+
+            if (backPath?.includes("/show/")) {
+                return "archive";
+            }
+
+            switch (backPath) {
+                case "/archive":
+                    return "archive";
+                case "/":
+                    return "radio";
+                case "/schedule":
+                    return "schedule";
+                case "/curators":
+                    return "curators";
+                default:
+                    return "";
+            }
+        };
+
+        if (curatorsStore.curators) {
+            findCuratorAndSendEvent();
         } else {
             watch(() => curatorsStore.curators, (state) => {
                 if (state) {
-                    curator.value = curatorsStore.curators.find(curator => formatName(curator.name) === formattedName);
-                    getCuratorLinks();
+                    findCuratorAndSendEvent();
                 }
             });
         }
     }
+
 
     const links = ref([]);
     const otherServices = ['bandcamp', 'youtube', 'soundcloud', 'mixcloud', 'deezer'];

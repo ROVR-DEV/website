@@ -15,6 +15,7 @@
     "axios": "^1.6.5",
     "laravel-echo": "^1.15.3",
     "loaders.css": "^0.1.2",
+    "lp.rovr.live": "file:",
     "pinia": "^2.1.7",
     "socket.io-client": "^2.5.0",
     "v-calendar": "^3.1.2",
